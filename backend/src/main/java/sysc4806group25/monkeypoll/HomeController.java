@@ -10,4 +10,9 @@ public class HomeController {
     public String home() {
         return "forward:/index.html";
     }
+
+    @GetMapping("/{path:[^\\.]*}")
+    public String redirect() {
+        return "forward:/index.html";
+    }
 }
