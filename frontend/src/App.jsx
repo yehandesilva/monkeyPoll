@@ -6,6 +6,9 @@ function App() {
 
   return (
     <>
+        <div className="flex justify-content-center align-items-center h-screen">
+            <img src="monkeyPollLogoWithWhiteText.png" height="250"/>
+        </div>
     </>
   )
 }
