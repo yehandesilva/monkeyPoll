@@ -1,16 +1,16 @@
-import 'primereact/resources/themes/fluent-light/theme.css';
+import 'primereact/resources/themes/lara-dark-teal/theme.css';
+import './App.css';
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
+import Welcome from "./welcome/Welcome.jsx";
 
-function App() {
+const App = () => {
 
-  return (
-    <>
-        <div className="flex justify-content-center align-items-center h-screen">
-            <img src="monkeyPollLogoWithWhiteText.png" height="250"/>
-        </div>
-    </>
-  )
+    return (
+        <>
+            <Welcome />
+        </>
+    )
 }
 
 export default App
