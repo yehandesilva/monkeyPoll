@@ -4,6 +4,7 @@ import {Dialog} from 'primereact/dialog';
 import {Button} from 'primereact/button';
 
 import Login from "./Login.jsx";
+import Register from "./Register.jsx";
 
 const LoginDialog = ({visible, setVisible}) => {
 
@@ -29,7 +30,7 @@ const LoginDialog = ({visible, setVisible}) => {
                         (isLogin) ?
                             <Login setVisible={setVisible}/>
                             :
-                            null
+                            <Register setVisible={setVisible}/>
                     }
                 </div>
             </Dialog>
