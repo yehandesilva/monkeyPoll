@@ -2,7 +2,7 @@ import {useState} from 'react';
 
 import {Button} from 'primereact/button';
 
-import LoginDialog from "../welcome/LoginDialog.jsx";
+import LoginDialog from "./welcome/LoginDialog.jsx";
 
 const MenuBar = () => {
 
