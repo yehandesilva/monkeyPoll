@@ -1,6 +1,5 @@
-import {useState, useRef, useContext} from 'react';
+import {useState, useContext} from 'react';
 
-import {Toast} from 'primereact/toast';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
@@ -10,9 +9,8 @@ import {validateEmail} from "../modules/validation.js";
 import {loginUser} from "../api.js";
 
 
-const Login = ({setVisible}) => {
+const Login = ({toast, setVisible}) => {
 
-    const toast = useRef(null);
     const [user, setUser] = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -73,7 +71,6 @@ const Login = ({setVisible}) => {
 
     return (
         <>
-            <Toast ref={toast}/>
             <div className="flex justify-content-center pb-6">
                 <div className="flex flex-column max-w-max">
                     <div>
