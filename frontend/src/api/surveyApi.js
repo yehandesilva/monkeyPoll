@@ -1,3 +1,7 @@
+// Get survey given its id.
+// Return:
+// - Success: True if survey is successfully fetched
+// - Body - Fetched survey in JSON format or message describing the error
 export const getSurvey = async (id) => {
 
     const requestOptions = {

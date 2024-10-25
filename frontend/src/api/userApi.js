@@ -1,3 +1,9 @@
+/*
+Login user given email and password.
+Return:
+- Success: True if user is allowed to log in
+- Body - Fetched user in JSON format or message describing the error
+*/
 export const loginUser = async (email, password) => {
 
     const requestOptions = {
@@ -23,6 +29,12 @@ export const loginUser = async (email, password) => {
     return status;
 }
 
+/*
+Create user given first name, last name, email and password.
+Return:
+- Success: True if user is created
+- Body - Created user in JSON format or message describing the error
+*/
 export const registerUser = async (firstName, lastName, email, password) => {
 
     const requestOptions = {
