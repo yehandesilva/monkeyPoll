@@ -7,7 +7,6 @@ export const loginUser = async (email, password) => {
     };
 
     const response = await fetch(`signIn`, requestOptions);
-    console.log(response)
 
     const status = {
         success: false,

@@ -4,7 +4,7 @@ import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
 
-import {registerUser} from "../api.js";
+import {registerUser} from "../api/userApi.js";
 import {validateEmail} from "../modules/validation.js";
 
 const Register = ({toast, setIsLogin}) => {
