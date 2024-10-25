@@ -4,6 +4,7 @@ import {Toast} from 'primereact/toast';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
+import {validateEmail} from "../modules/validation.js";
 
 const Login = ({setVisible}) => {
 
@@ -14,8 +15,7 @@ const Login = ({setVisible}) => {
     const onSubmit = () => {
         if (email && password) {
             // Validate email format
-            const emailRegX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-            if (emailRegX.test(email)) {
+            if (validateEmail(email)) {
                 // TODO Sign-in user
                 setVisible(false);
             } else {
