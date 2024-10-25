@@ -14,6 +14,7 @@ const LoginDialog = ({visible, setVisible}) => {
         <>
             <Dialog visible={visible} style={{minWidth: '30vw'}} draggable={false} resizable={false} onHide={() => {
                 setVisible(false);
+                setIsLogin(true);
             }}>
                 <div className="flex flex-column gap-2">
                     <div className="flex flex-column justify-content-center align-items-center gap-4 h-full">

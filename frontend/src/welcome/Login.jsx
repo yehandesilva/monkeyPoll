@@ -11,8 +11,13 @@ const Login = ({setVisible}) => {
     const toast = useRef(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [invalidFields, setInvalidFields] = useState({
+        email: false,
+        password: false,
+    });
 
     const onSubmit = () => {
+        const _invalidFields = {...invalidFields};
         if (email && password) {
             // Validate email format
             if (validateEmail(email)) {
@@ -25,6 +30,7 @@ const Login = ({setVisible}) => {
                     summary: 'Login Error',
                     detail: 'Email must be in format of example@email.com'
                 });
+                _invalidFields.email = true;
             }
         } else {
             // Email or password fields are empty
@@ -44,7 +50,10 @@ const Login = ({setVisible}) => {
                     detail: 'Password is required'
                 });
             }
+            _invalidFields.email = !email;
+            _invalidFields.password = !password;
         }
+        setInvalidFields({..._invalidFields});
     }
 
     return (
@@ -54,11 +63,11 @@ const Login = ({setVisible}) => {
                 <div className="flex flex-column max-w-max">
                     <div>
                         <label htmlFor="email" className="block mb-1 ml-1">E-mail</label>
-                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} className="w-full"/>
+                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} invalid={invalidFields.email} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="password" className="block mb-1 ml-1">Password</label>
-                        <Password value={password} toggleMask feedback={false}
+                        <Password value={password} toggleMask feedback={false} invalid={invalidFields.password}
                                   onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <div className="flex justify-content-center mt-6">
