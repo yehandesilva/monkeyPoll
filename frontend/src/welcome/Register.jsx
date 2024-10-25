@@ -13,8 +13,15 @@ const Register = ({setVisible}) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [invalidFields, setInvalidFields] = useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+    });
 
     const onSubmit = () => {
+        const _invalidFields = {...invalidFields};
         if (firstName && lastName && email && password) {
             if (validateEmail(email)) {
                 // TODO Create user
@@ -26,6 +33,7 @@ const Register = ({setVisible}) => {
                     summary: 'Login Error',
                     detail: 'Email must be in format of example@email.com'
                 });
+                _invalidFields.email = true;
             }
         } else {
             // Sign-in fields are empty
@@ -61,7 +69,12 @@ const Register = ({setVisible}) => {
                     detail: 'Password is required'
                 });
             }
+            _invalidFields.firstName = !firstName;
+            _invalidFields.lastName = !lastName;
+            _invalidFields.email = !email;
+            _invalidFields.password = !password;
         }
+        setInvalidFields({..._invalidFields});
     }
 
     return (
@@ -71,19 +84,19 @@ const Register = ({setVisible}) => {
                 <div className="flex flex-column max-w-max">
                     <div>
                         <label htmlFor="First Name" className="block mb-1 ml-1">First Name</label>
-                        <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} className="w-full"/>
+                        <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} invalid={invalidFields.firstName} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="Last Name" className="block mb-1 ml-1">Last Name</label>
-                        <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} className="w-full"/>
+                        <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} invalid={invalidFields.lastName} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="email" className="block mb-1 ml-1">E-mail</label>
-                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} className="w-full"/>
+                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} invalid={invalidFields.email} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="password" className="block mb-1 ml-1">Password</label>
-                        <Password value={password} toggleMask
+                        <Password value={password} toggleMask invalid={invalidFields.password}
                                   onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <div className="flex justify-content-center mt-6">
