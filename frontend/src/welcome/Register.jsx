@@ -4,6 +4,8 @@ import {Toast} from 'primereact/toast';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
+
+import {registerUser} from "../api.js";
 import {validateEmail} from "../modules/validation.js";
 
 const Register = ({setVisible}) => {
@@ -20,17 +22,31 @@ const Register = ({setVisible}) => {
         password: false,
     });
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const _invalidFields = {...invalidFields};
         if (firstName && lastName && email && password) {
             if (validateEmail(email)) {
-                // TODO Create user
-                setVisible(false);
+                const registerStatus = await registerUser(firstName, lastName, email, password);
+                if (registerStatus.success) {
+                    toast.current.show({
+                        severity: 'success',
+                        life: 3000,
+                        summary: 'Registration Success',
+                        detail: 'Account Created',
+                    });
+                } else {
+                    toast.current.show({
+                        severity: 'error',
+                        life: 3000,
+                        summary: 'Registration Error',
+                        detail: registerStatus.body.message,
+                    });
+                }
             } else {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
-                    summary: 'Login Error',
+                    summary: 'Registration Error',
                     detail: 'Email must be in format of example@email.com'
                 });
                 _invalidFields.email = true;
@@ -41,7 +57,7 @@ const Register = ({setVisible}) => {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
-                    summary: 'Login Error',
+                    summary: 'Registration Error',
                     detail: 'First name is required'
                 });
             }
@@ -49,7 +65,7 @@ const Register = ({setVisible}) => {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
-                    summary: 'Login Error',
+                    summary: 'Registration Error',
                     detail: 'Last name is required'
                 });
             }
@@ -57,7 +73,7 @@ const Register = ({setVisible}) => {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
-                    summary: 'Login Error',
+                    summary: 'Registration Error',
                     detail: 'Email is required'
                 });
             }
@@ -65,7 +81,7 @@ const Register = ({setVisible}) => {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
-                    summary: 'Login Error',
+                    summary: 'Registration Error',
                     detail: 'Password is required'
                 });
             }
@@ -84,15 +100,18 @@ const Register = ({setVisible}) => {
                 <div className="flex flex-column max-w-max">
                     <div>
                         <label htmlFor="First Name" className="block mb-1 ml-1">First Name</label>
-                        <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} invalid={invalidFields.firstName} className="w-full"/>
+                        <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)}
+                                   invalid={invalidFields.firstName} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="Last Name" className="block mb-1 ml-1">Last Name</label>
-                        <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} invalid={invalidFields.lastName} className="w-full"/>
+                        <InputText value={lastName} onChange={(e) => setLastName(e.target.value)}
+                                   invalid={invalidFields.lastName} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="email" className="block mb-1 ml-1">E-mail</label>
-                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} invalid={invalidFields.email} className="w-full"/>
+                        <InputText value={email} onChange={(e) => setEmail(e.target.value)}
+                                   invalid={invalidFields.email} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="password" className="block mb-1 ml-1">Password</label>

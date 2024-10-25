@@ -1,14 +1,19 @@
-import {useState, useRef} from 'react';
+import {useState, useRef, useContext} from 'react';
 
 import {Toast} from 'primereact/toast';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
+
+import {UserContext} from "../context/UserContext.jsx";
 import {validateEmail} from "../modules/validation.js";
+import {loginUser} from "../api.js";
+
 
 const Login = ({setVisible}) => {
 
     const toast = useRef(null);
+    const [user, setUser] = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [invalidFields, setInvalidFields] = useState({
@@ -16,13 +21,23 @@ const Login = ({setVisible}) => {
         password: false,
     });
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const _invalidFields = {...invalidFields};
         if (email && password) {
             // Validate email format
             if (validateEmail(email)) {
-                // TODO Sign-in user
-                setVisible(false);
+                const loginStatus = await loginUser(email, password);
+                if (loginStatus.success) {
+                    setUser(loginStatus.body);
+                    setVisible(false);
+                } else {
+                    toast.current.show({
+                        severity: 'error',
+                        life: 3000,
+                        summary: 'Login Error',
+                        detail: loginStatus.body.message,
+                    });
+                }
             } else {
                 toast.current.show({
                     severity: 'error',
