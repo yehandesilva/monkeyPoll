@@ -6,7 +6,7 @@ import {Button} from 'primereact/button';
 
 import {UserContext} from "../context/UserContext.jsx";
 import {validateEmail} from "../modules/validation.js";
-import {loginUser} from "../api.js";
+import {loginUser} from "../api/userApi.js";
 
 
 const Login = ({toast, setVisible}) => {
