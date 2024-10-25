@@ -1,5 +1,6 @@
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 
+import {Toast} from 'primereact/toast';
 import {Dialog} from 'primereact/dialog';
 import {Button} from 'primereact/button';
 
@@ -8,10 +9,12 @@ import Register from "./Register.jsx";
 
 const LoginDialog = ({visible, setVisible}) => {
 
+    const toast = useRef(null);
     const [isLogin, setIsLogin] = useState(true);
 
     return (
         <>
+            <Toast ref={toast}/>
             <Dialog visible={visible} style={{minWidth: '30vw'}} draggable={false} resizable={false} onHide={() => {
                 setVisible(false);
                 setIsLogin(true);
@@ -29,9 +32,9 @@ const LoginDialog = ({visible, setVisible}) => {
                     </div>
                     {
                         (isLogin) ?
-                            <Login setVisible={setVisible}/>
+                            <Login toast={toast} setVisible={setVisible}/>
                             :
-                            <Register setVisible={setVisible}/>
+                            <Register toast={toast} setIsLogin={setIsLogin}/>
                     }
                 </div>
             </Dialog>

@@ -1,6 +1,5 @@
-import {useState, useRef} from 'react';
+import {useState} from 'react';
 
-import {Toast} from 'primereact/toast';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
@@ -8,9 +7,8 @@ import {Button} from 'primereact/button';
 import {registerUser} from "../api.js";
 import {validateEmail} from "../modules/validation.js";
 
-const Register = ({setVisible}) => {
+const Register = ({toast, setIsLogin}) => {
 
-    const toast = useRef(null);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -34,6 +32,7 @@ const Register = ({setVisible}) => {
                         summary: 'Registration Success',
                         detail: 'Account Created',
                     });
+                    setIsLogin(true);
                 } else {
                     toast.current.show({
                         severity: 'error',
@@ -95,7 +94,6 @@ const Register = ({setVisible}) => {
 
     return (
         <>
-            <Toast ref={toast}/>
             <div className="flex justify-content-center pb-6">
                 <div className="flex flex-column max-w-max">
                     <div>
