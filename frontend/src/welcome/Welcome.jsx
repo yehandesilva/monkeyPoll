@@ -4,7 +4,7 @@ import {Button} from 'primereact/button';
 import {InputText} from 'primereact/inputtext';
 
 const Welcome = () => {
-    const [code, setCode] = useState("");
+    const [code, setCode] = useState((window.location.pathname).toString().substring(1));
 
     return (
         <div className="flex flex-column justify-content-center align-items-center gap-4 h-full">
