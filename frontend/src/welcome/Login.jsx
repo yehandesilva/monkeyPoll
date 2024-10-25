@@ -63,7 +63,8 @@ const Login = ({setVisible}) => {
                 <div className="flex flex-column max-w-max">
                     <div>
                         <label htmlFor="email" className="block mb-1 ml-1">E-mail</label>
-                        <InputText value={email} onChange={(e) => setEmail(e.target.value)} invalid={invalidFields.email} className="w-full"/>
+                        <InputText value={email} onChange={(e) => setEmail(e.target.value)}
+                                   invalid={invalidFields.email} className="w-full"/>
                     </div>
                     <div className="mt-3">
                         <label htmlFor="password" className="block mb-1 ml-1">Password</label>

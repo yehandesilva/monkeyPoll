@@ -2,18 +2,22 @@ import 'primereact/resources/themes/lara-dark-teal/theme.css';
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
+import {SurveyProvider} from "./context/SurveyContext.jsx";
+import {UserProvider} from "./context/UserContext.jsx";
 import Welcome from "./welcome/Welcome.jsx";
 import MenuBar from "./main/MenuBar.jsx";
 
 const App = () => {
 
     return (
-        <>
-            <div className="h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
-                <MenuBar/>
-                <Welcome/>
-            </div>
-        </>
+        <SurveyProvider>
+            <UserProvider>
+                <div className="h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
+                    <MenuBar/>
+                    <Welcome/>
+                </div>
+            </UserProvider>
+        </SurveyProvider>
     )
 }
 
