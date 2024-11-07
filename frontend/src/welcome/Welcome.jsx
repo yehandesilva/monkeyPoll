@@ -39,9 +39,12 @@ const Welcome = () => {
         <>
             <Toast ref={toast}/>
             <div className="flex flex-column justify-content-center align-items-center gap-4 h-full">
-                <div className="flex pb-5 justify-content-center">
+                <div className="flex justify-content-center">
                     <img src="monkeypoll-full-white.svg" alt="MonkeyPoll Logo"
                          style={{width: '50%', maxWidth: '1080px', height: 'auto'}}/>
+                </div>
+                <div className="flex pb-4">
+                    <p style={{fontSize: '1.4rem'}}>Polls made simple.</p>
                 </div>
                 <div className="flex gap-2">
                     <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
