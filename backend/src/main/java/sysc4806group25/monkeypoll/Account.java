@@ -126,4 +126,12 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    /**
+     * @return a String representation of the Account entity
+     */
+    @Override
+    public String toString() {
+        return String.format("First name: %s\nLast name: %s\nEmail: %s\nPassword: %s", firstName, lastName, email, password);
+    }
 }
