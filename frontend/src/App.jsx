@@ -1,4 +1,4 @@
-import 'primereact/resources/themes/lara-dark-teal/theme.css';
+import 'primereact/resources/themes/lara-dark-green/theme.css';
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
