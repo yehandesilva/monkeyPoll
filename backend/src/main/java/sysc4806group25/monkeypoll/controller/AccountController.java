@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
@@ -33,16 +34,17 @@ public class AccountController {
 
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 loginRequest.email(), loginRequest.password());
-        Authentication authentication = this.authenticationManager.authenticate(token);
 
-        if (authentication.isAuthenticated()) {
+        try {
+            Authentication authentication = this.authenticationManager.authenticate(token);
             SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
             context.setAuthentication(authentication);
             this.securityContextHolderStrategy.setContext(context);
             return ResponseEntity.ok("Login successful!");
-        }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials.");
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Username or Password..");
+        }
 
     }
 
