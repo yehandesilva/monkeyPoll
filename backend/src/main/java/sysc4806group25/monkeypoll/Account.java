@@ -145,26 +145,31 @@ public class Account implements UserDetails {
     }
 
     @Override
+    @Transient
     public String getUsername() {
         return getEmail();
     }
 
     @Override
+    @Transient
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
+    @Transient
     public boolean isAccountNonLocked() {
         return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
+    @Transient
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
+    @Transient
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
