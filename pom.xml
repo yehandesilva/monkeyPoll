@@ -7,6 +7,12 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/release</url>
+        </repository>
+    </repositories>
     <modules>
         <module>frontend</module>
         <module>backend</module>
@@ -14,34 +20,41 @@
 
     <build>
         <plugins>
-            <!-- Frontend Maven Plugin for building the frontend -->
+            <!-- Frontend Maven Plugin (for building frontend) -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.12.0</version>
                 <executions>
-                    <!-- Install npm dependencies during install phase -->
                     <execution>
-                        <id>npm install</id>
-                        <phase>install</phase> <!-- This binds to the install phase -->
+                        <id>install node and npm</id>
                         <goals>
-                            <goal>npm</goal>
+                            <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}/frontend/node_modules</workingDirectory>
-                            <arguments>install</arguments>
+                            <nodeVersion>v14.17.0</nodeVersion>
+                            <npmVersion>7.20.0</npmVersion> <!-- Updated npm version -->
+                            <workingDirectory>frontend</workingDirectory>
                         </configuration>
                     </execution>
-                    <!-- Build the frontend during install phase -->
                     <execution>
-                        <id>npm run build</id>
-                        <phase>install</phase> <!-- This binds to the install phase -->
+                        <id>npm install</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${project.basedir}/frontend/node_modules</workingDirectory>
+                            <arguments>install</arguments>
+                            <workingDirectory>frontend</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
                             <arguments>run build</arguments>
+                            <workingDirectory>frontend</workingDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -63,4 +76,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

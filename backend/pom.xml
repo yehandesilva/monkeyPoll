@@ -8,13 +8,19 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>SYSC4806group25</groupId>
-    <artifactId>monkeyPoll-backend</artifactId> <!-- Change artifactId to avoid duplication -->
+    <artifactId>monkeyPoll-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>monkeyPoll Backend</name>
     <description>Backend for MonkeyPoll</description>
 
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/release</url>
+        </repository>
+    </repositories>
+
     <dependencies>
-        <!-- Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -41,11 +47,10 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.4</version> <!-- Ensure the correct version -->
+                <version>3.3.4</version>
             </plugin>
         </plugins>
     </build>
