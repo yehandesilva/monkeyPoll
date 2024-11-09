@@ -1,22 +1,67 @@
 package sysc4806group25.monkeypoll.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
+
+import java.util.Optional;
 
 @RestController
 public class AccountController {
 
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+
+    @Autowired
+    AccountUserDetailsService accountUserDetailsService;
+
+    public AccountController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
     @PostMapping("/login")
-    public void loginAccount(@RequestParam String email, @RequestParam String password) {
-        //TODO: authenticate the user
+    public ResponseEntity<String> loginAccount(@RequestBody LoginRequest loginRequest) {
+
+        UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
+                loginRequest.email(), loginRequest.password());
+        Authentication authentication = this.authenticationManager.authenticate(token);
+
+        if (authentication.isAuthenticated()) {
+            SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
+            context.setAuthentication(authentication);
+            this.securityContextHolderStrategy.setContext(context);
+            return ResponseEntity.ok("Login successful!");
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials.");
+
     }
 
     @PostMapping("/register")
-    public void registerAccount(@RequestParam String firstName,
-                                @RequestParam String lastName,
-                                @RequestParam String email,
-                                @RequestParam String password) {
-        //TODO: create the user
+    public ResponseEntity<String> registerAccount(@RequestBody RegisterRequest registerRequest) {
+        //TODO: Validate inputs of RegisterRequest, which should be done in the record or a DTO
+
+        Optional<Account> account = accountUserDetailsService.loadUserByUsername(registerRequest.email());
+        if (account.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with that email already exists.");
+        }
+        Account newAccount = accountUserDetailsService.registerNewAccount(registerRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created!");
+
+
     }
+
+    public record LoginRequest(String email, String password) {}
+    public record RegisterRequest(String email, String password, String firstName, String lastName) {}
 }
