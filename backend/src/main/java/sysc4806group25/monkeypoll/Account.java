@@ -33,7 +33,7 @@ public class Account implements UserDetails {
     /**
      * Empty constructor with no args for JPA
      */
-    protected Account() {
+    public Account() {
 
     }
 
