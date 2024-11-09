@@ -17,6 +17,12 @@
         <module>frontend</module>
         <module>backend</module>
     </modules>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-plugins</id>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
