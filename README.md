@@ -1,4 +1,4 @@
-# ![MonkeyPoll logo](https://github.com/yehandesilva/monkeyPoll/blob/main/frontend/public/monkeyPoll-32x32.png) MonkeyPoll 
+![MonkeyPoll logo](https://github.com/yehandesilva/monkeyPoll/blob/main/frontend/public/monkeypoll-full-white.svg)
 
 ## Overwiew:
 MonkeyPoll is a web application for creating, sharing, and analyzing surveys with ease.  
