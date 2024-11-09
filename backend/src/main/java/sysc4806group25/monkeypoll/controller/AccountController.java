@@ -43,7 +43,7 @@ public class AccountController {
             return ResponseEntity.ok("Login successful!");
 
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Username or Password..");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Username or Password.");
         }
 
     }
