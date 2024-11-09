@@ -12,9 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import sysc4806group25.monkeypoll.Account;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
-
-import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -51,15 +50,11 @@ public class AccountController {
     public ResponseEntity<String> registerAccount(@RequestBody RegisterRequest registerRequest) {
         //TODO: Validate inputs of RegisterRequest, which should be done in the record or a DTO
 
-        Optional<Account> account = accountUserDetailsService.loadUserByUsername(registerRequest.email());
-        if (account.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with that email already exists.");
+        if (accountUserDetailsService.isEmailUnique(registerRequest.email())) {
+            Account newAccount = accountUserDetailsService.registerNewAccount(registerRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created!");
         }
-        Account newAccount = accountUserDetailsService.registerNewAccount(registerRequest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created!");
-
-
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with that email already exists.");
     }
 
     public record LoginRequest(String email, String password) {}
