@@ -1,9 +1,12 @@
 package sysc4806group25.monkeypoll;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The Account class models the Account entity for the MonkeyPoll application.
@@ -15,7 +18,7 @@ import jakarta.persistence.SequenceGenerator;
  */
 @Entity
 @SequenceGenerator(name="accountSeq")
-public class Account {
+public class Account implements UserDetails {
 
     // Fields
     private long id;
@@ -125,6 +128,45 @@ public class Account {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    /** Methods required by UserDetails interface, used for authentication **/
+
+    /**
+     * Accounts are assigned the role "ROLE_SERVEYOR" as account holders can make and manage surveys
+     * @return the list of Authorities for this account
+     */
+    @Override
+    @Transient
+    public Collection<? extends GrantedAuthority> getAuthorities()
+    {
+        return List.of(new SimpleGrantedAuthority("ROLE_SERVEYOR"));
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     /**
