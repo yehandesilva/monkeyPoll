@@ -1,0 +1,31 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2055 1775" width="2055" height="1775">
+	<title>-e-nlarged Logo</title>
+	<defs>
+		<linearGradient id="g1" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-1180.931,2191,-2453.816,-1322.586,2490.175,483.339)">
+			<stop offset="0" stop-color="#00d95f"/>
+			<stop offset="1" stop-color="#199250"/>
+		</linearGradient>
+		<linearGradient id="g2" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-902.862,1675.094,-1724.35,-929.41,1692.688,354.961)">
+			<stop offset="0" stop-color="#00d95f"/>
+			<stop offset="1" stop-color="#199250"/>
+		</linearGradient>
+		<linearGradient id="g3" x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-902.903,1675.171,-1724.568,-929.528,1287.573,109.996)">
+			<stop offset="0" stop-color="#00d95f"/>
+			<stop offset="1" stop-color="#199250"/>
+		</linearGradient>
+	</defs>
+	<style>
+		.s0 { fill: url(#g1) } 
+		.s1 { fill: url(#g2) } 
+		.s2 { fill: url(#g3) } 
+	</style>
+	<g id="-e-nlarged Logo">
+		<g id="&lt;Group&gt;">
+			<g id="&lt;Group&gt;">
+				<path id="&lt;Compound Path&gt;" fill-rule="evenodd" class="s0" d="m2054.1 622v345.3c0 34.7-28.2 62.8-62.9 62.8h-97.8c-68.1 422.1-434.5 744.4-876.2 744.4-441.6 0-808-322.3-876.1-744.4h-78.2c-34.7 0-62.8-28.1-62.8-62.8v-345.3c0-34.6 28.1-62.7 62.8-62.7h129.7c130.6-327.2 450.6-558.3 824.6-558.3 374.1 0 694.1 231.1 824.7 558.3h149.3c34.7 0 62.9 28.1 62.9 62.7zm-413.5-100c0-66.8-54.2-121-121.1-121h-382.5c-66.9 0-121.1 54.2-121.1 121 0-66.8-54.2-121-121.1-121h-382.6c-66.8 0-121.1 54.2-121.1 121v440c0 66.8 54.3 121 121.1 121h176.2v284.5c0 93.4 75.8 169.2 169.2 169.2h327.5c93.5 0 169.3-75.8 169.3-169.2v-284.5h165.1c66.9 0 121.1-54.2 121.1-121z"/>
+				<path id="&lt;Path&gt;" class="s1" d="m1350.7 769.3h-145.8c-17.8 0-32.1 14.4-32.1 32.1v128c0 17.7 14.3 32.1 32.1 32.1h145.8c17.7 0 32.1-14.4 32.1-32.1v-128c0-17.7-14.4-32.1-32.1-32.1z"/>
+				<path id="&lt;Path&gt;" class="s2" d="m813.4 769.3h-145.7c-17.8 0-32.2 14.4-32.2 32.1v128c0 17.7 14.4 32.1 32.2 32.1h145.7c17.8 0 32.2-14.4 32.2-32.1v-128c0-17.7-14.4-32.1-32.2-32.1z"/>
+			</g>
+		</g>
+	</g>
+</svg>
