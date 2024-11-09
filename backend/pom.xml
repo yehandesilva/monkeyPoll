@@ -12,6 +12,12 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>monkeyPoll Backend</name>
     <description>Backend for MonkeyPoll</description>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-plugins</id>
+            <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <repositories>
         <repository>
