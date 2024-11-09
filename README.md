@@ -62,7 +62,7 @@ Make sure you have the following installed and properly configured (Exp: Path en
 
 ## Milestones:
 
-### Milestone 1 - Early prototype:
+### Milestone 1 - Early Prototype:
 - Setup project and GitHub repository with CI enabled
 - Elicited and documented project requirements
 - Created project logos
