@@ -66,7 +66,7 @@ Make sure you have the following installed and properly configured (Exp: Path en
 - Setup project and GitHub repository with CI enabled
 - Elicited and documented project requirements
 - Created project logos
-- Developped frontend welcome and home screens, allowing users to sign up and log in
+- Developed frontend welcome and home screens, allowing users to sign up and log in
 - Created an Account entity and controller with corresponding JUnit tests
 - Implemented account authentication to authenticate user credentials upon log in
 - Created up to date UML class diagrams and database schema
