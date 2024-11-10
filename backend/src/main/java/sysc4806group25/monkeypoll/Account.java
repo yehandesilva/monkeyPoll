@@ -1,9 +1,13 @@
 package sysc4806group25.monkeypoll;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The Account class models the Account entity for the MonkeyPoll application.
@@ -15,13 +19,15 @@ import jakarta.persistence.SequenceGenerator;
  */
 @Entity
 @SequenceGenerator(name="accountSeq")
-public class Account {
+public class Account implements UserDetails {
 
     // Fields
     private long id;
     private String firstName;
     private String lastName;
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     //TODO: Once Survey entity is implemented, Account entity should have a list of Survey objects
@@ -30,7 +36,7 @@ public class Account {
     /**
      * Empty constructor with no args for JPA
      */
-    protected Account() {
+    public Account() {
 
     }
 
@@ -125,6 +131,50 @@ public class Account {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    /** Methods required by UserDetails interface, used for authentication **/
+
+    /**
+     * Accounts are assigned the role "ROLE_SERVEYOR" as account holders can make and manage surveys
+     * @return the list of Authorities for this account
+     */
+    @Override
+    @Transient
+    public Collection<? extends GrantedAuthority> getAuthorities()
+    {
+        return List.of(new SimpleGrantedAuthority("ROLE_SERVEYOR"));
+    }
+
+    @Override
+    @Transient
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    @Transient
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    @Transient
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     /**
