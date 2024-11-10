@@ -57,3 +57,5 @@ dist-ssr
 *.sw?
 
 /backend/src/main/resources/static
+/frontend/node/
+/frontend/node_modules/
