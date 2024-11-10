@@ -26,6 +26,10 @@
         </repository>
     </repositories>
 
+    <properties>
+        <java.version>21</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -92,12 +96,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <configuration>
-                    <includes>
-                        <include>**/*</include>
-                    </includes>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>
