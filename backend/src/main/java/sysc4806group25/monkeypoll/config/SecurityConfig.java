@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -34,8 +33,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/error", "/register", "/login").permitAll()
+                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**","/error", "/register", "/login").permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .httpBasic(withDefaults())
                 .csrf(csrf->
