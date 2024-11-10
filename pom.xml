@@ -38,8 +38,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v14.17.0</nodeVersion>
-                            <npmVersion>7.20.0</npmVersion> <!-- Updated npm version -->
+                            <nodeVersion>v22.11.0</nodeVersion>
+                            <npmVersion>10.9.0</npmVersion>
                             <workingDirectory>frontend</workingDirectory>
                         </configuration>
                     </execution>
