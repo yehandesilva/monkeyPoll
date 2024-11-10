@@ -21,8 +21,8 @@ const LoginDialog = ({visible, setVisible}) => {
             }}>
                 <div className="flex flex-column gap-2">
                     <div className="flex flex-column justify-content-center align-items-center gap-4 h-full">
-                        <img src="monkeyPollLogoWithWhiteText.png" alt="MonkeyPoll Logo"
-                             style={{width: '80%', maxWidth: '400px', height: 'auto'}}/>
+                        <img src="monkeypoll-logo-white.svg" alt="MonkeyPoll Logo"
+                             style={{width: '20%', maxWidth: '400px', height: 'auto'}}/>
                     </div>
                     <div className="flex justify-content-center align-items-center mb-5">
                         <span

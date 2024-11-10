@@ -12,7 +12,7 @@ export const loginUser = async (email, password) => {
         body: JSON.stringify({email: email, password: password}),
     };
 
-    const response = await fetch(`signIn`, requestOptions);
+    const response = await fetch(`login`, requestOptions);
 
     const status = {
         success: false,
@@ -43,7 +43,7 @@ export const registerUser = async (firstName, lastName, email, password) => {
         body: JSON.stringify({firstName: firstName, lastName: lastName, email: email, password: password}),
     };
 
-    const response = await fetch(`user`, requestOptions);
+    const response = await fetch(`register`, requestOptions);
 
     const status = {
         success: false,
