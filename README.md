@@ -37,28 +37,28 @@ Make sure you have the following installed and properly configured (Exp: Path en
    cd MonkeyPoll
    ```
 
-**2. Build the frontend (Must be done before running the backend):**  
-   ```
-   cd frontend
-   npm install
-   npm run build
-   ```
-   
-**3. Build and run the backend:**
-   ```
-   cd ../backend
-   mvn clean install
-   mvn spring-boot:run
+**2. Install the required dependencies and build the project:**
+```
+mvn clean install
+```
+
+**3. Run the program:**
+```
+cd backend
+mvn spring-boot:run
    ```
    The application should now be running at http://localhost:8080.
 
 ## Diagrams:
 
 ### Model - UML Class Diagram:
-![UML class digram for models]()
+We have a single model class for each entity in the system. 
+Each model class has a corresponding controller class that handles API requests for that entity.
+![UML class diagram for models](diagrams/current/UMLDiagram.png)
 
 ### Database Schema:
-![Database schema]()
+We have a single table for each entity in the system. For now, we have a table for Account. 
+![Database schema](diagrams/current/ERDiagram.png)
 
 ## Milestones:
 
