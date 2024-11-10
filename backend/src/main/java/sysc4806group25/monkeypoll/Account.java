@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +26,8 @@ public class Account implements UserDetails {
     private String firstName;
     private String lastName;
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     //TODO: Once Survey entity is implemented, Account entity should have a list of Survey objects

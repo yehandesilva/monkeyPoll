@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import sysc4806group25.monkeypoll.Account;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
 
@@ -30,7 +31,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginAccount(@RequestBody LoginRequest loginRequest) {
+    public Account loginAccount(@RequestBody LoginRequest loginRequest) {
 
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 loginRequest.email(), loginRequest.password());
@@ -40,10 +41,10 @@ public class AccountController {
             SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
             context.setAuthentication(authentication);
             this.securityContextHolderStrategy.setContext(context);
-            return ResponseEntity.ok("Login successful!");
+            return (Account) context.getAuthentication().getPrincipal();
 
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Username or Password.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Username or Password.");
         }
 
     }
@@ -54,9 +55,9 @@ public class AccountController {
 
         if (accountUserDetailsService.isEmailUnique(registerRequest.email())) {
             Account newAccount = accountUserDetailsService.registerNewAccount(registerRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created!");
+            return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Account successfully created!\"}");
         }
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("An account with that email already exists.");
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "An account with that email already exists.");
     }
 
     public record LoginRequest(String email, String password) {}
