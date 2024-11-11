@@ -1,4 +1,4 @@
-![MonkeyPoll logo](https://github.com/yehandesilva/monkeyPoll/blob/main/frontend/public/monkeypoll-full-white.svg)
+![MonkeyPoll logo](https://github.com/yehandesilva/monkeyPoll/blob/main/frontend/public/monkeypoll-full-green.svg)
 
 ## Overwiew:
 MonkeyPoll is a web application for creating, sharing, and analyzing surveys with ease.  
@@ -14,11 +14,13 @@ The latest online deployment of the application can be found at https://yamp.azu
 🥇 Yehan De Silva (101185388)
 
 ## Project Structure:
-The github repository is composed of 2 directories:
+The github repository is composed of 3 directories:
 1) **/backend**
    - A Spring Boot application serving as the bridge between the frontend and the database, handling API requests and business logic.
 2) **/frontend**
    - A React application that enables users to create, share, and analyze surveys through an interactive interface.
+3) **/diagrams**
+   - All Model UML class diagrams and database schema diagrams
 
 ## How to Run Project Locally:
 
