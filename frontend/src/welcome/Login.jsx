@@ -82,11 +82,10 @@ const Login = ({toast, setVisible}) => {
                         <Password value={password} toggleMask feedback={false} invalid={invalidFields.password}
                                   onChange={(e) => setPassword(e.target.value)}/>
                     </div>
-                    {!user && (
                         <div className="flex justify-content-center mt-6">
                             <Button label="Login" icon="pi pi-sign-in" onClick={() => onSubmit()} className="max-w-min"/>
                         </div>
-                    )}
+
                 </div>
             </div>
         </>

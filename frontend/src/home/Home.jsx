@@ -10,11 +10,11 @@ const Home = () => {
     return (
         <div className="home flex flex-column align-items-center justify-content-center h-screen">
             {user ? (
-            <div>
+                <div>
                     <div className="flex justify-content-center">
                         <img src="monkeypoll-full-white.svg" alt="MonkeyPoll Logo"
                              style={{width: '50%', maxWidth: '1080px', height: 'auto'}}/>
-                    </div>
+                </div>
                 <div className="flex flex-column align-items-center gap-3 p-4 card">
                     <h2>Welcome, {user.firstName} {user.lastName}!</h2>
                     <p className="text-secondary">We’re glad you’re here.</p>
