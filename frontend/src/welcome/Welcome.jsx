@@ -1,17 +1,25 @@
-import {useState, useRef, useContext} from 'react';
-
+import {useState, useRef, useContext, useEffect} from 'react';
 import {Toast} from 'primereact/toast';
 import {Button} from 'primereact/button';
 import {InputText} from 'primereact/inputtext';
 import {getSurvey} from "../api/surveyApi.js";
 import {SurveyContext} from "../context/SurveyContext.jsx";
+import {UserContext} from "../context/UserContext.jsx";
+import Home from '../home/Home.jsx';
 
 const Welcome = () => {
-
     const toast = useRef(null);
     const [survey, setSurvey] = useContext(SurveyContext);
+    const [user] = useContext(UserContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
     const [isSurveyEnabled, setIsSurveyEnabled] = useState(false);
+    const [showHome, setShowHome] = useState(false);
+
+    useEffect(() => {
+        if (user || survey) {
+            setShowHome(true);
+        }
+    }, [user, survey]);
 
     const codeSubmit = async () => {
         if (code) {
@@ -28,13 +36,16 @@ const Welcome = () => {
             }
         } else {
             toast.current.show({
-
                 severity: 'error',
                 life: 3000,
                 summary: 'Survey Error',
                 detail: 'Survey code is required',
             });
         }
+    }
+
+    if (showHome) {
+        return <Home />;
     }
 
     return (
