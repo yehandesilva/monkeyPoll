@@ -1,4 +1,5 @@
 import {useState, useRef} from 'react';
+import PropTypes from 'prop-types';
 
 import {Toast} from 'primereact/toast';
 import {Dialog} from 'primereact/dialog';
@@ -41,5 +42,10 @@ const LoginDialog = ({visible, setVisible}) => {
         </>
     )
 }
+
+LoginDialog.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    setVisible: PropTypes.func.isRequired
+};
 
 export default LoginDialog;

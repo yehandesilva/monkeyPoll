@@ -6,6 +6,7 @@ import {SurveyProvider} from "./context/SurveyContext.jsx";
 import {UserProvider} from "./context/UserContext.jsx";
 import Welcome from "./welcome/Welcome.jsx";
 import MenuBar from "./MenuBar.jsx";
+import Home from "./home/Home.jsx";
 
 const App = () => {
 

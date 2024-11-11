@@ -1,9 +1,8 @@
 import {useState, useContext} from 'react';
-
+import PropTypes from 'prop-types';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
-
 import {UserContext} from "../context/UserContext.jsx";
 import {validateEmail} from "../modules/validation.js";
 import {loginUser} from "../api/userApi.js";
@@ -83,13 +82,19 @@ const Login = ({toast, setVisible}) => {
                         <Password value={password} toggleMask feedback={false} invalid={invalidFields.password}
                                   onChange={(e) => setPassword(e.target.value)}/>
                     </div>
-                    <div className="flex justify-content-center mt-6">
-                        <Button label="Login" icon="pi pi-sign-in" onClick={() => onSubmit()} className="max-w-min"/>
-                    </div>
+                        <div className="flex justify-content-center mt-6">
+                            <Button label="Login" icon="pi pi-sign-in" onClick={() => onSubmit()} className="max-w-min"/>
+                        </div>
+
                 </div>
             </div>
         </>
     )
 }
+
+Login.propTypes = {
+    toast: PropTypes.object.isRequired,
+    setVisible: PropTypes.func.isRequired
+};
 
 export default Login;
