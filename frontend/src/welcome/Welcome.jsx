@@ -11,6 +11,7 @@ const Welcome = () => {
     const toast = useRef(null);
     const [survey, setSurvey] = useContext(SurveyContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
+    const [isSurveyEnabled, setIsSurveyEnabled] = useState(false);
 
     const codeSubmit = async () => {
         if (code) {
@@ -27,6 +28,7 @@ const Welcome = () => {
             }
         } else {
             toast.current.show({
+
                 severity: 'error',
                 life: 3000,
                 summary: 'Survey Error',
@@ -46,11 +48,13 @@ const Welcome = () => {
                 <div className="flex pb-4">
                     <p style={{fontSize: '1.4rem'}}>Polls made simple.</p>
                 </div>
-                <div className="flex gap-2">
-                    <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
-                               className="p-inputtext-lg"/>
-                    <Button icon="pi pi-arrow-right" size="large" style={{boxShadow: "none"}} onClick={() => codeSubmit()}/>
-                </div>
+                {isSurveyEnabled && (
+                    <div className="flex gap-2">
+                        <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
+                                   className="p-inputtext-lg"/>
+                        <Button icon="pi pi-arrow-right" size="large" style={{boxShadow: "none"}} onClick={() => codeSubmit()}/>
+                    </div>
+                )}
             </div>
         </>
     )
