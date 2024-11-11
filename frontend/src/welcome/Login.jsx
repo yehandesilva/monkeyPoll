@@ -1,4 +1,5 @@
 import {useState, useContext} from 'react';
+import PropTypes from 'prop-types';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
@@ -91,5 +92,10 @@ const Login = ({toast, setVisible}) => {
         </>
     )
 }
+
+Login.propTypes = {
+    toast: PropTypes.object.isRequired,
+    setVisible: PropTypes.func.isRequired
+};
 
 export default Login;

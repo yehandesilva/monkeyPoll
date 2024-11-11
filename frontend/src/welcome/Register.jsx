@@ -1,5 +1,6 @@
 import {useState} from 'react';
 
+import PropTypes from 'prop-types';
 import {InputText} from 'primereact/inputtext';
 import {Password} from 'primereact/password';
 import {Button} from 'primereact/button';
@@ -125,5 +126,10 @@ const Register = ({toast, setIsLogin}) => {
         </>
     )
 }
+
+Register.propTypes = {
+    toast: PropTypes.object.isRequired,
+    setIsLogin: PropTypes.func.isRequired
+};
 
 export default Register;
