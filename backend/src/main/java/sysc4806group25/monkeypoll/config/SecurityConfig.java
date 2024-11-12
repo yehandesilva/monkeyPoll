@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -38,8 +39,9 @@ public class SecurityConfig {
 
                 )
                 .httpBasic(withDefaults())
+                .logout((logout) -> logout.addLogoutHandler(new SecurityContextLogoutHandler()))
                 .csrf(csrf->
-                        csrf.ignoringRequestMatchers("/register", "/login")
+                        csrf.ignoringRequestMatchers("/register", "/login", "/logout") // this allows us to test using postman
                 );
 
         return http.build();
