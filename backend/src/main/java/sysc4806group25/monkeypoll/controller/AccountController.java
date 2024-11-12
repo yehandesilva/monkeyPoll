@@ -1,5 +1,7 @@
 package sysc4806group25.monkeypoll.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,12 +30,15 @@ public class AccountController {
     @Autowired
     AccountUserDetailsService accountUserDetailsService;
 
+    private SecurityContextRepository securityContextRepository =
+            new HttpSessionSecurityContextRepository();
+
     public AccountController(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/login")
-    public Account loginAccount(@RequestBody LoginRequest loginRequest) {
+    public Account loginAccount(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
 
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
                 loginRequest.email(), loginRequest.password());
@@ -41,6 +48,8 @@ public class AccountController {
             SecurityContext context = this.securityContextHolderStrategy.createEmptyContext();
             context.setAuthentication(authentication);
             this.securityContextHolderStrategy.setContext(context);
+            securityContextRepository.saveContext(context, request, response);
+
             return (Account) context.getAuthentication().getPrincipal();
 
         } catch (AuthenticationException e) {
