@@ -59,3 +59,31 @@ export const registerUser = async (firstName, lastName, email, password) => {
 
     return status;
 }
+
+/*
+Logout the user that is currently logged in.
+Return:
+- Success: True if user has been successfully logged out on the server side
+- Body - No content (204) on success or message describing the error
+*/
+export const logoutUser = async () => {
+
+    const requestOptions = {
+        method: 'POST',
+    };
+
+    const response = await fetch(`logout`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to logout user"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
+    }
+
+    return status;
+}
