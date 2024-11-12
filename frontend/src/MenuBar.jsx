@@ -15,11 +15,8 @@ const MenuBar = () => {
     const handleLogout = async () => {
 
         const logoutStatus = await logoutUser();
-        setUser(null);
-        console.log("point a")
         if (logoutStatus.success) {
             setUser(null);
-            console.log("point b")
         } else {
             toast.current.show({
                 severity: 'error',
