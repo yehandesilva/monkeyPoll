@@ -4,6 +4,7 @@ import {Card} from "primereact/card";
 import {Dropdown} from "primereact/dropdown";
 import {Slider} from "primereact/slider";
 import PropTypes from "prop-types";
+import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 
 const Question = ({id}) => {
     const [prompt, setPrompt] = useState()
@@ -21,7 +22,7 @@ const Question = ({id}) => {
             case "text":
                 return <InputText disabled placeholder="No response options needed" className="w-full m-auto"/>
             case "number":
-                return <Slider value={responseOptions} onChange={(e) => setResponseOptions(e.value)} className="m-4 w-auto" range />
+                return <NumberQuestionOptions/>
             case "choice":
                 return <InputText placeholder="Option 1" />
             default:
