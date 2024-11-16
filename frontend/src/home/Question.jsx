@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { InputText } from 'primereact/inputtext';
 import {Card} from "primereact/card";
 import {Dropdown} from "primereact/dropdown";
@@ -9,7 +9,7 @@ import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 const Question = ({id}) => {
     const [prompt, setPrompt] = useState()
     const [type, setType] = useState()
-    const [responseOptions, setResponseOptions] = useState()
+    const [responseOptions, setResponseOptions] = useState([])
 
     const questionTypes = [
         {label: "Text Question", value: "text"},
@@ -22,7 +22,7 @@ const Question = ({id}) => {
             case "text":
                 return <InputText disabled placeholder="No response options needed" className="w-full m-auto"/>
             case "number":
-                return <NumberQuestionOptions/>
+                return <NumberQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
             case "choice":
                 return <InputText placeholder="Option 1" />
             default:

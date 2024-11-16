@@ -1,30 +1,34 @@
 import {useEffect, useState} from 'react';
-import { InputText } from 'primereact/inputtext';
-import {Slider} from "primereact/slider";
+import PropTypes from "prop-types";
+import Question from "./Question.jsx";
+import {InputNumber} from "primereact/inputnumber";
 
-const NumberQuestionOptions = () => {
-    const [responseOptions, setResponseOptions] = useState([0,10])
-
+const NumberQuestionOptions = ({responseOptions, setResponseOptions}) => {
     return (
         <>
-            <div className="flex flex-row align-items-center">
-                <div className="flex flex-column align-items-center">
-                    <label htmlFor="min" className="mb-1">Min</label>
-                    <InputText id="min" value={responseOptions[0]} onChange={(e) =>
-                        setResponseOptions([e.target.value, responseOptions[1]])} className="w-5"/>
+            <div className="formgrid grid">
+                <div className="field col-12 md:col-6">
+                    <label htmlFor="min" className="mb-1">Minimum value</label>
+                    <InputNumber inputId="min" value={responseOptions[0]} onChange={(e) =>
+                        setResponseOptions([e.value, responseOptions[1]])} showButtons className="w-auto"
+                                 max={responseOptions[1]}/>
+                </div>
+                <div className="field col-12 md:col-6">
+                    <label htmlFor="max" className="mb-1">Maximum value</label>
+                    <InputNumber inputId="max" value={responseOptions[1]} onChange={(e) =>
+                        setResponseOptions([responseOptions[0], e.value])} showButtons className="w-auto"
+                                 min={responseOptions[0]}/>
                 </div>
 
-                <Slider value={responseOptions} onChange={(e) =>
-                    setResponseOptions(e.value)} range className="w-full"/>
-                <div className="flex flex-column align-items-center">
-                    <label htmlFor="max" className="mb-1">Max</label>
-                    <InputText id="max" value={responseOptions[1]} onChange={(e) =>
-                        setResponseOptions([responseOptions[0], e.target.value])} className="w-5" />
-                </div>
             </div>
-
 
             </>
     )
 }
+
+NumberQuestionOptions.propTypes = {
+    responseOptions: PropTypes.array.isRequired,
+    setResponseOptions: PropTypes.func.isRequired
+};
+
 export default NumberQuestionOptions
