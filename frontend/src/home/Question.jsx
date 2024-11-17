@@ -2,20 +2,24 @@ import {useEffect, useState} from 'react';
 import { InputText } from 'primereact/inputtext';
 import {Card} from "primereact/card";
 import {Dropdown} from "primereact/dropdown";
-import {Slider} from "primereact/slider";
 import PropTypes from "prop-types";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
+import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 
 const Question = ({id}) => {
     const [prompt, setPrompt] = useState()
     const [type, setType] = useState()
-    const [responseOptions, setResponseOptions] = useState([])
+    const [responseOptions, setResponseOptions] = useState({})
 
     const questionTypes = [
         {label: "Text Question", value: "text"},
         {label: "Number Question", value: "number"},
         {label: "Choice Question", value: "choice"}
     ]
+
+    useEffect(() => {
+        console.log(responseOptions);
+    }, [responseOptions]);
 
     const renderTypeSelection = () => {
         switch(type) {
@@ -24,7 +28,7 @@ const Question = ({id}) => {
             case "number":
                 return <NumberQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
             case "choice":
-                return <InputText placeholder="Option 1" />
+                return <ChoiceQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
             default:
                 return null;
 

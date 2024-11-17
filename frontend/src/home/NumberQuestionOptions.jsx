@@ -1,23 +1,30 @@
 import {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
-import Question from "./Question.jsx";
 import {InputNumber} from "primereact/inputnumber";
 
 const NumberQuestionOptions = ({responseOptions, setResponseOptions}) => {
+
+    const updateResponseOptions = (e, boundToUpdate) => {
+        console.log(e)
+        setResponseOptions(prevState => {
+            return {...prevState, [boundToUpdate]: e.value}
+        })
+    }
+
     return (
         <>
             <div className="formgrid grid">
                 <div className="field col-12 md:col-6">
                     <label htmlFor="min" className="mb-1">Minimum value</label>
-                    <InputNumber inputId="min" value={responseOptions[0]} onChange={(e) =>
-                        setResponseOptions([e.value, responseOptions[1]])} showButtons className="w-auto"
-                                 max={responseOptions[1]}/>
+                    <InputNumber inputId="min" value={responseOptions["min"]} onChange={(e) =>
+                        updateResponseOptions(e, "min")} showButtons className="w-auto"
+                                 max={responseOptions["max"]}/>
                 </div>
                 <div className="field col-12 md:col-6">
                     <label htmlFor="max" className="mb-1">Maximum value</label>
-                    <InputNumber inputId="max" value={responseOptions[1]} onChange={(e) =>
-                        setResponseOptions([responseOptions[0], e.value])} showButtons className="w-auto"
-                                 min={responseOptions[0]}/>
+                    <InputNumber inputId="max" value={responseOptions["max"]} onChange={(e) =>
+                        updateResponseOptions(e, "max")} showButtons className="w-auto"
+                                 min={responseOptions["min"]}/>
                 </div>
 
             </div>
@@ -27,7 +34,7 @@ const NumberQuestionOptions = ({responseOptions, setResponseOptions}) => {
 }
 
 NumberQuestionOptions.propTypes = {
-    responseOptions: PropTypes.array.isRequired,
+    responseOptions: PropTypes.object.isRequired,
     setResponseOptions: PropTypes.func.isRequired
 };
 
