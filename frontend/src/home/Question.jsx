@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 
-const Question = ({id}) => {
+const Question = ({id, setQuestionContents}) => {
     const [prompt, setPrompt] = useState()
     const [type, setType] = useState()
     const [responseOptions, setResponseOptions] = useState({})
@@ -18,8 +18,28 @@ const Question = ({id}) => {
     ]
 
     useEffect(() => {
-        console.log(responseOptions);
-    }, [responseOptions]);
+        // need to clear response options when the type changes
+        setResponseOptions({})
+        updateQuestionContentsObj()
+
+    }, [type]);
+
+    useEffect(() => {
+        updateQuestionContentsObj()
+    }, [prompt, responseOptions]);
+
+
+    const updateQuestionContentsObj = () => {
+        const contentsAsObject = {
+            prompt: prompt,
+            type: type,
+            responseOptions: responseOptions
+        }
+
+        setQuestionContents(prevState => {
+            return {...prevState, [id]: contentsAsObject}
+        })
+    }
 
     const renderTypeSelection = () => {
         switch(type) {
@@ -57,7 +77,8 @@ const Question = ({id}) => {
 }
 
 Question.propTypes = {
-    id: PropTypes.number.isRequired
+    id: PropTypes.number.isRequired,
+    setQuestionContents: PropTypes.func.isRequired
 };
 
 export default Question

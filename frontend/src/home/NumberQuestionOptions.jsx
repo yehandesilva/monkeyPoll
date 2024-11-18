@@ -5,7 +5,6 @@ import {InputNumber} from "primereact/inputnumber";
 const NumberQuestionOptions = ({responseOptions, setResponseOptions}) => {
 
     const updateResponseOptions = (e, boundToUpdate) => {
-        console.log(e)
         setResponseOptions(prevState => {
             return {...prevState, [boundToUpdate]: e.value}
         })
