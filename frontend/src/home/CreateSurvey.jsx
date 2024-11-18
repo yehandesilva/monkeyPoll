@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { UserContext } from "../context/UserContext.jsx";
 import Home from '../home/Home.jsx';
 import Question from "./Question.jsx";
+import {createSurvey} from "../api/surveyApi.js";
 
 const CreateSurvey = () => {
     const toast = useRef(null);
@@ -24,9 +25,30 @@ const CreateSurvey = () => {
     }
 
     const onSubmit = async () => {
-        //const createStatus = await createSurvey(questionContents);
-        // TODO: validate and post to a backend endpoint
-        console.log(questionContents)
+        /*
+        TODO: validate inputs and adjust behaviour once creation endpoint is up.
+        right now we don't know what will be returned from the backend, so we'll likely want to add some
+        pop up to display the survey code, or return some info about the survey to populate the user's homepage
+        */
+        console.log(questionContents) //TODO: remove log
+
+        const creationStatus = await createSurvey(questionContents);
+        if (creationStatus.success) {
+            toast.current.show({
+                severity: 'success',
+                life: 3000,
+                summary: 'Survey successfully created!',
+                detail: creationStatus.body.message,
+            });
+            setShowHome(true) //TODO: returning to home, but may need to change
+        } else {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Creation Error',
+                detail: creationStatus.body.message,
+            });
+        }
     };
 
     const handleAddQuestion = () => {
@@ -39,6 +61,7 @@ const CreateSurvey = () => {
 
     return (
         <>
+            <Toast ref={toast}/>
             <Button label="Back to Home" icon="pi pi-home" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setShowHome(true)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
