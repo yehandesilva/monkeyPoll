@@ -61,7 +61,8 @@ const Question = ({id, setQuestionContents}) => {
           <Card title={"Question " + id} className="w-6">
               <div className="formgrid grid">
                   <div className="field col-12 md:col-6">
-                      <InputText type="text" placeholder="Enter question prompt" className="w-full"/>
+                      <InputText type="text" placeholder="Enter question prompt" onChange={(e) =>
+                          setPrompt(e.target.value)} className="w-full"/>
                   </div>
                   <div className="field col-12 md:col-6">
                       <Dropdown value={type} onChange={(e) => setType(e.value)} options={questionTypes}
