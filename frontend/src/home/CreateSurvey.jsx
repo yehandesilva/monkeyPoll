@@ -11,26 +11,29 @@ const CreateSurvey = () => {
     const lastQuestionId = useRef(1)
     const [user] = useContext(UserContext);
     const [showHome, setShowHome] = useState(false);
-    const [questionList, setQuestionList] = useState([<Question key={1} id={1}/>])
-
-    const getUniqueId = () =>  {
-        return ++lastQuestionId.current;
-    }
+    const [questionContents, setQuestionContents] = useState({})
+    const [questionList, setQuestionList] = useState([<Question key={1} id={1} setQuestionContents={setQuestionContents}/>])
 
 
     if (showHome) {
         return <Home />;
     }
 
+    const getUniqueId = () =>  {
+        return ++lastQuestionId.current;
+    }
+
     const onSubmit = async () => {
-        //const createStatus = await createSurvey(questionList);
+        //const createStatus = await createSurvey(questionContents);
+        // TODO: validate and post to a backend endpoint
+        console.log(questionContents)
     };
 
     const handleAddQuestion = () => {
         const newId = getUniqueId()
 
         setQuestionList(prevState => {
-            return [...prevState, <Question key={newId} id={newId}/>]
+            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents}/>]
         })
     };
 
