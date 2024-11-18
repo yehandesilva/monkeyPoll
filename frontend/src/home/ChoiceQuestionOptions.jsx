@@ -25,7 +25,7 @@ const ChoiceQuestionOptions = ({responseOptions, setResponseOptions}) => {
 
     const handleNumOptionsChanged = (newVal) => {
         if (newVal > numOptions && newVal <= MAX_OPTIONS) {
-            // Adding an option
+            // Add a new component to display this Option
             const newOption =
                 <div className="flex flex-column m-2 " key={newVal}>
                     <label htmlFor={"option-" + newVal} className="mb-1">Option {newVal}</label>
@@ -39,9 +39,17 @@ const ChoiceQuestionOptions = ({responseOptions, setResponseOptions}) => {
 
         } else if (newVal < numOptions && newVal >= MIN_OPTIONS) {
             // Removing an option
+            // remove the last component which is displaying this Option
             const copyArr = [...optionList];
             copyArr.pop();
             setOptionList(copyArr);
+
+            // remove the last Option (with id numOptions) from ResponseOptions
+            const keyToRemove = "option-" + numOptions
+            setResponseOptions(prevState => {
+                const {[keyToRemove]: _, ...optionsToKeep} = prevState;
+                return optionsToKeep;
+            })
         }
 
         setNumOptions(newVal)
