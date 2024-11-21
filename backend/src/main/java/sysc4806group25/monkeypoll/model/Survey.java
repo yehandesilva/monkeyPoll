@@ -30,6 +30,9 @@ public class Survey {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyCompletion> completions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Question> questions;
+
     /**
      * Empty constructor with no args for JPA
      */
@@ -90,6 +93,13 @@ public class Survey {
         return this.completions;
     }
 
+    /**
+     * @return successful completions of the survey
+     */
+    public List<Question> getQuestions() {
+        return this.questions;
+    }
+
     // SETTER methods
 
     /**
@@ -125,6 +135,13 @@ public class Survey {
      */
     public void setCompletions(List<SurveyCompletion> completions) {
         this.completions = completions;
+    }
+
+    /**
+     * @param questions - questions of the survey.
+     */
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     /**
