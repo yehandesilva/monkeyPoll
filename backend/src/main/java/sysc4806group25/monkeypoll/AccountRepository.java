@@ -1,6 +1,7 @@
 package sysc4806group25.monkeypoll;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.CrudRepository;
+import sysc4806group25.monkeypoll.model.Account;
 
 import java.util.Optional;
 

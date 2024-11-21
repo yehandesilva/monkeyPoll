@@ -1,4 +1,4 @@
-package sysc4806group25.monkeypoll;
+package sysc4806group25.monkeypoll.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
