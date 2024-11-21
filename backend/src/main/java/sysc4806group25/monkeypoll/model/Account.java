@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,8 +31,7 @@ public class Account implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    //TODO: Once Survey entity is implemented, Account entity should have a list of Survey objects
-    // (i.e. List<Survey> surveys)
+    private List<Survey> surveys = new ArrayList<>();
 
     /**
      * Empty constructor with no args for JPA
@@ -91,6 +91,11 @@ public class Account implements UserDetails {
         return password;
     }
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Survey> getSurveys() {
+        return this.surveys;
+    }
+
 
     /** SETTER methods **/
 
@@ -133,6 +138,19 @@ public class Account implements UserDetails {
         this.password = password;
     }
 
+    public void setSurveys(List<Survey> surveys) {
+        this.surveys = surveys;
+    }
+
+    public void addSurvey(Survey survey) {
+        this.surveys.add(survey);
+        survey.setAccount(this);
+    }
+
+    public void removeSurvey(Survey survey) {
+        this.surveys.remove(survey);
+        survey.setAccount(null);
+    }
 
     /** Methods required by UserDetails interface, used for authentication **/
 
