@@ -94,6 +94,7 @@ public class AccountTest {
         // Create two instances of Account
         Account account1 = new Account("John", "Doe", "johndoe@email.com", "password123");
         Account account2 = new Account("Mark", "David", "markdavid@gmail.com", "somepassword?");
+        accountRepository.deleteAll();
 
         // Use repository to persist both instances
         System.out.println("Persisting the following Account: \n" + account1);
@@ -104,9 +105,11 @@ public class AccountTest {
         // Retrieve all persisted Accounts
         ArrayList<Account> persistedAccounts = new ArrayList<>();
         accountRepository.findAll().forEach(persistedAccounts::add);
+        System.out.println(persistedAccounts.size());
 
         // Assert each persisted Account
         assertEquals(account1.toString(), persistedAccounts.getFirst().toString());
         assertEquals(account2.toString(), persistedAccounts.getLast().toString());
+        accountRepository.deleteAll();
     }
 }

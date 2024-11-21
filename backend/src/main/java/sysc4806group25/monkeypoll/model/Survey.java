@@ -15,9 +15,11 @@ import java.util.List;
  */
 @Entity
 @SequenceGenerator(name="surveySeq")
-public class Survey implements Serializable {
+public class Survey {
 
     // Fields
+    @Id
+    @GeneratedValue(generator="surveySeq")
     private long surveyId;
     private String description;
     private Boolean closed = false;
@@ -26,7 +28,8 @@ public class Survey implements Serializable {
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
-    private List<SurveyCompletion> completions = new ArrayList<>();
+    /*@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurveyCompletion> completions = new ArrayList<>();*/
 
     /**
      * Empty constructor with no args for JPA
@@ -35,10 +38,20 @@ public class Survey implements Serializable {
 
     }
 
+    /**
+     * Constructor for testing purposes
+     */
+    public Survey(String description, boolean closed, Account account) {
+        this.description = description;
+        this.closed = closed;
+        this.account = account;
+    }
+
     // GETTER methods
 
-    @Id
-    @GeneratedValue(generator="surveySeq")
+    /**
+     * @return unique identifier of survey.
+     */
     public long getSurveyId() {
         return this.surveyId;
     }
@@ -64,13 +77,12 @@ public class Survey implements Serializable {
         return this.closed;
     }
 
-    /**
-     * @return successful completions of the survey
-     */
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    public List<SurveyCompletion> getCompletions() {
-        return this.completions;
-    }
+//    /**
+//     * @return successful completions of the survey
+//     */
+//    public List<SurveyCompletion> getCompletions() {
+//        return this.completions;
+//    }
 
     // SETTER methods
 
@@ -102,26 +114,26 @@ public class Survey implements Serializable {
         this.closed = closed;
     }
 
-    /**
-     * @param completions - completions of the survey.
-     */
-    public void setCompletions(List<SurveyCompletion> completions) {
-        this.completions = completions;
-    }
-
-    /**
-     * @param completion - completion to add to survey.
-     */
-    public void addCompletion(SurveyCompletion completion) {
-        this.completions.add(completion);
-        completion.setSurvey(this);
-    }
-
-    /**
-     * @param completion - completion to remove from survey.
-     */
-    public void removeCompletion(SurveyCompletion completion) {
-        this.completions.remove(completion);
-        completion.setSurvey(null);
-    }
+//    /**
+//     * @param completions - completions of the survey.
+//     */
+//    public void setCompletions(List<SurveyCompletion> completions) {
+//        this.completions = completions;
+//    }
+//
+//    /**
+//     * @param completion - completion to add to survey.
+//     */
+//    public void addCompletion(SurveyCompletion completion) {
+//        this.completions.add(completion);
+//        completion.setSurvey(this);
+//    }
+//
+//    /**
+//     * @param completion - completion to remove from survey.
+//     */
+//    public void removeCompletion(SurveyCompletion completion) {
+//        this.completions.remove(completion);
+//        completion.setSurvey(null);
+//    }
 }
