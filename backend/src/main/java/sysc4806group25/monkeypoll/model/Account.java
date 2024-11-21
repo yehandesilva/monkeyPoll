@@ -21,9 +21,11 @@ import java.util.List;
  */
 @Entity
 @SequenceGenerator(name="accountSeq")
-public class Account implements UserDetails, Serializable {
+public class Account implements UserDetails {
 
     // Fields
+    @Id
+    @GeneratedValue(generator="accountSeq")
     private long id;
     private String firstName;
     private String lastName;
@@ -32,6 +34,7 @@ public class Account implements UserDetails, Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Survey> surveys = new ArrayList<>();
 
     /**
@@ -58,8 +61,6 @@ public class Account implements UserDetails, Serializable {
      * (The 'id' attribute will be the single unique identifier for this entity,
      * and will be generated using the 'accountSeq' generator)
      */
-    @Id
-    @GeneratedValue(generator="accountSeq")
     public long getId() {
         return id;
     }
@@ -92,7 +93,9 @@ public class Account implements UserDetails, Serializable {
         return password;
     }
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    /**
+     * @return surveys created by account.
+     */
     public List<Survey> getSurveys() {
         return this.surveys;
     }
@@ -139,6 +142,9 @@ public class Account implements UserDetails, Serializable {
         this.password = password;
     }
 
+    /**
+     * @param surveys - surveys belonging to the user.
+     */
     public void setSurveys(List<Survey> surveys) {
         this.surveys = surveys;
     }
