@@ -2,6 +2,10 @@ package sysc4806group25.monkeypoll.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The Survey class models the survey entity for the MonkeyPoll application.
  * Users can create surveys composed of multiple survey questions and share them with other people to complete.
@@ -11,7 +15,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @SequenceGenerator(name="surveySeq")
-public class Survey {
+public class Survey implements Serializable {
 
     // Fields
     private long surveyId;
@@ -21,6 +25,8 @@ public class Survey {
     @ManyToOne
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
+
+    private List<SurveyCompletion> completions = new ArrayList<>();
 
     /**
      * Empty constructor with no args for JPA
@@ -58,7 +64,15 @@ public class Survey {
         return this.closed;
     }
 
-    // Setter methods
+    /**
+     * @return successful completions of the survey
+     */
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<SurveyCompletion> getCompletions() {
+        return this.completions;
+    }
+
+    // SETTER methods
 
     /**
      * @param surveyId - survey's unique identifier.
@@ -86,5 +100,28 @@ public class Survey {
      */
     public void setClosed(Boolean closed) {
         this.closed = closed;
+    }
+
+    /**
+     * @param completions - completions of the survey.
+     */
+    public void setCompletions(List<SurveyCompletion> completions) {
+        this.completions = completions;
+    }
+
+    /**
+     * @param completion - completion to add to survey.
+     */
+    public void addCompletion(SurveyCompletion completion) {
+        this.completions.add(completion);
+        completion.setSurvey(this);
+    }
+
+    /**
+     * @param completion - completion to remove from survey.
+     */
+    public void removeCompletion(SurveyCompletion completion) {
+        this.completions.remove(completion);
+        completion.setSurvey(null);
     }
 }
