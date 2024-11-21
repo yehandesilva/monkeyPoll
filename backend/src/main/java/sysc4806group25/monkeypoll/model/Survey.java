@@ -16,7 +16,7 @@ public class Survey {
     // Fields
     private long surveyId;
     private String description;
-    private Boolean closed;
+    private Boolean closed = false;
 
     @ManyToOne
     @JoinColumn(name = "accountId", nullable = false)
