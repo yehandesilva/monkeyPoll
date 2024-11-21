@@ -142,11 +142,17 @@ public class Account implements UserDetails {
         this.surveys = surveys;
     }
 
+    /**
+     * @param survey - survey to add to account
+     */
     public void addSurvey(Survey survey) {
         this.surveys.add(survey);
         survey.setAccount(this);
     }
 
+    /**
+     * @param survey - survey to remove from account
+     */
     public void removeSurvey(Survey survey) {
         this.surveys.remove(survey);
         survey.setAccount(null);
