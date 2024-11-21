@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import sysc4806group25.monkeypoll.Account;
+import sysc4806group25.monkeypoll.model.Account;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
 
 @RestController
