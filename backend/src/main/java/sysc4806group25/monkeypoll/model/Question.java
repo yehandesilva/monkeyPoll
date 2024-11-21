@@ -1,12 +1,11 @@
 package sysc4806group25.monkeypoll.model;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 @MappedSuperclass
+@SequenceGenerator(name="questionSeq")
 public class Question implements Serializable {
 
     // Fields
@@ -23,6 +22,8 @@ public class Question implements Serializable {
 
     // GETTERS
 
+    @Id
+    @GeneratedValue(generator="questionSeq")
     public long getQuestionId() {
         return questionId;
     }
