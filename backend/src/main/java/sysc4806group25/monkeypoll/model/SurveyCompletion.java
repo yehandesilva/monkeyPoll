@@ -2,13 +2,13 @@ package sysc4806group25.monkeypoll.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Entity
-@SequenceGenerator(name="surveyCompletionSeq")
+@SequenceGenerator(name = "surveyCompletionSeq")
 public class SurveyCompletion {
 
     // Fields
+    @Id
+    @GeneratedValue(generator = "surveyCompletionSeq")
     private long surveyCompletionId;
     private String email;
 
@@ -33,8 +33,6 @@ public class SurveyCompletion {
     /**
      * @return unique identifier for survey completion.
      */
-    @Id
-    @GeneratedValue(generator="surveyCompletionSeq")
     public long getSurveyCompletionId() {
         return this.surveyCompletionId;
     }

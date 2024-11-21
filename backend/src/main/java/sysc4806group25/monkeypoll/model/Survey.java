@@ -2,7 +2,6 @@ package sysc4806group25.monkeypoll.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class Survey {
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
-    /*@OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyCompletion> completions = new ArrayList<>();*/
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SurveyCompletion> completions = new ArrayList<>();
 
     /**
      * Empty constructor with no args for JPA
@@ -44,6 +43,13 @@ public class Survey {
     public Survey(String description, boolean closed, Account account) {
         this.description = description;
         this.closed = closed;
+        this.account = account;
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public Survey(Account account) {
         this.account = account;
     }
 
@@ -77,12 +83,12 @@ public class Survey {
         return this.closed;
     }
 
-//    /**
-//     * @return successful completions of the survey
-//     */
-//    public List<SurveyCompletion> getCompletions() {
-//        return this.completions;
-//    }
+    /**
+     * @return successful completions of the survey
+     */
+    public List<SurveyCompletion> getCompletions() {
+        return this.completions;
+    }
 
     // SETTER methods
 
@@ -114,26 +120,26 @@ public class Survey {
         this.closed = closed;
     }
 
-//    /**
-//     * @param completions - completions of the survey.
-//     */
-//    public void setCompletions(List<SurveyCompletion> completions) {
-//        this.completions = completions;
-//    }
-//
-//    /**
-//     * @param completion - completion to add to survey.
-//     */
-//    public void addCompletion(SurveyCompletion completion) {
-//        this.completions.add(completion);
-//        completion.setSurvey(this);
-//    }
-//
-//    /**
-//     * @param completion - completion to remove from survey.
-//     */
-//    public void removeCompletion(SurveyCompletion completion) {
-//        this.completions.remove(completion);
-//        completion.setSurvey(null);
-//    }
+    /**
+     * @param completions - completions of the survey.
+     */
+    public void setCompletions(List<SurveyCompletion> completions) {
+        this.completions = completions;
+    }
+
+    /**
+     * @param completion - completion to add to survey.
+     */
+    public void addCompletion(SurveyCompletion completion) {
+        this.completions.add(completion);
+        completion.setSurvey(this);
+    }
+
+    /**
+     * @param completion - completion to remove from survey.
+     */
+    public void removeCompletion(SurveyCompletion completion) {
+        this.completions.remove(completion);
+        completion.setSurvey(null);
+    }
 }
