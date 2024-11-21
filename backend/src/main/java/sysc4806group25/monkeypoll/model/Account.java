@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @SequenceGenerator(name="accountSeq")
-public class Account implements UserDetails {
+public class Account implements UserDetails, Serializable {
 
     // Fields
     private long id;
