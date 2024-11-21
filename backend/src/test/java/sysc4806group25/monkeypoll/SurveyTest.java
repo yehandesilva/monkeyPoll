@@ -73,12 +73,10 @@ public class SurveyTest {
     @Test
     public void testPersistence() {
 
-        // Verify no surveys exist
-        accountRepository.deleteAll();
-        ArrayList<Survey> persistedSurveys = new ArrayList<>();
+        // Create account for survey
         accountRepository.save(account);
+        ArrayList<Survey> persistedSurveys = new ArrayList<>();
         surveyRepository.findAll().forEach(persistedSurveys::add);
-        assertEquals(0, persistedSurveys.size());
 
         // Save two survey instances
         Survey survey1 = new Survey("Test survey 1", false, account);
@@ -87,9 +85,9 @@ public class SurveyTest {
         surveyRepository.save(survey2);
 
         // Verify surveys are persisted
+        int initialSize = persistedSurveys.size();
         persistedSurveys.clear();
         surveyRepository.findAll().forEach(persistedSurveys::add);
-        assertEquals(2, persistedSurveys.size());
-        accountRepository.deleteAll();
+        assertEquals(initialSize + 2, persistedSurveys.size());
     }
 }

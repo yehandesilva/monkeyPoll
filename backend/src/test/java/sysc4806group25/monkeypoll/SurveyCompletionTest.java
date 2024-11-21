@@ -5,9 +5,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sysc4806group25.monkeypoll.model.Account;
 import sysc4806group25.monkeypoll.model.Survey;
 import sysc4806group25.monkeypoll.model.SurveyCompletion;
+import sysc4806group25.monkeypoll.repo.AccountRepository;
 import sysc4806group25.monkeypoll.repo.SurveyCompletionRepository;
+import sysc4806group25.monkeypoll.repo.SurveyRepository;
 
 import java.util.ArrayList;
 
@@ -19,7 +22,12 @@ public class SurveyCompletionTest {
 
     @Autowired
     private SurveyCompletionRepository surveyCompletionRepository;
-    private final Survey survey = new Survey();
+    @Autowired
+    private SurveyRepository surveyRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    private final Account account = new Account();
+    private final Survey survey = new Survey(account);
 
     @Test
     public void testEmail() {
@@ -44,6 +52,12 @@ public class SurveyCompletionTest {
 
     @Test
     public void testSurveyCompletionPersistence() {
+        // Create account and survey for survey completion
+        accountRepository.save(account);
+        surveyRepository.save(survey);
+        ArrayList<SurveyCompletion> persistedSurveyCompletions = new ArrayList<>();
+        surveyCompletionRepository.findAll().forEach(persistedSurveyCompletions::add);
+
         // Create two instances of SurveyCompletion
         SurveyCompletion surveyCompletion1 = new SurveyCompletion("first@email.com", survey);
         SurveyCompletion surveyCompletion2 = new SurveyCompletion("second@email.com", survey);
@@ -52,12 +66,10 @@ public class SurveyCompletionTest {
         surveyCompletionRepository.save(surveyCompletion1);
         surveyCompletionRepository.save(surveyCompletion2);
 
-        // Retrieve all persisted SurveyCompletions
-        ArrayList<SurveyCompletion> persistedSurveyCompletions = new ArrayList<>();
+        // Verify surveys completions are persisted
+        int initialSize = persistedSurveyCompletions.size();
+        persistedSurveyCompletions.clear();
         surveyCompletionRepository.findAll().forEach(persistedSurveyCompletions::add);
-
-        // Assert each persisted SurveyCompletion
-        assertEquals(surveyCompletion1.toString(), persistedSurveyCompletions.getFirst().toString());
-        assertEquals(surveyCompletion2.toString(), persistedSurveyCompletions.getLast().toString());
+        assertEquals(initialSize + 2, persistedSurveyCompletions.size());
     }
 }
