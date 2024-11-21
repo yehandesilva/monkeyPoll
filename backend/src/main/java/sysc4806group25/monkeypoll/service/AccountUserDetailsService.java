@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sysc4806group25.monkeypoll.model.Account;
-import sysc4806group25.monkeypoll.AccountRepository;
+import sysc4806group25.monkeypoll.repo.AccountRepository;
 import sysc4806group25.monkeypoll.controller.AccountController;
 
 import java.util.Optional;
