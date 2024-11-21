@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.Test;
 import org.springframework.test.context.junit4.SpringRunner;
+import sysc4806group25.monkeypoll.repo.AccountRepository;
+import sysc4806group25.monkeypoll.model.Account;
 
 import java.util.ArrayList;
 
