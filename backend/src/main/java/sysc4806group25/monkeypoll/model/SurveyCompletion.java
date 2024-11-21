@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @SequenceGenerator(name="surveyCompletionSeq")
-public class SurveyCompletion implements Serializable {
+public class SurveyCompletion {
 
     // Fields
     private long surveyCompletionId;
@@ -21,6 +21,11 @@ public class SurveyCompletion implements Serializable {
      */
     public SurveyCompletion() {
 
+    }
+
+    public SurveyCompletion(String email, Survey survey) {
+        this.email = email;
+        this.survey = survey;
     }
 
     // GETTER methods
