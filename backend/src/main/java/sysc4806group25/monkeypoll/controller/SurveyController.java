@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/surveys")
+@RequestMapping("/survey")
 public class SurveyController {
 
     @Autowired
@@ -27,7 +27,6 @@ public class SurveyController {
     @GetMapping("/{surveyId}")
     public ResponseEntity<Survey> getSurveyById(@PathVariable long surveyId) {
         Optional<Survey> survey = surveyService.getSurveyById(surveyId);
-        System.out.println("surveys:" + surveyService.findAll());
         return survey.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
