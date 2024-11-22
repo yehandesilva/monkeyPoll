@@ -25,6 +25,21 @@ public class TextResponse {
     @JoinColumn(name = "questionId", nullable = false)
     private TextQuestion question;
 
+    /**
+     * Empty constructor with no args for JPA
+     */
+    public TextResponse() {
+
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public TextResponse(String response, TextQuestion question) {
+        this.response = response;
+        this.question = question;
+    }
+
     // GETTERS
 
     /**

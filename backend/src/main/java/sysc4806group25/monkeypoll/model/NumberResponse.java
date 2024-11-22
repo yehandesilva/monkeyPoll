@@ -25,6 +25,21 @@ public class NumberResponse implements Serializable {
     @JoinColumn(name = "questionId", nullable = false)
     private NumberQuestion question;
 
+    /**
+     * Empty constructor with no args for JPA
+     */
+    public NumberResponse() {
+
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public NumberResponse(int response, NumberQuestion question) {
+        this.response = response;
+        this.question = question;
+    }
+
     // GETTERS
 
     /**
