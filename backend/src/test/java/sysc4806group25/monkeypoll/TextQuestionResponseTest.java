@@ -5,8 +5,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sysc4806group25.monkeypoll.model.*;
-import sysc4806group25.monkeypoll.repo.*;
+import sysc4806group25.monkeypoll.model.Account;
+import sysc4806group25.monkeypoll.model.Survey;
+import sysc4806group25.monkeypoll.model.TextQuestion;
+import sysc4806group25.monkeypoll.model.TextResponse;
+import sysc4806group25.monkeypoll.repo.AccountRepository;
+import sysc4806group25.monkeypoll.repo.TextQuestionRepository;
+import sysc4806group25.monkeypoll.repo.TextResponseRepository;
 
 import java.util.ArrayList;
 
@@ -17,12 +22,12 @@ import static org.junit.Assert.assertEquals;
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class NumberQuestionTest {
+public class TextQuestionResponseTest {
 
     @Autowired
-    private NumberResponseRepository numberResponseRepository;
+    private TextResponseRepository textResponseRepository;
     @Autowired
-    private NumberQuestionRepository numberQuestionRepository;
+    private TextQuestionRepository textQuestionRepository;
     @Autowired
     private AccountRepository accountRepository;
 
@@ -34,10 +39,10 @@ public class NumberQuestionTest {
      */
     @Test
     public void testQuestionResponse() {
-        NumberQuestion question = new NumberQuestion();
+        TextQuestion question = new TextQuestion();
         assertEquals(0, question.getResponses().size());
 
-        NumberResponse response = new NumberResponse();
+        TextResponse response = new TextResponse();
         question.addResponse(response);
         assertEquals(1, question.getResponses().size());
 
@@ -50,7 +55,7 @@ public class NumberQuestionTest {
      */
     @Test
     public void testSurvey() {
-        NumberQuestion question = new NumberQuestion();
+        TextQuestion question = new TextQuestion();
         question.setSurvey(survey);
         assertEquals(survey, question.getSurvey());
     }
@@ -61,7 +66,7 @@ public class NumberQuestionTest {
     @Test
     public void testQuestion() {
         String questionStatement = "Is this a test question?";
-        NumberQuestion question = new NumberQuestion();
+        TextQuestion question = new TextQuestion();
         question.setQuestion(questionStatement);
         assertEquals(questionStatement, question.getQuestion());
     }
@@ -71,8 +76,8 @@ public class NumberQuestionTest {
      */
     @Test
     public void testResponse() {
-        NumberResponse response = new NumberResponse();
-        int newResponse = 1;
+        TextResponse response = new TextResponse();
+        String newResponse = "New response";
         response.setResponse(newResponse);
         assertEquals(newResponse, response.getResponse());
     }
@@ -82,14 +87,14 @@ public class NumberQuestionTest {
      */
     @Test
     public void testResponseQuestion() {
-        NumberResponse response = new NumberResponse();
-        NumberQuestion question = new NumberQuestion();
+        TextResponse response = new TextResponse();
+        TextQuestion question = new TextQuestion();
         response.setQuestion(question);
         assertEquals(question, response.getQuestion());
     }
 
     /**
-     * Test persistence of number question and response record in database.
+     * Test persistence of text question and response record in database.
      */
     @Test
     public void testPersistence() {
@@ -98,37 +103,36 @@ public class NumberQuestionTest {
         account.addSurvey(survey);
         accountRepository.save(account);
 
-        ArrayList<NumberQuestion> persistedNumberQuestions = new ArrayList<>();
-        numberQuestionRepository.findAll().forEach(persistedNumberQuestions::add);
-        ArrayList<NumberResponse> persistedNumberResponses = new ArrayList<>();
-        numberResponseRepository.findAll().forEach(persistedNumberResponses::add);
+        ArrayList<TextQuestion> persistedTextQuestions = new ArrayList<>();
+        textQuestionRepository.findAll().forEach(persistedTextQuestions::add);
+        ArrayList<TextResponse> persistedTextResponses = new ArrayList<>();
+        textResponseRepository.findAll().forEach(persistedTextResponses::add);
 
         // Save two text question instances
-        NumberQuestion question1 = new NumberQuestion("Question 1", survey);
-        NumberQuestion question2 = new NumberQuestion("Question 2", survey);
-        numberQuestionRepository.save(question1);
-        numberQuestionRepository.save(question2);
+        TextQuestion question1 = new TextQuestion("Question 1", survey);
+        TextQuestion question2 = new TextQuestion("Question 2", survey);
+        textQuestionRepository.save(question1);
+        textQuestionRepository.save(question2);
 
         // Add responses
-        NumberResponse response1 = new NumberResponse();
-        NumberResponse response2 = new NumberResponse();
+        TextResponse response1 = new TextResponse();
+        TextResponse response2 = new TextResponse();
         question1.addResponse(response1);
         question2.addResponse(response2);
 
         // Verify questions are persisted
-        int initialQuestionSize = persistedNumberQuestions.size();
-        persistedNumberQuestions.clear();
-        numberQuestionRepository.findAll().forEach(persistedNumberQuestions::add);
-        assertEquals(initialQuestionSize + 2, persistedNumberQuestions.size());
+        int initialQuestionSize = persistedTextQuestions.size();
+        persistedTextQuestions.clear();
+        textQuestionRepository.findAll().forEach(persistedTextQuestions::add);
+        assertEquals(initialQuestionSize + 2, persistedTextQuestions.size());
 
         // Verify responses are persisted
-        int initialResponseSize = persistedNumberResponses.size();
-        persistedNumberResponses.clear();
-        numberResponseRepository.findAll().forEach(persistedNumberResponses::add);
-        assertEquals(initialResponseSize + 2, persistedNumberQuestions.size());
-        for (NumberResponse response : persistedNumberResponses) {
+        int initialResponseSize = persistedTextResponses.size();
+        persistedTextResponses.clear();
+        textResponseRepository.findAll().forEach(persistedTextResponses::add);
+        assertEquals(initialResponseSize + 2, persistedTextQuestions.size());
+        for (TextResponse response : persistedTextResponses) {
             assertEquals(question1, response.getQuestion());
         }
     }
 }
-
