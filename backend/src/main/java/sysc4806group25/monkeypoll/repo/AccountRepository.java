@@ -12,10 +12,8 @@ import java.util.Optional;
  * @author Pathum Danthanarayana, 101181411
  * @date November 8th, 2024
  */
-
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Long> {
-    // TODO: Any custom queries can be added here
 
     Optional<Account> findByEmail(String email);
 }
