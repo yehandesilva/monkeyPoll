@@ -67,6 +67,28 @@ public class NumberQuestionResponseTest {
     }
 
     /**
+     * Test the min value of the question.
+     */
+    @Test
+    public void testQuestionMin() {
+        NumberQuestion question = new NumberQuestion();
+        int minValue = 0;
+        question.setMinValue(minValue);
+        assertEquals(minValue, question.getMinValue());
+    }
+
+    /**
+     * Test the max value of the question.
+     */
+    @Test
+    public void testQuestionMax() {
+        NumberQuestion question = new NumberQuestion();
+        int maxValue = 0;
+        question.setMaxValue(maxValue);
+        assertEquals(maxValue, question.getMaxValue());
+    }
+
+    /**
      * Test the response statement of a response.
      */
     @Test
