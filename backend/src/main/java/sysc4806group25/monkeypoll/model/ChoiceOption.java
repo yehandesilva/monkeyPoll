@@ -52,6 +52,13 @@ public class ChoiceOption {
         return question;
     }
 
+    /**
+     * @return responses that chose choice option.
+     */
+    public List<ChoiceResponse> getResponses() {
+        return responses;
+    }
+
     // SETTERS
 
     /**
@@ -73,5 +80,28 @@ public class ChoiceOption {
      */
     public void setQuestion(ChoiceQuestion question) {
         this.question = question;
+    }
+
+    /**
+     * @param responses - responses that chose choice option.
+     */
+    public void setResponses(List<ChoiceResponse> responses) {
+        this.responses = responses;
+    }
+
+    /**
+     * @param response - response that chose choice option.
+     */
+    public void addResponse(ChoiceResponse response) {
+        this.responses.add(response);
+        response.setResponse(this);
+    }
+
+    /**
+     * @param response - response that no longer chose choice option.
+     */
+    public void removeResponse(ChoiceResponse response) {
+        this.responses.remove(response);
+        response.setResponse(null);
     }
 }
