@@ -145,6 +145,22 @@ public class Survey {
     }
 
     /**
+     * @param question - question to add to survey.
+     */
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+        question.setSurvey(this);
+    }
+
+    /**
+     * @param question - question to remove from survey.
+     */
+    public void removeQuestion(Question question) {
+        this.questions.remove(question);
+        question.setSurvey(null);
+    }
+
+    /**
      * @param completion - completion to add to survey.
      */
     public void addCompletion(SurveyCompletion completion) {
