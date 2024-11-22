@@ -1,5 +1,7 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,14 +25,18 @@ public class Survey {
     private String description;
     private Boolean closed = false;
 
+    // Do not print account info with each survey
     @ManyToOne
     @JoinColumn(name = "accountId", nullable = false)
+    @JsonIgnore
     private Account account;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyCompletion> completions = new ArrayList<>();
 
+    // managed reference prevents Json from being printed recursively (bidirectional)
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Question> questions;
 
     /**
@@ -47,6 +53,7 @@ public class Survey {
         this.description = description;
         this.closed = closed;
         this.account = account;
+        this.questions = new ArrayList<>();
     }
 
     /**

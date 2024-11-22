@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 /**
@@ -23,6 +24,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "surveyId", nullable = false)
+    @JsonBackReference
     private Survey survey;
 
     /**
