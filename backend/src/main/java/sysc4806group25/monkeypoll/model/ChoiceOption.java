@@ -2,6 +2,9 @@ package sysc4806group25.monkeypoll.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The ChoiceOption class models the choice option entity for the MonkeyPoll application.
  * A choice question requires a list of possible options to choose from.
@@ -22,6 +25,9 @@ public class ChoiceOption {
     @ManyToOne
     @JoinColumn(name = "questionId", nullable = false)
     private ChoiceQuestion question;
+
+    @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChoiceResponse> responses = new ArrayList<>();
 
     // GETTERS
 
