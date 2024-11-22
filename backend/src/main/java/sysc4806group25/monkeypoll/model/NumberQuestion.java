@@ -10,10 +10,25 @@ import java.util.List;
 @Entity
 public class NumberQuestion extends Question {
 
+    /**
+     * Empty constructor with no args for JPA
+     */
+    public NumberQuestion() {
+        super();
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public NumberQuestion(String string, Survey survey) {
+        super(string, survey);
+    }
+
     // Fields
     private int minValue;
     private int maxValue;
 
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NumberResponse> responses = new ArrayList<>();
 
     // GETTERS
@@ -26,7 +41,6 @@ public class NumberQuestion extends Question {
         return maxValue;
     }
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<NumberResponse> getResponses() {
         return responses;
     }
