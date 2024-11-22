@@ -91,7 +91,7 @@ public class ChoiceQuestionResponseTest {
     }
 
     /**
-     * Test persistence of text question and response record in database.
+     * Test persistence of choice question and response record in database.
      */
     @Test
     public void testPersistence() {
@@ -100,10 +100,12 @@ public class ChoiceQuestionResponseTest {
         account.addSurvey(survey);
         accountRepository.save(account);
 
-        ArrayList<ChoiceQuestion> persistedTextQuestions = new ArrayList<>();
-        choiceQuestionRepository.findAll().forEach(persistedTextQuestions::add);
-        ArrayList<ChoiceResponse> persistedTextResponses = new ArrayList<>();
-        choiceResponseRepository.findAll().forEach(persistedTextResponses::add);
+        ArrayList<ChoiceQuestion> persistedChoiceQuestions = new ArrayList<>();
+        choiceQuestionRepository.findAll().forEach(persistedChoiceQuestions::add);
+        ArrayList<ChoiceResponse> persistedChoiceResponses = new ArrayList<>();
+        choiceResponseRepository.findAll().forEach(persistedChoiceResponses::add);
+        ArrayList<ChoiceOption> persistedChoiceOptions = new ArrayList<>();
+        choiceOptionRepository.findAll().forEach(persistedChoiceOptions::add);
 
         // Save two text question instances
         ChoiceQuestion question1 = new ChoiceQuestion("Question 1", survey);
@@ -111,25 +113,41 @@ public class ChoiceQuestionResponseTest {
         choiceQuestionRepository.save(question1);
         choiceQuestionRepository.save(question2);
 
+        // Add options
+        ChoiceOption option1 = new ChoiceOption();
+        ChoiceOption option2 = new ChoiceOption();
+        question1.addOption(option1);
+        question2.addOption(option2);
+        choiceOptionRepository.save(option1);
+        choiceOptionRepository.save(option2);
+
         // Add responses
         ChoiceResponse response1 = new ChoiceResponse();
         ChoiceResponse response2 = new ChoiceResponse();
         question1.addResponse(response1);
         question2.addResponse(response2);
+        response1.setResponse(option1);
+        response2.setResponse(option2);
+        choiceResponseRepository.save(response1);
+        choiceResponseRepository.save(response2);
+
 
         // Verify questions are persisted
-        int initialQuestionSize = persistedTextQuestions.size();
-        persistedTextQuestions.clear();
-        choiceQuestionRepository.findAll().forEach(persistedTextQuestions::add);
-        assertEquals(initialQuestionSize + 2, persistedTextQuestions.size());
+        int initialQuestionSize = persistedChoiceQuestions.size();
+        persistedChoiceQuestions.clear();
+        choiceQuestionRepository.findAll().forEach(persistedChoiceQuestions::add);
+        assertEquals(initialQuestionSize + 2, persistedChoiceQuestions.size());
+
+        // Verify options are persisted
+        int initialOptionSize = persistedChoiceOptions.size();
+        persistedChoiceOptions.clear();
+        choiceOptionRepository.findAll().forEach(persistedChoiceOptions::add);
+        assertEquals(initialOptionSize + 2, persistedChoiceOptions.size());
 
         // Verify responses are persisted
-        int initialResponseSize = persistedTextResponses.size();
-        persistedTextResponses.clear();
-        choiceResponseRepository.findAll().forEach(persistedTextResponses::add);
-        assertEquals(initialResponseSize + 2, persistedTextQuestions.size());
-        for (ChoiceResponse response : persistedTextResponses) {
-            assertEquals(question1, response.getQuestion());
-        }
+        int initialResponseSize = persistedChoiceResponses.size();
+        persistedChoiceResponses.clear();
+        choiceResponseRepository.findAll().forEach(persistedChoiceResponses::add);
+        assertEquals(initialResponseSize + 2, persistedChoiceResponses.size());
     }
 }
