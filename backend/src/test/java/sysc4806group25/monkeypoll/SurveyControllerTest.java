@@ -68,7 +68,7 @@ public class SurveyControllerTest {
         mockMvc.perform(get("/surveys/" + survey.getSurveyId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"surveyId\":1,\"description\":\"Test Survey\",\"closed\":false,\"completions\":[],\"questions\":[{\"questionId\":0,\"question\":\"Question 1\",\"responses\":[]},{\"questionId\":0,\"question\":\"Question 2\",\"responses\":[]}]}"));
+                .andExpect(content().json("{\"surveyId\":1,\"description\":\"Test Survey\",\"closed\":false,\"completions\":[],\"questions\":[{\"questionId\":0,\"question\":\"Question 1\"},{\"questionId\":0,\"question\":\"Question 2\"}]}"));
     }
 
 }
