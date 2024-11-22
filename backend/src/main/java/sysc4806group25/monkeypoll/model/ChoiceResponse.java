@@ -17,7 +17,10 @@ public class ChoiceResponse {
     @Id
     @GeneratedValue(generator = "choiceResponseSeq")
     private long responseId;
-    private long response;
+
+    @ManyToOne
+    @JoinColumn(name = "optionId", nullable = false)
+    private ChoiceOption response;
 
     @ManyToOne
     @JoinColumn(name = "questionId", nullable = false)
@@ -35,7 +38,7 @@ public class ChoiceResponse {
     /**
      * @return user response to number question.
      */
-    public long getResponse() {
+    public ChoiceOption getResponse() {
         return response;
     }
 
@@ -58,7 +61,7 @@ public class ChoiceResponse {
     /**
      * @param response - user response to number question.
      */
-    public void setResponse(long response) {
+    public void setResponse(ChoiceOption response) {
         this.response = response;
     }
 
