@@ -26,6 +26,21 @@ public class ChoiceResponse {
     @JoinColumn(name = "questionId", nullable = false)
     private ChoiceQuestion question;
 
+    /**
+     * Empty constructor with no args for JPA
+     */
+    public ChoiceResponse() {
+
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public ChoiceResponse(ChoiceOption response, ChoiceQuestion question) {
+        this.response = response;
+        this.question = question;
+    }
+
     // GETTERS
 
     /**

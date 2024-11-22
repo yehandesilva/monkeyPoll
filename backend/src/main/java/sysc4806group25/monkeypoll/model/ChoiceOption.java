@@ -29,6 +29,21 @@ public class ChoiceOption {
     @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChoiceResponse> responses = new ArrayList<>();
 
+    /**
+     * Empty constructor with no args for JPA
+     */
+    public ChoiceOption() {
+
+    }
+
+    /**
+     * Constructor for testing purposes
+     */
+    public ChoiceOption(String description, ChoiceQuestion question) {
+        this.description = description;
+        this.question = question;
+    }
+
     // GETTERS
 
     /**
