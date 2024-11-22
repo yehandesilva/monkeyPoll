@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class NumberResponse implements Serializable {
 
     // Fields
+    @Id
+    @GeneratedValue(generator = "numberResponseSeq")
     private long responseId;
     private int response;
 
@@ -18,8 +20,6 @@ public class NumberResponse implements Serializable {
 
     // GETTERS
 
-    @Id
-    @GeneratedValue(generator = "numberResponseSeq")
     public long getResponseId() {
         return responseId;
     }
