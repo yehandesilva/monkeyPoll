@@ -33,7 +33,7 @@ const Survey = () => {
                         return (
                             <div key={question.id} className="w-full">
                                 <Card title={"Question " + question.questionId} className="flex w-6">
-                                    <h2>{question.question}</h2>
+                                    <h3>{question.question}</h3>
                                     <InputTextarea autoResize value={textValue}
                                                    onChange={(e) => setTextValue(e.target.value)} rows={10} cols={40}/>
                                 </Card>
@@ -45,7 +45,7 @@ const Survey = () => {
                         return (
                             <div key={question.id} className="w-full">
                                 <Card title={"Question " + question.questionId} className="flex w-6">
-                                    <h2>{question.question}</h2>
+                                    <h3>{question.question}</h3>
                                     <div className="flex-auto">
                                         <label htmlFor="minmax" className="font-bold block mb-2">Enter a number between {question.minValue} and {question.maxValue}</label>
                                         <InputNumber inputId="minmax" value={numValue}
@@ -62,7 +62,7 @@ const Survey = () => {
                         return (
                             <div key={question.id} className="w-full">
                                 <Card title={"Question " + question.questionId} className="flex w-6">
-                                    <h2>{question.question}</h2>
+                                    <h3>{question.question}</h3>
                                     <div className="flex flex-column gap-2">
                                         {choiceOptions.map(function(choiceOption) {
                                             // Create RadioButton for each option
