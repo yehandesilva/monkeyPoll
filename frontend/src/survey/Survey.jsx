@@ -10,6 +10,7 @@ import {Button} from "primereact/button";
 import {submitSurvey} from "../api/surveyApi.js";
 import {InputText} from "primereact/inputtext";
 import {FloatLabel} from "primereact/floatlabel";
+import {Message} from "primereact/message";
 
 
 /*
@@ -49,17 +50,21 @@ const Survey = () => {
 
     // Handling clicking of submit button
     const surveySubmit = async () => {
+        // Set the user's email if they are logged in
+        if (user) {
+            console.log(email);
+            setEmail(user.email);
+        }
+
         // Check email field
-        if (!user) {
-            if (!email || typeof email == 'undefined') {
-                toast.current.show({
-                    severity: 'error',
-                    life: 3000,
-                    summary: 'Survey Submission Error',
-                    detail: 'Email is required to fill out a survey ',
-                });
-                return;
-            }
+        if (!email || typeof email == 'undefined') {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Survey Submission Error',
+                detail: 'Email is required to fill out a survey',
+            });
+            return;
         }
         // Traverse through each questionId-response pair and check its completion
         for (let [questionId, response] of responses) {
@@ -74,10 +79,8 @@ const Survey = () => {
                 return;
             }
         }
+        console.log("Email before submitting: " + email);
         // Await result of submitting survey
-        if (user) {
-            setEmail(user.email);
-        }
         const surveySubmissionStatus = await submitSurvey(survey.surveyId, email, responses);
         if (surveySubmissionStatus.success) {
             // Send the user back to the home
@@ -102,7 +105,7 @@ const Survey = () => {
                 </div>
                 <div className="flex flex-column align-items-center gap-5 pt-5">
                     {user ?
-                        <h4>Email: {user.email}</h4>
+                        <Message severity="info" text={"Submission email: " + user.email} />
                         : <div className="card flex justify-content-center">
                             <FloatLabel>
                                 <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
@@ -115,7 +118,7 @@ const Survey = () => {
                         // Question is a TextQuestion
                         if (question.type === "TextQuestion") {
                             return (
-                                <div key={question.id} className="w-full">
+                                <div key={questionId} className="w-full">
                                     <Card title={"Question " + questionId}>
                                         <h3>{questionStr}</h3>
                                         <InputTextarea autoResize value={responses.get(questionId)}
@@ -127,7 +130,7 @@ const Survey = () => {
                         // Question is a NumberQuestion
                         if (question.type === "NumberQuestion") {
                             return (
-                                <div key={question.id} className="w-full">
+                                <div key={questionId} className="w-full">
                                     <Card title={"Question " + questionId}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex-auto">
@@ -144,16 +147,17 @@ const Survey = () => {
                         if (question.type === "ChoiceQuestion") {
                             let choiceOptions = question.options;
                             return (
-                                <div key={question.id} className="w-full">
+                                <div key={questionId} className="w-full">
                                     <Card title={"Question " + questionId}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex flex-column gap-2">
                                             {choiceOptions.map(function(choiceOption) {
                                                 // Create RadioButton for each option
+                                                let choiceOptionId = choiceOption.choiceOptionId;
                                                 return (
-                                                    <div key={choiceOption.id} className="flex align-items-center">
-                                                        <RadioButton inputId={choiceOption.id} name={question} value={choiceOption.description} onChange={(e) => handleResponseChange(e, questionId)} checked={responses.get(questionId) === choiceOption.description} />
-                                                        <label htmlFor={choiceOption.id} className="ml-2">{choiceOption.description}</label>
+                                                    <div key={choiceOptionId} className="flex align-items-center">
+                                                        <RadioButton inputId={choiceOptionId} name={question} value={choiceOption.description} onChange={(e) => handleResponseChange(e, questionId)} checked={responses.get(questionId) === choiceOption.description} />
+                                                        <label htmlFor={choiceOptionId} className="ml-2">{choiceOption.description}</label>
                                                     </div>
                                                 );
                                             })}
