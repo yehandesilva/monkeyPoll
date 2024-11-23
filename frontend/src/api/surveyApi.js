@@ -30,6 +30,42 @@ export const getSurvey = async (id) => {
 // Submits the completed survey.
 // Return:
 // - Success: True if survey is successfully fetched
-export const submitSurvey = async(survey) => {
-    let completedSurvey = survey;
+export const submitSurvey = async(surveyId, responses) => {
+    // Create a new map with the following structure:
+    /**
+     * {
+     *     'responses': [
+     *         {
+     *             'questionId': <questionId>,
+     *             'response': <response>
+     *         },
+     *         {
+     *             'questionId': <questionId>,
+     *             'response': <response>
+     *         },
+     *         ...
+     *     ]
+     * }
+     */
+    // Convert responses map to Array and structure as above
+    const responsesArr = Array.from(responses, ([questionId, response]) => ({questionId, response}));
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({responses: responsesArr}),
+    };
+
+    // Send request and await response from server
+    const response = await fetch(`survey/${surveyId}`, requestOptions);
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to submit survey response"
+        }
+    }
+    if (response.ok) {
+        status.success = true;
+        status.body = await response.json();
+    }
+    return status;
 }
