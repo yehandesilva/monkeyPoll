@@ -1,13 +1,12 @@
 import {useContext, useRef, useState} from "react";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { InputTextarea } from 'primereact/inputtextarea';
-import {Knob} from "primereact/knob";
 import {RadioButton} from "primereact/radiobutton";
 import {Card} from "primereact/card";
 import {InputNumber} from "primereact/inputnumber";
 import {Toast} from "primereact/toast";
 import {Button} from "primereact/button";
-import {getSurvey, submitSurvey} from "../api/surveyApi.js";
+import {submitSurvey} from "../api/surveyApi.js";
 
 
 /*
