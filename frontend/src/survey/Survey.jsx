@@ -25,7 +25,8 @@ const Survey = () => {
 
     // Create useState hook to keep track of the user's response for each question
     // for each question using a Map -> [questionId, response] is the key-value pair
-    const [responses, setResponses] = useState(new Map(surveyQuestions.map((question) => [question.questionId, null])));
+    const [responses, setResponses] = useState(new Map(surveyQuestions.map((question) => [question.questionId, undefined])));
+
     // Handle response change by updating the Map with the new value for the key
     const handleResponseChange = (e, questionId) => {
         const updatedResponse = e.target.value;
@@ -41,42 +42,32 @@ const Survey = () => {
         setShowMainPage(!!showMainPage);
     }, [showMainPage]);
 
-
     // Handling clicking of submit button
     const surveySubmit = async () => {
-        if (textValue && numValue && option) {
-            const surveySubmissionStatus = await submitSurvey(survey);
-            if (surveySubmissionStatus.success) {
-                // Send the user back to the home
-                setShowMainPage(surveySubmissionStatus.body);
-            } else {
+        // Traverse through each questionId-response pair and check its completion
+        for (let [questionId, response] of responses) {
+            // Incomplete response
+            if (!response || typeof response == 'undefined') {
                 toast.current.show({
                     severity: 'error',
                     life: 3000,
                     summary: 'Survey Submission Error',
-                    detail: surveySubmissionStatus.body.message,
+                    detail: 'Response is required for Question ' + questionId,
                 });
+                return;
             }
-        } else if (textValue === "") {
+        }
+        // Await result of submitting survey
+        const surveySubmissionStatus = await submitSurvey(survey.surveyId, responses);
+        if (surveySubmissionStatus.success) {
+            // Send the user back to the home
+            setShowMainPage(surveySubmissionStatus.body);
+        } else {
             toast.current.show({
                 severity: 'error',
                 life: 3000,
                 summary: 'Survey Submission Error',
-                detail: 'Text response is required',
-            });
-        } else if (!numValue) {
-            toast.current.show({
-                severity: 'error',
-                life: 3000,
-                summary: 'Survey Submission Error',
-                detail: 'Number response is required',
-            });
-        } else if (!option) {
-            toast.current.show({
-                severity: 'error',
-                life: 3000,
-                summary: 'Survey Submission Error',
-                detail: 'Choice response is required',
+                detail: surveySubmissionStatus.body.message,
             });
         }
     }
