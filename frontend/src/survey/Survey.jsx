@@ -78,7 +78,7 @@ const Survey = () => {
                 return;
             }
         }
-        console.log("Email before submitting: " + email);
+
         // Await result of submitting survey
         const surveySubmissionStatus = await submitSurvey(survey.surveyId, email, responses);
         if (surveySubmissionStatus.success) {
