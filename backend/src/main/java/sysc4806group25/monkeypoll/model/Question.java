@@ -21,6 +21,7 @@ public class Question {
     @GeneratedValue(generator="questionSeq")
     private long questionId;
     private String question;
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "surveyId", nullable = false)
@@ -39,6 +40,7 @@ public class Question {
      */
     public Question(String question, Survey survey) {
         this.question = question;
+        this.type = this.getClass().getSimpleName();
         this.survey = survey;
     }
 
@@ -65,6 +67,13 @@ public class Question {
         return survey;
     }
 
+    /**
+     * @return the type of the question (i.e. TextQuestion)
+     */
+    public String getType() {
+        return type;
+    }
+
     // SETTERS
 
     /**
@@ -86,5 +95,12 @@ public class Question {
      */
     public void setSurvey(Survey survey) {
         this.survey = survey;
+    }
+
+    /**
+     * @param type - type of the question to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }
