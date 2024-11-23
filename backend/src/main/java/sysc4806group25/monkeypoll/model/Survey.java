@@ -2,10 +2,12 @@ package sysc4806group25.monkeypoll.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Survey class models the survey entity for the MonkeyPoll application.
@@ -84,6 +86,16 @@ public class Survey {
      */
     public String getDescription() {
         return this.description;
+    }
+
+    /**
+     * @return list of question types in the survey
+     */
+    @JsonProperty("questionTypes")
+    public List<String> getQuestionTypes() {
+        return questions.stream()
+                .map(question -> question.getClass().getSimpleName())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -182,4 +194,5 @@ public class Survey {
         this.completions.remove(completion);
         completion.setSurvey(null);
     }
+
 }
