@@ -21,7 +21,6 @@ export const getSurvey = async (id) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
-        console.log(status.body);
     }
 
     return status;
@@ -67,5 +66,7 @@ export const submitSurvey = async(surveyId, responses) => {
         status.success = true;
         status.body = await response.json();
     }
+
+    // Return response status
     return status;
 }

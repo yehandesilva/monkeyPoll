@@ -30,11 +30,8 @@ const Survey = () => {
     // Handle response change by updating the Map with the new value for the key
     const handleResponseChange = (e, questionId) => {
         const updatedResponse = e.target.value;
-        console.log("Target value: " + updatedResponse);
-        console.log("Question id: " + questionId);
         // Update the response value for the question and create new Map to force re-render
         setResponses(new Map(responses.set(questionId, updatedResponse)));
-        console.log(responses.entries());
     }
 
     // Hook to direct user back to main MonkeyPoll page after survey submission
