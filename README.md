@@ -54,12 +54,11 @@ mvn spring-boot:run
 ## Diagrams:
 
 ### Model - UML Class Diagram:
-We have a single model class for each entity in the system. 
-Each model class has a corresponding controller class that handles API requests for that entity.
+See below for the complete UML class diagram showcasing all models and relationships within the MonkeyPoll application.
 ![UML class diagram for models](diagrams/current/UMLDiagram.png)
 
 ### Database Schema:
-We have a single table for each entity in the system. For now, we have a table for Account. 
+See below for the complete ER model of how the entities of the MonkeyPoll application are stored in an actual relational database.
 ![Database schema](diagrams/current/ERDiagram.png)
 
 ## Milestones:
@@ -73,7 +72,15 @@ We have a single table for each entity in the system. For now, we have a table f
 - Implemented account authentication to authenticate user credentials upon log in
 - Created up to date UML class diagrams and database schema
 
-### Plans For Next Milestone - Alpha Release:
-- Implement all other required entities and controllers along with corresponding JUnit tests
-- Allow users to create and share surveys
-- Allow users to complete surveys shared with them
+### Milestone 2 - Alpha Release:
+- Created a database schema to handle the functionaliy proposed by the application (Represented by diagrams created)
+- Implemented all remaining entities with corresponding Junit tests
+- Adjusted authentication to ensure proper persistence across sesssions
+- Created a survey controller to get specified surveys and post given surveys along with corresponding Junit tests
+- Added user interface on frontend to allow users to create surveys
+- Added user interface on frontend to allow users to get, fill out and submit surveys
+
+### Plans For Next Milestone - Final Demo:
+- Allow creators of surveys to close their surveys, preventing any more responses
+- Analyze the reponses of surveys and display the results to owners of surveys
+- Incorporate an alternative to our ORM as per the project topic
