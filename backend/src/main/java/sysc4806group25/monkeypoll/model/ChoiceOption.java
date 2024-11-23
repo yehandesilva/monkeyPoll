@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class ChoiceOption {
     private ChoiceQuestion question;
 
     @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ChoiceResponse> responses = new ArrayList<>();
 
     /**

@@ -1,6 +1,5 @@
 package sysc4806group25.monkeypoll.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,15 +33,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**","/error", "/register", "/login").permitAll()
+                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**").permitAll()
                         .anyRequest().authenticated()
-
                 )
                 .httpBasic(withDefaults())
                 .logout((logout) -> logout.addLogoutHandler(new SecurityContextLogoutHandler()))
-                .csrf(csrf->
-                        csrf.ignoringRequestMatchers("/register", "/login", "/logout") // this allows us to test using postman
-                );
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/surveys/")); // this allows us to test using postman
 
         return http.build();
     }
@@ -56,5 +52,4 @@ public class SecurityConfig {
 
         return new ProviderManager(authenticationProvider);
     }
-
 }

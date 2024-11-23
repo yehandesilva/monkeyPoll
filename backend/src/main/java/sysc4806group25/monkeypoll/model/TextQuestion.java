@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -33,6 +34,7 @@ public class TextQuestion extends Question {
 
     // Fields
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<TextResponse> responses = new ArrayList<>();
 
     // GETTERS

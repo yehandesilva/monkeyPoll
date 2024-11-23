@@ -1,9 +1,13 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Survey class models the survey entity for the MonkeyPoll application.
@@ -23,14 +27,18 @@ public class Survey {
     private String description;
     private Boolean closed = false;
 
+    // Do not print account info with each survey
     @ManyToOne
     @JoinColumn(name = "accountId", nullable = false)
+    @JsonIgnore
     private Account account;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyCompletion> completions = new ArrayList<>();
 
+    // managed reference prevents Json from being printed recursively (bidirectional)
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Question> questions;
 
     /**
@@ -47,6 +55,7 @@ public class Survey {
         this.description = description;
         this.closed = closed;
         this.account = account;
+        this.questions = new ArrayList<>();
     }
 
     /**
@@ -77,6 +86,16 @@ public class Survey {
      */
     public String getDescription() {
         return this.description;
+    }
+
+    /**
+     * @return list of question types in the survey
+     */
+    @JsonProperty("questionTypes")
+    public List<String> getQuestionTypes() {
+        return questions.stream()
+                .map(question -> question.getClass().getSimpleName())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -175,4 +194,5 @@ public class Survey {
         this.completions.remove(completion);
         completion.setSurvey(null);
     }
+
 }
