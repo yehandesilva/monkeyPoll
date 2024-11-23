@@ -1,4 +1,4 @@
-import {useContext, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { InputTextarea } from 'primereact/inputtextarea';
 import {RadioButton} from "primereact/radiobutton";
@@ -19,18 +19,26 @@ const Survey = () => {
     const [textValue, setTextValue] = useState('');
     const [numValue, setNumValue] = useState(0);
     const [option, setOption] = useState('');
+
     const toast = useRef(null);
+    const [showMainPage, setShowMainPage] = useState(false);
 
     let surveyQuestions = survey.questions;
     // Sort the array of questions based on questionId
     surveyQuestions.sort((a, b) => a.questionId - b.questionId);
+
+    // Hook to direct user back to main MonkeyPoll page after survey submission
+    useEffect(() => {
+        setShowMainPage(!!showMainPage);
+    }, [showMainPage]);
 
     // Handling clicking of submit button
     const surveySubmit = async () => {
         if (textValue && numValue && option) {
             const surveySubmissionStatus = await submitSurvey(survey);
             if (surveySubmissionStatus.success) {
-                //setSurvey(surveyStatus.body);
+                // Send the user back to the home
+                setShowMainPage(surveySubmissionStatus.body);
             } else {
                 toast.current.show({
                     severity: 'error',
