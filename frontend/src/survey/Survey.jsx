@@ -31,8 +31,8 @@ const Survey = () => {
         const updatedResponse = e.target.value;
         console.log("Target value: " + updatedResponse);
         console.log("Question id: " + questionId);
-        // New map will be created using the previous map, and setting the new value for the key
-        setResponses((originalResponses) => new Map(originalResponses).set(questionId, updatedResponse));
+        // Update the response value for the question and create new Map to force re-render
+        setResponses(new Map(responses.set(questionId, updatedResponse)));
         console.log(responses.entries());
     }
 
