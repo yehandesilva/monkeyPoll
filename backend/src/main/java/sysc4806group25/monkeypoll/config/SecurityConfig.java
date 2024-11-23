@@ -33,12 +33,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**").permitAll()
+                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/**").permitAll()
+                        .requestMatchers("/{userId}/survey/create").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 .logout((logout) -> logout.addLogoutHandler(new SecurityContextLogoutHandler()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/survey/")); // this allows us to test using postman
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/**")); // this allows us to test using postman
 
         return http.build();
     }
