@@ -30,7 +30,6 @@ const Survey = () => {
     surveyQuestions.sort((a, b) => a.questionId - b.questionId);
 
     const toast = useRef(null);
-    const [showMainPage, setShowMainPage] = useState(false);
 
     // Create useState hook to keep track of the user's response for each question
     // for each question using a Map -> [questionId, response] is the key-value pair
@@ -42,11 +41,6 @@ const Survey = () => {
         // Update the response value for the question and create new Map to force re-render
         setResponses(new Map(responses.set(questionId, updatedResponse)));
     }
-
-    // Hook to direct user back to main MonkeyPoll page after survey submission
-    useEffect(() => {
-        setShowMainPage(!!showMainPage);
-    }, [showMainPage]);
 
     // Hook to update the email with the logged-in user's email
     useEffect(() => {
@@ -88,8 +82,13 @@ const Survey = () => {
         // Await result of submitting survey
         const surveySubmissionStatus = await submitSurvey(survey.surveyId, email, responses);
         if (surveySubmissionStatus.success) {
-            // Send the user back to the home
-            setShowMainPage(surveySubmissionStatus.body);
+            // Show success message
+            toast.current.show({
+                severity: 'success',
+                life: 3000,
+                summary: 'Survey response submitted successfully',
+                detail: 'Response submitted',
+            });
         } else {
             toast.current.show({
                 severity: 'error',

@@ -15,7 +15,6 @@ const App = () => {
     // Get reference to survey and user context
     const [survey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
-    console.log(user);
     return (
         <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
             <MenuBar/>
