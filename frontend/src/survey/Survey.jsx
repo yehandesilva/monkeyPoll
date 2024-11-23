@@ -1,6 +1,7 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { UserContext } from "../context/UserContext.jsx";
+import {validateEmail} from "../modules/validation.js";
 import { InputTextarea } from 'primereact/inputtextarea';
 import {RadioButton} from "primereact/radiobutton";
 import {Card} from "primereact/card";
@@ -55,7 +56,7 @@ const Survey = () => {
         if (user) {
             setEmail(user.email);
         }
-        // Check email field
+        // Check if email is not specified
         if (!email || typeof email == 'undefined') {
             toast.current.show({
                 severity: 'error',
@@ -64,7 +65,16 @@ const Survey = () => {
                 detail: 'Email is required to fill out a survey',
             });
             return;
+        } else if (!validateEmail(email)) {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Survey Submission Error',
+                detail: 'Incorrect email format',
+            });
+            return;
         }
+
         // Traverse through each questionId-response pair and check its completion
         for (let [questionId, response] of responses) {
             // Incomplete response
