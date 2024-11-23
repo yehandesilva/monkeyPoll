@@ -13,7 +13,7 @@ const App = () => {
     return (
         <SurveyProvider>
             <UserProvider>
-                <div className="h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
+                <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
                     <MenuBar/>
                     <Welcome/>
                 </div>
