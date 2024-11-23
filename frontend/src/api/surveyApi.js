@@ -54,7 +54,6 @@ export const submitSurvey = async(surveyId, email, responses) => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({email: email, responses: responsesArr}),
     };
-    console.log(requestOptions.body)
 
     // Send request and await response from server
     const response = await fetch(`survey/${surveyId}`, requestOptions);
