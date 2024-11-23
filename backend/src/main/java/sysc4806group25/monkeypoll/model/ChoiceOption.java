@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -25,6 +26,7 @@ public class ChoiceOption {
 
     @ManyToOne
     @JoinColumn(name = "questionId", nullable = false)
+    @JsonBackReference
     private ChoiceQuestion question;
 
     @OneToMany(mappedBy = "response", cascade = CascadeType.ALL, orphanRemoval = true)

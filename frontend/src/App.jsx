@@ -2,23 +2,28 @@ import 'primereact/resources/themes/lara-dark-green/theme.css';
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
-import {SurveyProvider} from "./context/SurveyContext.jsx";
-import {UserProvider} from "./context/UserContext.jsx";
 import Welcome from "./welcome/Welcome.jsx";
 import MenuBar from "./MenuBar.jsx";
+import {useContext} from "react";
 import Home from "./home/Home.jsx";
+import Survey from "./survey/Survey.jsx";
+import {SurveyContext} from "./context/SurveyContext.jsx";
+import {UserContext} from "./context/UserContext.jsx";
 
 const App = () => {
 
+    // Get reference to survey and user context
+    const [survey] = useContext(SurveyContext);
+    const [user] = useContext(UserContext);
     return (
-        <SurveyProvider>
-            <UserProvider>
-                <div className="h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
-                    <MenuBar/>
-                    <Welcome/>
-                </div>
-            </UserProvider>
-        </SurveyProvider>
+        <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
+            <MenuBar/>
+            { survey ? (
+                <Survey />
+            ) : user ? (
+                <Home />
+            ) : <Welcome/>}
+        </div>
     )
 }
 

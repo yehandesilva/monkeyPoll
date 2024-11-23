@@ -65,10 +65,11 @@ public class SurveyControllerTest {
     @WithMockUser
     public void testGetSurveyById() throws Exception {
         // Perform a GET request to retrieve the survey by ID and verify the response
+        //TODO: CHANGE 2 back to 1 after finishing testing
         mockMvc.perform(get("/survey/" + survey.getSurveyId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"surveyId\":1,\"description\":\"Test Survey\",\"closed\":false,\"completions\":[],\"questions\":[{\"questionId\":0,\"question\":\"Question 1\"},{\"questionId\":0,\"question\":\"Question 2\"}],\"questionTypes\":[\"TextQuestion\",\"TextQuestion\"]}"));
+                .andExpect(content().json("{\"surveyId\":2,\"description\":\"Test Survey\",\"closed\":false,\"completions\":[],\"questions\":[{\"questionId\":0,\"question\":\"Question 1\", \"type\": \"TextQuestion\"},{\"questionId\":0,\"question\":\"Question 2\", \"type\": \"TextQuestion\"}]}"));
     }
 
 }

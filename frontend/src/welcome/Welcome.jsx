@@ -5,19 +5,12 @@ import { InputText } from 'primereact/inputtext';
 import { getSurvey } from "../api/surveyApi.js";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { UserContext } from "../context/UserContext.jsx";
-import Home from '../home/Home.jsx';
 
 const Welcome = () => {
     const toast = useRef(null);
     const [survey, setSurvey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
-    const [isSurveyEnabled, setIsSurveyEnabled] = useState(false);
-    const [showHome, setShowHome] = useState(false);
-
-    useEffect(() => {
-        setShowHome(!!(user || survey));
-    }, [user, survey]);
 
     const codeSubmit = async () => {
         if (code) {
@@ -42,14 +35,10 @@ const Welcome = () => {
         }
     }
 
-    if (showHome) {
-        return <Home />;
-    }
-
     return (
         <>
             <Toast ref={toast} />
-            <div className="flex flex-column justify-content-center align-items-center gap-4 h-full">
+            <div className="flex flex-column justify-content-center align-items-center gap-4 h-full pt-8">
                 <div className="flex justify-content-center">
                     <img src="monkeypoll-full-white.svg" alt="MonkeyPoll Logo"
                          style={{ width: '50%', maxWidth: '1080px', height: 'auto' }} />
@@ -57,13 +46,11 @@ const Welcome = () => {
                 <div className="flex pb-4">
                     <p style={{ fontSize: '1.4rem' }}>Polls made simple.</p>
                 </div>
-                {isSurveyEnabled && (
-                    <div className="flex gap-2">
-                        <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
-                                   className="p-inputtext-lg" />
-                        <Button icon="pi pi-arrow-right" size="large" style={{ boxShadow: "none" }} onClick={() => codeSubmit()} />
-                    </div>
-                )}
+                <div className="flex gap-2">
+                    <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
+                               className="p-inputtext-lg" />
+                    <Button icon="pi pi-arrow-right" size="large" style={{ boxShadow: "none" }} onClick={() => codeSubmit()} />
+                </div>
             </div>
         </>
     )

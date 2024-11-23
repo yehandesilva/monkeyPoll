@@ -38,7 +38,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(withDefaults())
                 .logout((logout) -> logout.addLogoutHandler(new SecurityContextLogoutHandler()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/surveys/")); // this allows us to test using postman
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/survey/")); // this allows us to test using postman
 
         return http.build();
     }
