@@ -21,7 +21,15 @@ export const getSurvey = async (id) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+        console.log(status.body);
     }
 
     return status;
+}
+
+// Submits the completed survey.
+// Return:
+// - Success: True if survey is successfully fetched
+export const submitSurvey = async(survey) => {
+    let completedSurvey = survey;
 }
