@@ -48,14 +48,19 @@ const Survey = () => {
         setShowMainPage(!!showMainPage);
     }, [showMainPage]);
 
+    // Hook to update the email with the logged-in user's email
+    useEffect(() => {
+        if (user) {
+            setEmail(user.email);
+        }
+    }, [user]);
+
     // Handling clicking of submit button
     const surveySubmit = async () => {
         // Set the user's email if they are logged in
         if (user) {
-            console.log(email);
             setEmail(user.email);
         }
-
         // Check email field
         if (!email || typeof email == 'undefined') {
             toast.current.show({
