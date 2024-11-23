@@ -19,6 +19,8 @@ const Survey = () => {
     const [option, setOption] = useState('');
 
     let surveyQuestions = survey.questions;
+    // Sort the array of questions based on questionId
+    surveyQuestions.sort((a, b) => a.questionId - b.questionId);
 
     return (
         <div className="align-items-center pt-8">
