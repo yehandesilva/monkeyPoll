@@ -5,26 +5,12 @@ import { InputText } from 'primereact/inputtext';
 import { getSurvey } from "../api/surveyApi.js";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { UserContext } from "../context/UserContext.jsx";
-import Home from '../home/Home.jsx';
-import Survey from "../survey/Survey.jsx";
 
 const Welcome = () => {
     const toast = useRef(null);
     const [survey, setSurvey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
-    const [showHome, setShowHome] = useState(false);
-    const [showSurvey, setShowSurvey] = useState(false);
-
-    useEffect(() => {
-        setShowHome(!!user);
-    }, [user]);
-
-    // Only direct user to the Survey's page if the survey
-    // has been set (valid survey returned from backend)
-    useEffect( () => {
-        setShowSurvey(!!survey);
-    }, [survey]);
 
     const codeSubmit = async () => {
         if (code) {
@@ -47,16 +33,6 @@ const Welcome = () => {
                 detail: 'Survey code is required',
             });
         }
-    }
-
-    if (showHome) {
-        return <Home />;
-    }
-    // Return the Survey page if valid survey returned
-    // from the backend, so the user can fill it out and
-    // submit their response
-    if (showSurvey) {
-        return <Survey />;
     }
 
     return (

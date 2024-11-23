@@ -1,5 +1,6 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import { SurveyContext } from "../context/SurveyContext.jsx";
+import { UserContext } from "../context/UserContext.jsx";
 import { InputTextarea } from 'primereact/inputtextarea';
 import {RadioButton} from "primereact/radiobutton";
 import {Card} from "primereact/card";
@@ -7,6 +8,8 @@ import {InputNumber} from "primereact/inputnumber";
 import {Toast} from "primereact/toast";
 import {Button} from "primereact/button";
 import {submitSurvey} from "../api/surveyApi.js";
+import {InputText} from "primereact/inputtext";
+import {FloatLabel} from "primereact/floatlabel";
 
 
 /*
@@ -14,10 +17,15 @@ The Survey component models a Survey that the user can fill
 out and submit.
  */
 const Survey = () => {
-    // Get reference to survey
+    // Get reference to survey and user context
     const [survey] = useContext(SurveyContext);
-    const surveyQuestions = survey.questions;
+    const [user] = useContext(UserContext);
+
+    // useState hook for setting/getting user's email address (if not logged in)
+    const [email, setEmail] = useState('');
+
     // Sort the array of questions based on questionId
+    const surveyQuestions = survey.questions;
     surveyQuestions.sort((a, b) => a.questionId - b.questionId);
 
     const toast = useRef(null);
@@ -41,6 +49,18 @@ const Survey = () => {
 
     // Handling clicking of submit button
     const surveySubmit = async () => {
+        // Check email field
+        if (!user) {
+            if (!email || typeof email == 'undefined') {
+                toast.current.show({
+                    severity: 'error',
+                    life: 3000,
+                    summary: 'Survey Submission Error',
+                    detail: 'Email is required to fill out a survey ',
+                });
+                return;
+            }
+        }
         // Traverse through each questionId-response pair and check its completion
         for (let [questionId, response] of responses) {
             // Incomplete response
@@ -55,7 +75,10 @@ const Survey = () => {
             }
         }
         // Await result of submitting survey
-        const surveySubmissionStatus = await submitSurvey(survey.surveyId, responses);
+        if (user) {
+            setEmail(user.email);
+        }
+        const surveySubmissionStatus = await submitSurvey(survey.surveyId, email, responses);
         if (surveySubmissionStatus.success) {
             // Send the user back to the home
             setShowMainPage(surveySubmissionStatus.body);
@@ -75,10 +98,18 @@ const Survey = () => {
             <div className="flex flex-column align-items-center pt-8 pb-8">
                 <div className="flex flex-column align-items-center">
                     <h1>{survey.description}</h1>
-                    <h4>Survey code: {survey.surveyId}</h4>
+                    <h3>Survey code: {survey.surveyId}</h3>
                 </div>
                 <div className="flex flex-column align-items-center gap-5 pt-5">
-                    {surveyQuestions.map(function(question) {
+                    {user ?
+                        <h4>Email: {user.email}</h4>
+                        : <div className="card flex justify-content-center">
+                            <FloatLabel>
+                                <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                <label htmlFor="email">Email address</label>
+                            </FloatLabel>
+                        </div>}
+                    {surveyQuestions.map(function (question) {
                         let questionId = question.questionId;
                         let questionStr = question.question;
                         // Question is a TextQuestion

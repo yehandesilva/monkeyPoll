@@ -29,10 +29,11 @@ export const getSurvey = async (id) => {
 // Submits the completed survey.
 // Return:
 // - Success: True if survey is successfully fetched
-export const submitSurvey = async(surveyId, responses) => {
+export const submitSurvey = async(surveyId, email, responses) => {
     // Create a new map with the following structure:
     /**
      * {
+     *     'email': 'someemail@gmail.com',
      *     'responses': [
      *         {
      *             'questionId': <questionId>,
@@ -51,8 +52,9 @@ export const submitSurvey = async(surveyId, responses) => {
     const requestOptions = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({responses: responsesArr}),
+        body: JSON.stringify({email: email, responses: responsesArr}),
     };
+    console.log(requestOptions.body)
 
     // Send request and await response from server
     const response = await fetch(`survey/${surveyId}`, requestOptions);
