@@ -89,16 +89,6 @@ public class Survey {
     }
 
     /**
-     * @return list of question types in the survey
-     */
-    @JsonProperty("questionTypes")
-    public List<String> getQuestionTypes() {
-        return questions.stream()
-                .map(question -> question.getClass().getSimpleName())
-                .collect(Collectors.toList());
-    }
-
-    /**
      * @return true if the survey is closed, false otherwise
      */
     public Boolean getClosed() {
