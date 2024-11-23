@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,25 +42,26 @@ public class SurveyControllerTest {
 
     @BeforeEach
     public void setUp() {
-        // Create and save an account
-        Account account = new Account();
-        accountRepository.save(account);
-
-        // Create and save a survey associated with the account
-        survey = new Survey("Test Survey", false, account);
-        account.addSurvey(survey);
-        surveyRepository.save(survey);
-
-        // Create and add questions to the survey
-        TextQuestion question1 = new TextQuestion("Question 1", survey);
-        TextQuestion question2 = new TextQuestion("Question 2", survey);
-        survey.addQuestion(question1);
-        survey.addQuestion(question2);
-        surveyRepository.save(survey);
-
-        // Mock the surveyService to return the created survey when queried by ID
-        when(surveyService.getSurveyById(survey.getSurveyId())).thenReturn(Optional.of(survey));
+//        // Create and save an account
+//        Account account = new Account();
+//        accountRepository.save(account);
+//
+//        // Create and save a survey associated with the account
+//        survey = new Survey("Test Survey", false, account);
+//        account.addSurvey(survey);
+//        surveyRepository.save(survey);
+//
+//        // Create and add questions to the survey
+//        TextQuestion question1 = new TextQuestion("Question 1", survey);
+//        TextQuestion question2 = new TextQuestion("Question 2", survey);
+//        survey.addQuestion(question1);
+//        survey.addQuestion(question2);
+//        surveyRepository.save(survey);
+//
+//        // Mock the surveyService to return the created survey when queried by ID
+//        when(surveyService.getSurveyById(survey.getSurveyId())).thenReturn(Optional.of(survey));
     }
+
 
     @Test
     @WithMockUser
@@ -69,6 +71,30 @@ public class SurveyControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\"surveyId\":1,\"description\":\"Test Survey\",\"closed\":false,\"completions\":[],\"questions\":[{\"questionId\":0,\"question\":\"Question 1\"},{\"questionId\":0,\"question\":\"Question 2\"}],\"questionTypes\":[\"TextQuestion\",\"TextQuestion\"]}"));
+    }
+
+    @Test
+    public void testCreateSurvey() throws Exception {
+        this.mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"johndoe@email.com\", \"password\":\"password123\",\"firstName\":\"John\",\"lastName\":\"Doe\"}")
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        this.mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"johndoe@email.com\", \"password\":\"password123\"}")
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        this.mockMvc.perform(post("/survey/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"description\":\"New Survey\",\"closed\":false,\"questions\":[{\"question\":\"Question 1\"},{\"question\":\"Question 2\"}]}")
+                        .characterEncoding("utf-8"))
+                .andExpect(status().isCreated())
+                .andReturn();
     }
 
 }
