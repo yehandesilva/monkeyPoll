@@ -1,4 +1,4 @@
-package sysc4806group25.monkeypoll;
+package sysc4806group25.monkeypoll.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
 public class Account implements UserDetails {
 
     // Fields
+    @Id
+    @GeneratedValue(generator="accountSeq")
     private long id;
     private String firstName;
     private String lastName;
@@ -30,8 +34,8 @@ public class Account implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    //TODO: Once Survey entity is implemented, Account entity should have a list of Survey objects
-    // (i.e. List<Survey> surveys)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Survey> surveys = new ArrayList<>();
 
     /**
      * Empty constructor with no args for JPA
@@ -57,8 +61,6 @@ public class Account implements UserDetails {
      * (The 'id' attribute will be the single unique identifier for this entity,
      * and will be generated using the 'accountSeq' generator)
      */
-    @Id
-    @GeneratedValue(generator="accountSeq")
     public long getId() {
         return id;
     }
@@ -89,6 +91,13 @@ public class Account implements UserDetails {
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * @return surveys created by account.
+     */
+    public List<Survey> getSurveys() {
+        return this.surveys;
     }
 
 
@@ -133,6 +142,28 @@ public class Account implements UserDetails {
         this.password = password;
     }
 
+    /**
+     * @param surveys - surveys belonging to the user.
+     */
+    public void setSurveys(List<Survey> surveys) {
+        this.surveys = surveys;
+    }
+
+    /**
+     * @param survey - survey to add to account
+     */
+    public void addSurvey(Survey survey) {
+        this.surveys.add(survey);
+        survey.setAccount(this);
+    }
+
+    /**
+     * @param survey - survey to remove from account
+     */
+    public void removeSurvey(Survey survey) {
+        this.surveys.remove(survey);
+        survey.setAccount(null);
+    }
 
     /** Methods required by UserDetails interface, used for authentication **/
 
