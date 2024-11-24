@@ -30,7 +30,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/user/**").hasAuthority("ROLE_SURVEYOR")
