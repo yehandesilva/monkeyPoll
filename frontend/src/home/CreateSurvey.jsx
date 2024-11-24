@@ -8,6 +8,7 @@ import Question from "./Question.jsx";
 import {createSurvey} from "../api/surveyApi.js";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
+import question from "./Question.jsx";
 
 const CreateSurvey = () => {
     const toast = useRef(null);
@@ -28,11 +29,57 @@ const CreateSurvey = () => {
     }
 
     const onSubmit = async () => {
-        /*
-        TODO: validate inputs and adjust behaviour once creation endpoint is up.
-        right now we don't know what will be returned from the backend, so we'll likely want to add some
-        pop up to display the survey code, or return some info about the survey to populate the user's homepage
-        */
+        // Validate the form input before doing anything else, storing all error messages in a list
+        // TODO: currently only the first error is display, but storing all errors anyways in case we need them in the future
+        let validation_errors = [];
+
+        // Ensure that the survey has a name
+        if (!surveyName) {
+            validation_errors.push("A survey name is required")
+        }
+        // Ensure that each field of each question is properly filled in
+        for (const [questionId, contents] of Object.entries(questionContents)) {
+            if (!contents["prompt"]) {
+                validation_errors.push('Prompt is required for question ' + questionId);
+            }
+            if (!contents["type"]) {
+                validation_errors.push('Question Type is required for question ' + questionId);
+
+            } else {
+                let responseOptions = contents["responseOptions"];
+                if (contents["type"] === "NumberQuestion") {
+                    if (!responseOptions["min"]) {
+                        validation_errors.push('Minimum value is required for question ' + questionId);
+                    }
+                    if (!responseOptions["max"]) {
+                        validation_errors.push('Maximum value is required for question ' + questionId);
+                    }
+                } else if (contents["type"] === "ChoiceQuestion") {
+                    if (Object.entries(responseOptions).length === 0) {
+                        validation_errors.push('Option missing is required for question ' + questionId);
+                    } else {
+                        for (let option in responseOptions) {
+                            if (responseOptions.hasOwnProperty(option)) {
+                                if (!option) {
+                                    validation_errors.push('Option(s) missing for question ' + questionId);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (validation_errors.length > 0) {
+            toast.current.show({
+                severity: 'error',
+                life: 7000,
+                summary: 'Creation Input Error',
+                detail: validation_errors[0],
+            });
+            return;
+        }
 
         const creationData = formatCreationData()
 
@@ -58,7 +105,7 @@ const CreateSurvey = () => {
 
     // Format the survey data into the form expected by the backend, returning the formatted Object.
     const formatCreationData = () => {
-        let formattedQuestionList = []
+        let formattedQuestionList = [];
 
         // iterate through each Question and convert each to proper format
         for (const [questionId, contents] of Object.entries(questionContents)) {
@@ -68,7 +115,7 @@ const CreateSurvey = () => {
             }
 
             // Format the responseOptions of this question, based on the question type
-            let responseOptions = contents["responseOptions"]
+            let responseOptions = contents["responseOptions"];
             if (contents["type"] === "NumberQuestion") {
                 // For NumberQuestion types, need to add min and max value.
                 formattedQuestion = {...formattedQuestion,
@@ -76,17 +123,17 @@ const CreateSurvey = () => {
                     maxValue: responseOptions["max"]}
             } else if (contents["type"] === "ChoiceQuestion") {
                 // For ChoiceQuestion types, need to add each option in an "options" list
-                let optionsList = []
+                let optionsList = [];
                 for (let option in responseOptions) {
                     if (responseOptions.hasOwnProperty(option)) {
-                        optionsList = [...optionsList, {description: responseOptions[option]}]
+                        optionsList = [...optionsList, {description: responseOptions[option]}];
                     }
                 }
-                formattedQuestion = {...formattedQuestion, options: optionsList}
+                formattedQuestion = {...formattedQuestion, options: optionsList};
             }
             // No options needed for TextQuestion types
 
-            formattedQuestionList = [...formattedQuestionList, formattedQuestion]
+            formattedQuestionList = [...formattedQuestionList, formattedQuestion];
         }
 
         return {
