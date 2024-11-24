@@ -10,8 +10,10 @@ import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 public class SurveyController {
@@ -52,6 +54,49 @@ public class SurveyController {
         Survey createdSurvey = surveyService.createSurvey(survey);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey successfully created!\", \"surveyId\":" + createdSurvey.getSurveyId() + "}");
+    }
+
+    @GetMapping("/user/survey/{surveyId}/responses")
+    public ResponseEntity<?> getSurveyQuestionsAndResponses(@PathVariable long surveyId) {
+        Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
+        if (surveyOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+
+        Survey survey = surveyOpt.get();
+        List<Object> questionResponses = survey.getQuestions().stream().map(question -> {
+            if (question instanceof TextQuestion) {
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "TextQuestion",
+                        "responses", ((TextQuestion) question).getResponses().stream()
+                                .map(TextResponse::getResponse)
+                                .collect(Collectors.toList())
+                );
+            } else if (question instanceof NumberQuestion) {
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "NumberQuestion",
+                        "responses", ((NumberQuestion) question).getResponses().stream()
+                                .map(response -> String.valueOf(response.getResponse()))
+                                .collect(Collectors.toList())
+                );
+            } else if (question instanceof ChoiceQuestion) {
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "ChoiceQuestion",
+                        "responses", ((ChoiceQuestion) question).getResponses().stream()
+                                .map(response -> response.getResponse().getDescription())
+                                .collect(Collectors.toList())
+                );
+            }
+            return null;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(questionResponses);
     }
 
     @PostMapping("/survey/{surveyId}")
@@ -113,26 +158,8 @@ public class SurveyController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey response successfully submitted!\"}");
     }
-    //    @GetMapping("/questions")
-//    public ResponseEntity<List<Question>> getAllQuestions() {
-//        List<Question> questions = surveyService.getAllQuestions();
-//        return ResponseEntity.ok(questions);
-//    }
-//    @GetMapping("/questions/responses")
-//    public ResponseEntity<List<Question>> getAllQuestionsWithResponses() {
-//        List<Question> questions = surveyService.getAllQuestionsWithResponses();
-//        return ResponseEntity.ok(questions);
-//    }
 
-    @GetMapping("/survey/{surveyId}/responses")
-    public ResponseEntity<?> getSurveyResponses(@PathVariable long surveyId) {
-        Optional<Survey> survey = surveyService.getSurveyById(surveyId);
-        if (survey.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
-        }
 
-        List<SurveyCompletion> responses = surveyService.getSurveyResponses(surveyId);
-        return ResponseEntity.ok(responses);
-    }
+
 
 }

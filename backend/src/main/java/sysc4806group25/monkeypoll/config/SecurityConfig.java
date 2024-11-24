@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-//                        .requestMatchers("/user/**").hasAuthority("ROLE_SURVEYOR")
+                        .requestMatchers("/user/**").hasAuthority("ROLE_SURVEYOR")
                                 .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**", "/**").permitAll()
                                 .anyRequest().authenticated()
                 )
