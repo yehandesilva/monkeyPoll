@@ -15,7 +15,4 @@ import java.util.Optional;
  * @date November 21st, 2024
  */
 public interface ChoiceQuestionRepository extends CrudRepository<ChoiceQuestion, Long> {
-
-    @Query("SELECT q.questionId FROM ChoiceQuestion q")
-    List<Long> findAllQuestionIds();
 }

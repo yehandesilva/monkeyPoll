@@ -5,6 +5,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object (DTO) for submitting survey responses.
+ * This class is necessary to encapsulate the data sent from the client to the server
+ * when a user submits their responses to a survey. It ensures that the data is structured
+ * and serialized/deserialized correctly.
+ */
 public class SurveyResponseDTO {
     private String email;
     private List<ResponseDTO> responses;
@@ -27,6 +33,12 @@ public class SurveyResponseDTO {
         this.responses = responses;
     }
 
+    /**
+     * Abstract base class for different types of responses.
+     * This class is necessary to handle polymorphic response types (text, number, choice)
+     * in a single list. The @JsonTypeInfo and @JsonSubTypes annotations are used to
+     * correctly serialize/deserialize the different response types.
+     */
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = TextResponseDTO.class, name = "text"),
@@ -47,6 +59,10 @@ public class SurveyResponseDTO {
         }
     }
 
+    /**
+     * DTO for text responses.
+     * This class is necessary to encapsulate the data for text responses specifically.
+     */
     public static class TextResponseDTO extends ResponseDTO {
         private String response;
 
@@ -61,6 +77,10 @@ public class SurveyResponseDTO {
         }
     }
 
+    /**
+     * DTO for number responses.
+     * This class is necessary to encapsulate the data for number responses specifically.
+     */
     public static class NumberResponseDTO extends ResponseDTO {
         private int response;
 
@@ -75,6 +95,10 @@ public class SurveyResponseDTO {
         }
     }
 
+    /**
+     * DTO for choice responses.
+     * This class is necessary to encapsulate the data for choice responses specifically.
+     */
     public static class ChoiceResponseDTO extends ResponseDTO {
         private String response;
 

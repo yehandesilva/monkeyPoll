@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.repo.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +24,10 @@ public class SurveyService {
 
     @Autowired
     private TextResponseRepository textResponseRepository;
+
     @Autowired
     private NumberResponseRepository numberResponseRepository;
+
     @Autowired
     private ChoiceResponseRepository choiceResponseRepository;
 
@@ -46,6 +46,7 @@ public class SurveyService {
         // Save the survey (and cascade the save operation to questions, if configured correctly)
         return surveyRepository.save(survey);
     }
+
     /**
      * Retrieves a survey by its ID.
      *
@@ -57,73 +58,59 @@ public class SurveyService {
     }
 
     /**
-     * Retrieves the questions of a survey by its ID.
+     * Finds a survey completion by survey and email.
      *
-     * @param surveyId the ID of the survey
-     * @return a list of questions in the survey, or an empty list if the survey is not found
+     * @param survey the survey
+     * @param email the email of the respondent
+     * @return an Optional containing the survey completion if found, or empty if not found
      */
-    public List<Question> getSurveyQuestions(long surveyId) {
-        return surveyRepository.findById(surveyId)
-                .map(Survey::getQuestions)
-                .orElse(Collections.emptyList());
-    }
-
-
     public Optional<SurveyCompletion> findSurveyCompletionBySurveyAndEmail(Survey survey, String email) {
         return surveyCompletionRepository.findBySurveyAndEmail(survey, email);
     }
-    /**
-     * Retrieves all surveys.
-     *
-     * @return a list of all surveys
-     */
-    public List<Survey> findAll() {
-        return (List<Survey>) surveyRepository.findAll();
-    }
 
+    /**
+     * Saves a survey response.
+     *
+     * @param surveyCompletion the survey completion to be saved
+     */
     public void saveSurveyResponse(SurveyCompletion surveyCompletion) {
         surveyCompletionRepository.save(surveyCompletion);
     }
 
-    public List<SurveyCompletion> getSurveyResponses(long surveyId) {
-return surveyRepository.findById(surveyId)
-                .map(Survey::getCompletions)
-                .orElse(Collections.emptyList());
-
-    }
-
-
+    /**
+     * Retrieves a question by its ID.
+     *
+     * @param questionId the ID of the question
+     * @return an Optional containing the question if found, or empty if not found
+     */
     public Optional<Question> getQuestionById(long questionId) {
         return questionRepository.findById(questionId);
     }
 
-    public List<Long> getAllChoiceQuestionIds() {
-        return choiceQuestionRepository.findAllQuestionIds();
-    }
-
+    /**
+     * Saves a text response.
+     *
+     * @param textResponse the text response to be saved
+     */
     public void saveTextResponse(TextResponse textResponse) {
         textResponseRepository.save(textResponse);
     }
 
+    /**
+     * Saves a number response.
+     *
+     * @param numberResponse the number response to be saved
+     */
     public void saveNumberResponse(NumberResponse numberResponse) {
         numberResponseRepository.save(numberResponse);
     }
 
-    public void saveChoiceResponse(ChoiceResponse choiceResponse) { choiceResponseRepository.save(choiceResponse);
+    /**
+     * Saves a choice response.
+     *
+     * @param choiceResponse the choice response to be saved
+     */
+    public void saveChoiceResponse(ChoiceResponse choiceResponse) {
+        choiceResponseRepository.save(choiceResponse);
     }
-
-//    public List<Question> getAllQuestionsWithResponses() {
-//        List<Survey> surveys = (List<Survey>) surveyRepository.findAll();
-//        List<Question> allQuestions = new ArrayList<>();
-//
-//        for (Survey survey : surveys) {
-//            for (Question question : survey.getQuestions()) {
-//                allQuestions.add(question);
-//                List<String> responses = question.getResponses();
-//                // Process the responses as needed
-//            }
-//        }
-//
-//        return allQuestions;
-//    }
 }
