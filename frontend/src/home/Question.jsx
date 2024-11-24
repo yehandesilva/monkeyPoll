@@ -12,9 +12,9 @@ const Question = ({id, setQuestionContents}) => {
     const [responseOptions, setResponseOptions] = useState({})
 
     const questionTypes = [
-        {label: "Text Question", value: "text"},
-        {label: "Number Question", value: "number"},
-        {label: "Choice Question", value: "choice"}
+        {label: "Text Question", value: "TextQuestion"},
+        {label: "Number Question", value: "NumberQuestion"},
+        {label: "Choice Question", value: "ChoiceQuestion"}
     ]
 
     useEffect(() => {
@@ -43,11 +43,11 @@ const Question = ({id, setQuestionContents}) => {
 
     const renderTypeSelection = () => {
         switch(type) {
-            case "text":
+            case "":
                 return <InputText disabled placeholder="No response options needed" className="w-full m-auto"/>
-            case "number":
+            case "NumberQuestion":
                 return <NumberQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
-            case "choice":
+            case "ChoiceQuestion":
                 return <ChoiceQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
             default:
                 return null;

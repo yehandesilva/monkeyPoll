@@ -60,25 +60,22 @@ const CreateSurvey = () => {
     const formatCreationData = () => {
         let formattedQuestionList = []
 
+        // iterate through each Question and convert each to proper format
         for (const [questionId, contents] of Object.entries(questionContents)) {
             let formattedQuestion = {
-                question: contents["prompt"]
+                question: contents["prompt"],
+                type: contents["type"]
             }
 
+            // Format the responseOptions of this question, based on the question type
             let responseOptions = contents["responseOptions"]
-
-            if (contents["type"] === "number") {
+            if (contents["type"] === "NumberQuestion") {
                 // For NumberQuestion types, need to add min and max value.
-                formattedQuestion = {...formattedQuestion, type: "NumberQuestion"}
-
                 formattedQuestion = {...formattedQuestion,
                     min: responseOptions["min"],
                     max: responseOptions["max"]}
-            } else if (contents["type"] === "choice") {
-                // For NumberQuestion types, need to add each option in an "options" list
-
-                formattedQuestion = {...formattedQuestion, type: "ChoiceQuestion"}
-
+            } else if (contents["type"] === "ChoiceQuestion") {
+                // For ChoiceQuestion types, need to add each option in an "options" list
                 let optionsList = []
                 for (let option in responseOptions) {
                     if (responseOptions.hasOwnProperty(option)) {
@@ -86,10 +83,9 @@ const CreateSurvey = () => {
                     }
                 }
                 formattedQuestion = {...formattedQuestion, options: optionsList}
-            } else {
-                // No options needed for TextQuestion types
-                formattedQuestion = {...formattedQuestion, type: "TextQuestion"}
             }
+            // No options needed for TextQuestion types
+
             formattedQuestionList = [...formattedQuestionList, formattedQuestion]
         }
 
