@@ -34,7 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/user/**").hasAuthority("ROLE_SURVEYOR")
-                                .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**", "/**").permitAll()
+                                .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())

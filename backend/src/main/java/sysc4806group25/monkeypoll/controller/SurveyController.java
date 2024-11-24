@@ -124,31 +124,33 @@ public class SurveyController {
             Optional<Question> questionOpt = surveyService.getQuestionById(responseDTO.getQuestionId());
             if (questionOpt.isPresent()) {
                 Question question = questionOpt.get();
-                if (question instanceof TextQuestion && responseDTO instanceof SurveyResponseDTO.TextResponseDTO) {
-                    TextQuestion textQuestion = (TextQuestion) question;
-                    TextResponse textResponse = new TextResponse(((SurveyResponseDTO.TextResponseDTO) responseDTO).getResponse(), textQuestion);
-                    textQuestion.addResponse(textResponse);
-                    surveyService.saveTextResponse(textResponse); // Save the updated question
+                switch (question) {
+                    case TextQuestion textQuestion when responseDTO instanceof SurveyResponseDTO.TextResponseDTO -> {
+                        TextResponse textResponse = new TextResponse(((SurveyResponseDTO.TextResponseDTO) responseDTO).getResponse(), textQuestion);
+                        textQuestion.addResponse(textResponse);
+                        surveyService.saveTextResponse(textResponse); // Save the updated question
+                    }
+                    case NumberQuestion numberQuestion when responseDTO instanceof SurveyResponseDTO.NumberResponseDTO -> {
+                        NumberResponse numberResponse = new NumberResponse(((SurveyResponseDTO.NumberResponseDTO) responseDTO).getResponse(), numberQuestion);
+                        numberQuestion.addResponse(numberResponse);
+                        surveyService.saveNumberResponse(numberResponse); // Save the updated question
+                    }
+                    case ChoiceQuestion choiceQuestion when responseDTO instanceof SurveyResponseDTO.ChoiceResponseDTO -> {
+                        String response = ((SurveyResponseDTO.ChoiceResponseDTO) responseDTO).getResponse();
+                        Optional<ChoiceOption> choiceOptionOpt = choiceQuestion.getOptions().stream()
+                                .filter(option -> option.getDescription().equals(response))
+                                .findFirst();
+                        if (choiceOptionOpt.isPresent()) {
+                            ChoiceResponse choiceResponse = new ChoiceResponse(choiceOptionOpt.get(), choiceQuestion);
+                            choiceQuestion.addResponse(choiceResponse);
+                            surveyService.saveChoiceResponse(choiceResponse); // Save the updated question
 
-                } else if (question instanceof NumberQuestion && responseDTO instanceof SurveyResponseDTO.NumberResponseDTO) {
-                    NumberQuestion numberQuestion = (NumberQuestion) question;
-                    NumberResponse numberResponse = new NumberResponse(((SurveyResponseDTO.NumberResponseDTO) responseDTO).getResponse(), numberQuestion);
-                    numberQuestion.addResponse(numberResponse);
-                    surveyService.saveNumberResponse(numberResponse); // Save the updated question
-
-                } else if (question instanceof ChoiceQuestion && responseDTO instanceof SurveyResponseDTO.ChoiceResponseDTO) {
-                    ChoiceQuestion choiceQuestion = (ChoiceQuestion) question;
-                    String response = ((SurveyResponseDTO.ChoiceResponseDTO) responseDTO).getResponse();
-                    Optional<ChoiceOption> choiceOptionOpt = choiceQuestion.getOptions().stream()
-                            .filter(option -> option.getDescription().equals(response))
-                            .findFirst();
-                    if (choiceOptionOpt.isPresent()) {
-                        ChoiceResponse choiceResponse = new ChoiceResponse(choiceOptionOpt.get(), choiceQuestion);
-                        choiceQuestion.addResponse(choiceResponse);
-                        surveyService.saveChoiceResponse(choiceResponse); // Save the updated question
-
-                    } else {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Invalid choice option!\"}");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Invalid choice option!\"}");
+                        }
+                    }
+                    default -> {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Invalid question type!\"}");
                     }
                 }
             }
