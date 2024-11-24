@@ -1,7 +1,11 @@
 package sysc4806group25.monkeypoll.repo;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import sysc4806group25.monkeypoll.model.ChoiceQuestion;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The ChoiceQuestionRepository is responsible for managing the creation and modification of

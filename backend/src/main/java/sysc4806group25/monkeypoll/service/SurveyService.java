@@ -2,19 +2,34 @@ package sysc4806group25.monkeypoll.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sysc4806group25.monkeypoll.model.Question;
-import sysc4806group25.monkeypoll.model.Survey;
-import sysc4806group25.monkeypoll.repo.SurveyRepository;
+import sysc4806group25.monkeypoll.model.*;
+import sysc4806group25.monkeypoll.repo.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SurveyService {
+    @Autowired
+    private SurveyCompletionRepository surveyCompletionRepository;
 
     @Autowired
     private SurveyRepository surveyRepository;
+
+    @Autowired
+    private ChoiceQuestionRepository choiceQuestionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private TextResponseRepository textResponseRepository;
+
+    @Autowired
+    private NumberResponseRepository numberResponseRepository;
+
+    @Autowired
+    private ChoiceResponseRepository choiceResponseRepository;
 
     /**
      * Creates a new survey.
@@ -31,6 +46,7 @@ public class SurveyService {
         // Save the survey (and cascade the save operation to questions, if configured correctly)
         return surveyRepository.save(survey);
     }
+
     /**
      * Retrieves a survey by its ID.
      *
@@ -42,23 +58,59 @@ public class SurveyService {
     }
 
     /**
-     * Retrieves the questions of a survey by its ID.
+     * Finds a survey completion by survey and email.
      *
-     * @param surveyId the ID of the survey
-     * @return a list of questions in the survey, or an empty list if the survey is not found
+     * @param survey the survey
+     * @param email the email of the respondent
+     * @return an Optional containing the survey completion if found, or empty if not found
      */
-    public List<Question> getSurveyQuestions(long surveyId) {
-        return surveyRepository.findById(surveyId)
-                .map(Survey::getQuestions)
-                .orElse(Collections.emptyList());
+    public Optional<SurveyCompletion> findSurveyCompletionBySurveyAndEmail(Survey survey, String email) {
+        return surveyCompletionRepository.findBySurveyAndEmail(survey, email);
     }
 
     /**
-     * Retrieves all surveys.
+     * Saves a survey response.
      *
-     * @return a list of all surveys
+     * @param surveyCompletion the survey completion to be saved
      */
-    public List<Survey> findAll() {
-        return (List<Survey>) surveyRepository.findAll();
+    public void saveSurveyResponse(SurveyCompletion surveyCompletion) {
+        surveyCompletionRepository.save(surveyCompletion);
+    }
+
+    /**
+     * Retrieves a question by its ID.
+     *
+     * @param questionId the ID of the question
+     * @return an Optional containing the question if found, or empty if not found
+     */
+    public Optional<Question> getQuestionById(long questionId) {
+        return questionRepository.findById(questionId);
+    }
+
+    /**
+     * Saves a text response.
+     *
+     * @param textResponse the text response to be saved
+     */
+    public void saveTextResponse(TextResponse textResponse) {
+        textResponseRepository.save(textResponse);
+    }
+
+    /**
+     * Saves a number response.
+     *
+     * @param numberResponse the number response to be saved
+     */
+    public void saveNumberResponse(NumberResponse numberResponse) {
+        numberResponseRepository.save(numberResponse);
+    }
+
+    /**
+     * Saves a choice response.
+     *
+     * @param choiceResponse the choice response to be saved
+     */
+    public void saveChoiceResponse(ChoiceResponse choiceResponse) {
+        choiceResponseRepository.save(choiceResponse);
     }
 }
