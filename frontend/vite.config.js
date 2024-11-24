@@ -9,26 +9,12 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/register": {
-        target: 'http://localhost:8080',
+
+      '/**': {
+        target: 'https://localhost:8080',
         changeOrigin: true,
-        secure: false
+        secure: false,
       },
-      "/login": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false
-      },
-      "/logout": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false
-      },
-      "/survey": {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false
-      }
     }
   }
 })
