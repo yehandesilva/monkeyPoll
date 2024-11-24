@@ -84,7 +84,7 @@ export const createSurvey = async (surveyContents) => {
         body: JSON.stringify(surveyContents)
     };
 
-    const response = await fetch("create-survey", requestOptions);
+    const response = await fetch("/user/survey", requestOptions);
 
     const status = {
         success: false,
