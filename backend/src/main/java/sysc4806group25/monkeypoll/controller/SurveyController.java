@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import sysc4806group25.monkeypoll.dto.SurveyResponseDTO;
 import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
@@ -54,7 +55,7 @@ public class SurveyController {
     }
 
     @PostMapping("/survey/{surveyId}")
-    public ResponseEntity<String> submitSurveyResponse(@RequestBody SurveyCompletion surveyCompletion, @PathVariable long surveyId) {
+    public ResponseEntity<String> submitSurveyResponse(@RequestBody SurveyResponseDTO surveyResponseDTO, @PathVariable long surveyId) {
         Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
         if (surveyOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
@@ -66,21 +67,52 @@ public class SurveyController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Survey is closed!\"}");
         }
 
-        Optional<SurveyCompletion> existingCompletion = surveyService.findSurveyCompletionBySurveyAndEmail(survey, surveyCompletion.getEmail());
+        Optional<SurveyCompletion> existingCompletion = surveyService.findSurveyCompletionBySurveyAndEmail(survey, surveyResponseDTO.getEmail());
         if (existingCompletion.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"This email has already submitted the survey!\"}");
         }
 
-        // Set the survey property on the SurveyCompletion entity
-        surveyCompletion.setSurvey(survey);
+        SurveyCompletion surveyCompletion = new SurveyCompletion(surveyResponseDTO.getEmail(), survey);
+
+        // Process each response
+        for (SurveyResponseDTO.ResponseDTO responseDTO : surveyResponseDTO.getResponses()) {
+            Optional<Question> questionOpt = surveyService.getQuestionById(responseDTO.getQuestionId());
+            if (questionOpt.isPresent()) {
+                Question question = questionOpt.get();
+                if (question instanceof TextQuestion && responseDTO instanceof SurveyResponseDTO.TextResponseDTO) {
+                    TextQuestion textQuestion = (TextQuestion) question;
+                    TextResponse textResponse = new TextResponse(((SurveyResponseDTO.TextResponseDTO) responseDTO).getResponse(), textQuestion);
+                    textQuestion.addResponse(textResponse);
+                    surveyService.saveTextResponse(textResponse); // Save the updated question
+
+                } else if (question instanceof NumberQuestion && responseDTO instanceof SurveyResponseDTO.NumberResponseDTO) {
+                    NumberQuestion numberQuestion = (NumberQuestion) question;
+                    NumberResponse numberResponse = new NumberResponse(((SurveyResponseDTO.NumberResponseDTO) responseDTO).getResponse(), numberQuestion);
+                    numberQuestion.addResponse(numberResponse);
+                    surveyService.saveNumberResponse(numberResponse); // Save the updated question
+
+                } else if (question instanceof ChoiceQuestion && responseDTO instanceof SurveyResponseDTO.ChoiceResponseDTO) {
+                    ChoiceQuestion choiceQuestion = (ChoiceQuestion) question;
+                    String response = ((SurveyResponseDTO.ChoiceResponseDTO) responseDTO).getResponse();
+                    Optional<ChoiceOption> choiceOptionOpt = choiceQuestion.getOptions().stream()
+                            .filter(option -> option.getDescription().equals(response))
+                            .findFirst();
+                    if (choiceOptionOpt.isPresent()) {
+                        ChoiceResponse choiceResponse = new ChoiceResponse(choiceOptionOpt.get(), choiceQuestion);
+                        choiceQuestion.addResponse(choiceResponse);
+                        surveyService.saveChoiceResponse(choiceResponse); // Save the updated question
+
+                    } else {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\":\"Invalid choice option!\"}");
+                    }
+                }
+            }
+        }
 
         surveyService.saveSurveyResponse(surveyCompletion);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey response successfully submitted!\"}");
     }
-
-
-
     //    @GetMapping("/questions")
 //    public ResponseEntity<List<Question>> getAllQuestions() {
 //        List<Question> questions = surveyService.getAllQuestions();

@@ -3,9 +3,7 @@ package sysc4806group25.monkeypoll.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sysc4806group25.monkeypoll.model.*;
-import sysc4806group25.monkeypoll.repo.ChoiceQuestionRepository;
-import sysc4806group25.monkeypoll.repo.SurveyCompletionRepository;
-import sysc4806group25.monkeypoll.repo.SurveyRepository;
+import sysc4806group25.monkeypoll.repo.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +20,16 @@ public class SurveyService {
 
     @Autowired
     private ChoiceQuestionRepository choiceQuestionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private TextResponseRepository textResponseRepository;
+    @Autowired
+    private NumberResponseRepository numberResponseRepository;
+    @Autowired
+    private ChoiceResponseRepository choiceResponseRepository;
 
     /**
      * Creates a new survey.
@@ -84,8 +92,24 @@ return surveyRepository.findById(surveyId)
 
     }
 
+
+    public Optional<Question> getQuestionById(long questionId) {
+        return questionRepository.findById(questionId);
+    }
+
     public List<Long> getAllChoiceQuestionIds() {
         return choiceQuestionRepository.findAllQuestionIds();
+    }
+
+    public void saveTextResponse(TextResponse textResponse) {
+        textResponseRepository.save(textResponse);
+    }
+
+    public void saveNumberResponse(NumberResponse numberResponse) {
+        numberResponseRepository.save(numberResponse);
+    }
+
+    public void saveChoiceResponse(ChoiceResponse choiceResponse) { choiceResponseRepository.save(choiceResponse);
     }
 
 //    public List<Question> getAllQuestionsWithResponses() {
