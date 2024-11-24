@@ -3,20 +3,26 @@ package sysc4806group25.monkeypoll.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import sysc4806group25.monkeypoll.model.Account;
 import sysc4806group25.monkeypoll.model.Question;
 import sysc4806group25.monkeypoll.model.Survey;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/survey")
 public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+
+    private static final Logger logger = Logger.getLogger(SurveyController.class.getName());
 
     /**
      * Retrieves a survey by its ID.
@@ -24,23 +30,11 @@ public class SurveyController {
      * @param surveyId the ID of the survey
      * @return a ResponseEntity containing the survey if found, or a 404 status if not found
      */
-    @GetMapping("/{surveyId}")
-    public ResponseEntity<Survey> getSurveyById(@PathVariable long surveyId) {
+    @GetMapping("/survey/{surveyId}")
+    public ResponseEntity<?> getSurveyById(@PathVariable long surveyId) {
         Optional<Survey> survey = surveyService.getSurveyById(surveyId);
         return survey.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    /**
-     * Retrieves the questions of a survey by its ID.
-     *
-     * @param surveyId the ID of the survey
-     * @return a ResponseEntity containing the list of questions in the survey
-     */
-    @GetMapping("/{surveyId}/questions")
-    public ResponseEntity<List<Question>> getSurveyQuestions(@PathVariable long surveyId) {
-        List<Question> questions = surveyService.getSurveyQuestions(surveyId);
-        return ResponseEntity.ok(questions);
     }
 
     /**
@@ -49,9 +43,17 @@ public class SurveyController {
      * @param survey the survey to be created
      * @return a ResponseEntity containing the created survey with a 201 status
      */
-    @PostMapping
-    public ResponseEntity<Survey> createSurvey(@RequestBody Survey survey) {
-        Survey createdSurvey = surveyService.createSurvey(survey.getDescription(), survey.getClosed());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSurvey);
+    @PostMapping("/user/survey")
+    public ResponseEntity<String> createSurvey(@RequestBody Survey survey) {
+        logger.info("Received survey creation request: " + survey);
+        Account authenticatedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Ensure Account is set on the Survey
+        survey.setAccount(authenticatedAccount);
+
+        // Create the Survey and associate it with the Account
+        Survey createdSurvey = surveyService.createSurvey(survey);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey successfully created!\", \"surveyId\":" + createdSurvey.getSurveyId() + "}");
     }
 }

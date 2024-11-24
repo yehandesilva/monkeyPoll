@@ -14,6 +14,7 @@ import java.util.List;
  * @author Yehan De Silva
  * @date November 21st, 2024
  */
+
 @Entity
 @SequenceGenerator(name="choiceOptionSeq")
 public class ChoiceOption {
@@ -24,7 +25,7 @@ public class ChoiceOption {
     private long choiceOptionId;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "questionId", nullable = false)
     @JsonBackReference
     private ChoiceQuestion question;

@@ -1,6 +1,8 @@
 package sysc4806group25.monkeypoll.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
 /**
@@ -14,14 +16,22 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @SequenceGenerator(name="questionSeq")
-public class Question {
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ChoiceQuestion.class, name = "ChoiceQuestion"),
+        @JsonSubTypes.Type(value = NumberQuestion.class, name = "NumberQuestion"),
+        @JsonSubTypes.Type(value = TextQuestion.class, name = "TextQuestion")
+})
+public abstract class Question {
 
     // Fields
     @Id
     @GeneratedValue(generator="questionSeq")
     private long questionId;
     private String question;
-    private String type;
 
     @ManyToOne
     @JoinColumn(name = "surveyId", nullable = false)
@@ -40,7 +50,6 @@ public class Question {
      */
     public Question(String question, Survey survey) {
         this.question = question;
-        this.type = this.getClass().getSimpleName();
         this.survey = survey;
     }
 
@@ -67,12 +76,6 @@ public class Question {
         return survey;
     }
 
-    /**
-     * @return the type of the question (i.e. TextQuestion)
-     */
-    public String getType() {
-        return type;
-    }
 
     // SETTERS
 
@@ -97,10 +100,4 @@ public class Question {
         this.survey = survey;
     }
 
-    /**
-     * @param type - type of the question to set
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
 }

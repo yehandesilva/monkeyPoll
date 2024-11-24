@@ -17,17 +17,20 @@ public class SurveyService {
     private SurveyRepository surveyRepository;
 
     /**
-     * Creates a new survey with the given description and closed status.
+     * Creates a new survey.
      *
-     * @param description the description of the survey
-     * @param closed whether the survey is closed
+     * @param survey the survey to be created
      * @return the created survey
      */
-    public Survey createSurvey(String description, boolean closed) {
-        Survey survey = new Survey(description, closed, null);
+    public Survey createSurvey(Survey survey) {
+        // Ensure the questions reference the correct Survey before saving
+        for (Question question : survey.getQuestions()) {
+            question.setSurvey(survey);
+        }
+
+        // Save the survey (and cascade the save operation to questions, if configured correctly)
         return surveyRepository.save(survey);
     }
-
     /**
      * Retrieves a survey by its ID.
      *

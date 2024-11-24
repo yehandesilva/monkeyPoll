@@ -168,15 +168,17 @@ public class Account implements UserDetails {
     /** Methods required by UserDetails interface, used for authentication **/
 
     /**
-     * Accounts are assigned the role "ROLE_SERVEYOR" as account holders can make and manage surveys
+     * Accounts are assigned the role "ROLE_SURVEYOR" as account holders can make and manage surveys
      * @return the list of Authorities for this account
      */
     @Override
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
-        return List.of(new SimpleGrantedAuthority("ROLE_SERVEYOR"));
+        return List.of(new SimpleGrantedAuthority("ROLE_SURVEYOR"));
     }
+
+
 
     @Override
     @Transient
