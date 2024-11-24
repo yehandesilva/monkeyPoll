@@ -6,12 +6,15 @@ import { UserContext } from "../context/UserContext.jsx";
 import Home from '../home/Home.jsx';
 import Question from "./Question.jsx";
 import {createSurvey} from "../api/surveyApi.js";
+import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
+import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 
 const CreateSurvey = () => {
     const toast = useRef(null);
     const lastQuestionId = useRef(1)
     const [user] = useContext(UserContext);
     const [showHome, setShowHome] = useState(false);
+    const [surveyName, setSurveyName] = useState("")
     const [questionContents, setQuestionContents] = useState({})
     const [questionList, setQuestionList] = useState([<Question key={1} id={1} setQuestionContents={setQuestionContents}/>])
 
@@ -30,9 +33,11 @@ const CreateSurvey = () => {
         right now we don't know what will be returned from the backend, so we'll likely want to add some
         pop up to display the survey code, or return some info about the survey to populate the user's homepage
         */
-        console.log(questionContents) //TODO: remove log
 
-        const creationStatus = await createSurvey(questionContents);
+        const creationData = formatCreationData()
+
+        const creationStatus = await createSurvey(creationData);
+
         if (creationStatus.success) {
             toast.current.show({
                 severity: 'success',
@@ -51,6 +56,50 @@ const CreateSurvey = () => {
         }
     };
 
+    // Format the survey data into the form expected by the backend, returning the formatted Object.
+    const formatCreationData = () => {
+        let formattedQuestionList = []
+
+        for (const [questionId, contents] of Object.entries(questionContents)) {
+            let formattedQuestion = {
+                question: contents["prompt"]
+            }
+
+            let responseOptions = contents["responseOptions"]
+
+            if (contents["type"] === "number") {
+                // For NumberQuestion types, need to add min and max value.
+                formattedQuestion = {...formattedQuestion, type: "NumberQuestion"}
+
+                formattedQuestion = {...formattedQuestion,
+                    min: responseOptions["min"],
+                    max: responseOptions["max"]}
+            } else if (contents["type"] === "choice") {
+                // For NumberQuestion types, need to add each option in an "options" list
+
+                formattedQuestion = {...formattedQuestion, type: "ChoiceQuestion"}
+
+                let optionsList = []
+                for (let option in responseOptions) {
+                    if (responseOptions.hasOwnProperty(option)) {
+                        optionsList = [...optionsList, {description: responseOptions[option]}]
+                    }
+                }
+                formattedQuestion = {...formattedQuestion, options: optionsList}
+            } else {
+                // No options needed for TextQuestion types
+                formattedQuestion = {...formattedQuestion, type: "TextQuestion"}
+            }
+            formattedQuestionList = [...formattedQuestionList, formattedQuestion]
+        }
+
+        return {
+            description: surveyName,
+            closed: false,
+            questions: formattedQuestionList
+        }
+    }
+
     const handleAddQuestion = () => {
         const newId = getUniqueId()
 
@@ -65,13 +114,18 @@ const CreateSurvey = () => {
             <Button label="Back to Home" icon="pi pi-home" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setShowHome(true)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
+                <div className="flex flex-column m-2 mt-6 mb-4" >
+                    <label htmlFor="name" className="mb-1">Survey Name</label>
+                    <InputText id="name" placeholder="Enter survey name" onChange={(e) =>
+                        setSurveyName(e.target.value)} className="w-auto"/>
+                </div>
                 {questionList}
                 <Button label="Add question" icon="pi pi-plus-circle" size="small"
                         style={{boxShadow: "none"}} onClick={handleAddQuestion}/>
                 <Button label="Create Survey!" icon="pi pi-send" size="small"
                         style={{boxShadow: "none"}} onClick={onSubmit}/>
             </div>
-            </>
+        </>
     );
 };
 

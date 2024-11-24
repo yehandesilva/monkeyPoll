@@ -52,7 +52,6 @@ const Question = ({id, setQuestionContents}) => {
             default:
                 return null;
 
-
         }
     }
 
