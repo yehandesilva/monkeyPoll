@@ -43,7 +43,7 @@ const Question = ({id, setQuestionContents}) => {
 
     const renderTypeSelection = () => {
         switch(type) {
-            case "":
+            case "TextQuestion":
                 return <InputText disabled placeholder="No response options needed" className="w-full m-auto"/>
             case "NumberQuestion":
                 return <NumberQuestionOptions responseOptions={responseOptions} setResponseOptions={setResponseOptions}/>
