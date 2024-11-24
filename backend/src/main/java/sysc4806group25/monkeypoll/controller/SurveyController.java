@@ -3,13 +3,9 @@ package sysc4806group25.monkeypoll.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sysc4806group25.monkeypoll.model.Account;
-import sysc4806group25.monkeypoll.model.Question;
-import sysc4806group25.monkeypoll.model.Survey;
+import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
 import java.util.List;
@@ -56,4 +52,55 @@ public class SurveyController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey successfully created!\", \"surveyId\":" + createdSurvey.getSurveyId() + "}");
     }
+
+    @PostMapping("/survey/{surveyId}")
+    public ResponseEntity<String> submitSurveyResponse(@RequestBody SurveyCompletion surveyCompletion, @PathVariable long surveyId) {
+        Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
+        if (surveyOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+
+        Survey survey = surveyOpt.get();
+
+        if (survey.getClosed()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"Survey is closed!\"}");
+        }
+
+        Optional<SurveyCompletion> existingCompletion = surveyService.findSurveyCompletionBySurveyAndEmail(survey, surveyCompletion.getEmail());
+        if (existingCompletion.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"This email has already submitted the survey!\"}");
+        }
+
+        // Set the survey property on the SurveyCompletion entity
+        surveyCompletion.setSurvey(survey);
+
+        surveyService.saveSurveyResponse(surveyCompletion);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey response successfully submitted!\"}");
+    }
+
+
+
+    //    @GetMapping("/questions")
+//    public ResponseEntity<List<Question>> getAllQuestions() {
+//        List<Question> questions = surveyService.getAllQuestions();
+//        return ResponseEntity.ok(questions);
+//    }
+//    @GetMapping("/questions/responses")
+//    public ResponseEntity<List<Question>> getAllQuestionsWithResponses() {
+//        List<Question> questions = surveyService.getAllQuestionsWithResponses();
+//        return ResponseEntity.ok(questions);
+//    }
+
+    @GetMapping("/survey/{surveyId}/responses")
+    public ResponseEntity<?> getSurveyResponses(@PathVariable long surveyId) {
+        Optional<Survey> survey = surveyService.getSurveyById(surveyId);
+        if (survey.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+
+        List<SurveyCompletion> responses = surveyService.getSurveyResponses(surveyId);
+        return ResponseEntity.ok(responses);
+    }
+
 }

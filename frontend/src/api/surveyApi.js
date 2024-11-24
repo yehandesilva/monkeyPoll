@@ -66,6 +66,16 @@ export const submitSurvey = async(surveyId, email, responses) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+    } else {
+        const errorResponse = await response.json();
+        switch (response.status) {
+            case 409:
+                status.body.message = "This email has already submitted the survey!";
+                break;
+            default:
+                status.body.message = errorResponse.message || status.body.message;
+                break;
+        }
     }
 
     // Return response status

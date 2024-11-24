@@ -2,7 +2,10 @@ package sysc4806group25.monkeypoll.repo;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import sysc4806group25.monkeypoll.model.Survey;
 import sysc4806group25.monkeypoll.model.SurveyCompletion;
+
+import java.util.Optional;
 
 /**
  * The SurveyCompletionRepository is responsible for managing the creation and modification of
@@ -13,4 +16,6 @@ import sysc4806group25.monkeypoll.model.SurveyCompletion;
  */
 @Repository
 public interface SurveyCompletionRepository extends CrudRepository<SurveyCompletion, Long> {
+    Optional<SurveyCompletion> findBySurveyAndEmail(Survey survey, String email);
+
 }
