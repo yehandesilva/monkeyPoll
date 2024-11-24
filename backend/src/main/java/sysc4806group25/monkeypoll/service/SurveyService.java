@@ -23,9 +23,12 @@ public class SurveyService {
      * @return the created survey
      */
     public Survey createSurvey(Survey survey) {
+        // Ensure the questions reference the correct Survey before saving
         for (Question question : survey.getQuestions()) {
             question.setSurvey(survey);
         }
+
+        // Save the survey (and cascade the save operation to questions, if configured correctly)
         return surveyRepository.save(survey);
     }
     /**

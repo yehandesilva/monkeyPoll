@@ -30,16 +30,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/**").permitAll()
-                        .requestMatchers("/{userId}/survey/create").authenticated()
+                        .requestMatchers("/user/**").hasAuthority("ROLE_SURVEYOR")
+                        .requestMatchers("/", "/*.html", "/*.svg", "/*.png", "/assets/**", "/error", "/register", "/login", "/survey/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 .logout((logout) -> logout.addLogoutHandler(new SecurityContextLogoutHandler()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/**")); // this allows us to test using postman
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/register", "/login", "/logout", "/survey", "/**")); // this allows us to test using postman
 
         return http.build();
     }

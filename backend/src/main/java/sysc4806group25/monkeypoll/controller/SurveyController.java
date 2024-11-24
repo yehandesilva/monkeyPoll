@@ -3,6 +3,7 @@ package sysc4806group25.monkeypoll.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -42,22 +43,17 @@ public class SurveyController {
      * @param survey the survey to be created
      * @return a ResponseEntity containing the created survey with a 201 status
      */
-    @PostMapping("/{userId}/survey/create")
-    public ResponseEntity<String> createSurvey(@RequestBody Survey survey, @PathVariable long userId) {
+    @PostMapping("/user/survey")
+    public ResponseEntity<String> createSurvey(@RequestBody Survey survey) {
         logger.info("Received survey creation request: " + survey);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account authenticatedAccount = (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // check if the Authentication object is an instance of Account before casting
-        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof Account authenticatedAccount)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\":\"User is not authenticated.\"}");
-        }
-
-        if (authenticatedAccount.getId() != userId) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("{\"message\":\"User ID does not match the authenticated user.\"}");
-        }
-
+        // Ensure Account is set on the Survey
         survey.setAccount(authenticatedAccount);
+
+        // Create the Survey and associate it with the Account
         Survey createdSurvey = surveyService.createSurvey(survey);
+
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey successfully created!\", \"surveyId\":" + createdSurvey.getSurveyId() + "}");
     }
 }
