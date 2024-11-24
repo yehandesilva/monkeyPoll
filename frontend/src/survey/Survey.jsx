@@ -1,18 +1,17 @@
-import {useContext, useEffect, useRef, useState} from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SurveyContext } from "../context/SurveyContext.jsx";
 import { UserContext } from "../context/UserContext.jsx";
-import {validateEmail} from "../modules/validation.js";
+import { validateEmail } from "../modules/validation.js";
 import { InputTextarea } from 'primereact/inputtextarea';
-import {RadioButton} from "primereact/radiobutton";
-import {Card} from "primereact/card";
-import {InputNumber} from "primereact/inputnumber";
-import {Toast} from "primereact/toast";
-import {Button} from "primereact/button";
-import {submitSurvey} from "../api/surveyApi.js";
-import {InputText} from "primereact/inputtext";
-import {FloatLabel} from "primereact/floatlabel";
-import {Message} from "primereact/message";
-
+import { RadioButton } from "primereact/radiobutton";
+import { Card } from "primereact/card";
+import { InputNumber } from "primereact/inputnumber";
+import { Toast } from "primereact/toast";
+import { Button } from "primereact/button";
+import { submitSurvey } from "../api/surveyApi.js";
+import { InputText } from "primereact/inputtext";
+import { FloatLabel } from "primereact/floatlabel";
+import { Message } from "primereact/message";
 
 /*
 The Survey component models a Survey that the user can fill
@@ -37,11 +36,16 @@ const Survey = () => {
     const [responses, setResponses] = useState(new Map(surveyQuestions.map((question) => [question.questionId, undefined])));
 
     // Handle response change by updating the Map with the new value for the key
-    const handleResponseChange = (e, questionId) => {
-        const updatedResponse = e.target.value;
+    const handleResponseChange = (e, questionId, questionType) => {
+        let updatedResponse;
+        if (questionType === "ChoiceQuestion") {
+            updatedResponse = { choice: e.target.value, type: "choice" };
+        } else {
+            updatedResponse = e.target.value;
+        }
         // Update the response value for the question and create new Map to force re-render
         setResponses(new Map(responses.set(questionId, updatedResponse)));
-    }
+    };
 
     // Hook to update the email with the logged-in user's email
     useEffect(() => {
@@ -107,7 +111,7 @@ const Survey = () => {
                 detail: surveySubmissionStatus.body.message,
             });
         }
-    }
+    };
 
     return (
         <>
@@ -122,7 +126,7 @@ const Survey = () => {
                         <Message severity="info" text={"Submission email: " + user.email} />
                         : <div className="card flex justify-content-center">
                             <FloatLabel>
-                                <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                 <label htmlFor="email">Email address</label>
                             </FloatLabel>
                         </div>}
@@ -136,7 +140,7 @@ const Survey = () => {
                                     <Card title={"Question " + questionId}>
                                         <h3>{questionStr}</h3>
                                         <InputTextarea autoResize value={responses.get(questionId)}
-                                                       onChange={(e) => handleResponseChange(e, questionId)} rows={10} cols={40}/>
+                                                       onChange={(e) => handleResponseChange(e, questionId, question.type)} rows={10} cols={40} />
                                     </Card>
                                 </div>
                             );
@@ -150,8 +154,8 @@ const Survey = () => {
                                         <div className="flex-auto">
                                             <label htmlFor="minmax" className="block mb-2">Enter a number between {question.minValue} and {question.maxValue}</label>
                                             <InputNumber inputId="minmax" value={responses.get(questionId)}
-                                                         onValueChange={(e) => handleResponseChange(e, questionId)} min={question.minValue}
-                                                         max={question.maxValue}/>
+                                                         onValueChange={(e) => handleResponseChange(e, questionId, question.type)} min={question.minValue}
+                                                         max={question.maxValue} />
                                         </div>
                                     </Card>
                                 </div>
@@ -165,12 +169,18 @@ const Survey = () => {
                                     <Card title={"Question " + questionId}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex flex-column gap-2">
-                                            {choiceOptions.map(function(choiceOption) {
+                                            {choiceOptions.map(function (choiceOption) {
                                                 // Create RadioButton for each option
                                                 let choiceOptionId = choiceOption.choiceOptionId;
                                                 return (
                                                     <div key={choiceOptionId} className="flex align-items-center">
-                                                        <RadioButton inputId={choiceOptionId} name={question} value={choiceOption.description} onChange={(e) => handleResponseChange(e, questionId)} checked={responses.get(questionId) === choiceOption.description} />
+                                                        <RadioButton
+                                                            inputId={choiceOptionId}
+                                                            name={question}
+                                                            value={choiceOption.description}
+                                                            onChange={(e) => handleResponseChange(e, questionId, question.type)}
+                                                            checked={responses.get(questionId)?.choice === choiceOption.description}
+                                                        />
                                                         <label htmlFor={choiceOptionId} className="ml-2">{choiceOption.description}</label>
                                                     </div>
                                                 );
