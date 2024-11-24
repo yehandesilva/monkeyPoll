@@ -72,8 +72,8 @@ const CreateSurvey = () => {
             if (contents["type"] === "NumberQuestion") {
                 // For NumberQuestion types, need to add min and max value.
                 formattedQuestion = {...formattedQuestion,
-                    min: responseOptions["min"],
-                    max: responseOptions["max"]}
+                    minValue: responseOptions["min"],
+                    maxValue: responseOptions["max"]}
             } else if (contents["type"] === "ChoiceQuestion") {
                 // For ChoiceQuestion types, need to add each option in an "options" list
                 let optionsList = []
