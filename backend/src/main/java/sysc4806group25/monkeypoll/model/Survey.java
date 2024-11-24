@@ -34,6 +34,7 @@ public class Survey {
     private Account account;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<SurveyCompletion> completions = new ArrayList<>();
 
     // managed reference prevents Json from being printed recursively (bidirectional)

@@ -29,7 +29,7 @@ export const getSurvey = async (id) => {
 // Submits the completed survey.
 // Return:
 // - Success: True if survey is successfully fetched
-export const submitSurvey = async(surveyId, email, responses) => {
+export const submitSurvey = async (surveyId, email, responses) => {
     // Create a new map with the following structure:
     /**
      * {
@@ -37,22 +37,31 @@ export const submitSurvey = async(surveyId, email, responses) => {
      *     'responses': [
      *         {
      *             'questionId': <questionId>,
-     *             'response': <response>
-     *         },
-     *         {
-     *             'questionId': <questionId>,
-     *             'response': <response>
+     *             'response': <response>,
+     *             'type': <type>
      *         },
      *         ...
      *     ]
      * }
      */
-    // Convert responses map to Array and structure as above
-    const responsesArr = Array.from(responses, ([questionId, response]) => ({questionId, response}));
+        // Convert responses map to Array and structure as above
+    const responsesArr = Array.from(responses, ([questionId, response]) => {
+            let type;
+            if (typeof response === 'string') {
+                type = 'text';
+            } else if (typeof response === 'number') {
+                type = 'number';
+            } else if (typeof response === 'object' && response.choice) {
+                type = 'choice';
+                response = response.choice;
+            }
+            return { questionId, response, type };
+        });
+
     const requestOptions = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email: email, responses: responsesArr}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, responses: responsesArr }),
     };
 
     // Send request and await response from server
@@ -62,12 +71,22 @@ export const submitSurvey = async(surveyId, email, responses) => {
         body: {
             message: "Failed to submit survey response"
         }
-    }
+    };
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+    } else {
+        const errorResponse = await response.json();
+        switch (response.status) {
+            case 409:
+                status.body.message = "This email has already submitted the survey!";
+                break;
+            default:
+                status.body.message = errorResponse.message || status.body.message;
+                break;
+        }
     }
 
     // Return response status
     return status;
-}
+};
