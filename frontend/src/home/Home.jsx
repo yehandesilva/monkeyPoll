@@ -2,10 +2,17 @@ import { useContext, useState } from 'react';
 import { UserContext } from "../context/UserContext.jsx";
 import { Button } from 'primereact/button';
 import LoginDialog from '../welcome/LoginDialog.jsx';
+import CreateSurvey from "./CreateSurvey.jsx";
 
 const Home = () => {
     const [user] = useContext(UserContext);
     const [loginDialogVisible, setLoginDialogVisible] = useState(false);
+    const [showCreateSurvey, setShowCreateSurvey] = useState(false)
+
+
+    if (showCreateSurvey) {
+        return <CreateSurvey/>
+    }
 
     return (
         <div className="home flex flex-column align-items-center justify-content-center h-screen">
@@ -24,6 +31,8 @@ const Home = () => {
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Password:</strong> Just kidding!</p>
                     </div>
+                    <Button label="Create Survey" icon="pi pi-plus" size="small"
+                            style={{ boxShadow: "none" }} onClick={() => setShowCreateSurvey(true)} />
                 </div>
             </div>
             ) : (
