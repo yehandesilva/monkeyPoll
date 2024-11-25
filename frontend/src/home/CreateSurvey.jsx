@@ -9,11 +9,12 @@ import {createSurvey} from "../api/surveyApi.js";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 import question from "./Question.jsx";
+import {getUser} from "../api/userApi.js";
 
 const CreateSurvey = () => {
     const toast = useRef(null);
     const lastQuestionId = useRef(1)
-    const [user] = useContext(UserContext);
+    const [user, setUser] = useContext(UserContext);
     const [showHome, setShowHome] = useState(false);
     const [surveyName, setSurveyName] = useState("")
     const [questionContents, setQuestionContents] = useState({})
@@ -92,6 +93,10 @@ const CreateSurvey = () => {
                 summary: 'Survey successfully created!',
                 detail: creationStatus.body.message,
             });
+            const _user = await getUser();
+            if (_user.success) {
+                setUser(_user.body);
+            }
             setShowHome(true) //TODO: returning to home, but may need to change
         } else {
             toast.current.show({
