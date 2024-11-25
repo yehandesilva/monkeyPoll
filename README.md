@@ -76,8 +76,8 @@ See below for the complete ER model of how the entities of the MonkeyPoll applic
 - Created a database schema to handle the functionaliy proposed by the application (Represented by diagrams created)
 - Implemented all remaining entities with corresponding Junit tests
 - Adjusted authentication to ensure proper persistence across sesssions
-- Created a survey controller to get specified surveys and post given surveys along with corresponding Junit tests
-- Added user interface on frontend to allow users to create surveys
+- Created a survey controller to get specified surveys,post given surveys and get survey responses along with corresponding Junit tests
+- Added user interface on frontend to allow users to create surveys and see survey responses
 - Added user interface on frontend to allow users to get, fill out and submit surveys
 
 ### Plans For Next Milestone - Final Demo:
