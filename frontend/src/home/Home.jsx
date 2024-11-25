@@ -23,7 +23,6 @@ const Home = () => {
 
     const getResponses = async (survey) => {
 
-        console.log(survey)
         const responsesStatus = await getSurveyResponses(survey["surveyId"]);
         if (responsesStatus.success) {
             return (responsesStatus.body);
