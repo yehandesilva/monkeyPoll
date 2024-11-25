@@ -130,14 +130,14 @@ const Survey = () => {
                                 <label htmlFor="email">Email address</label>
                             </FloatLabel>
                         </div>}
-                    {surveyQuestions.map(function (question) {
+                    {surveyQuestions.map(function (question, questionIndex) {
                         let questionId = question.questionId;
                         let questionStr = question.question;
                         // Question is a TextQuestion
                         if (question.type === "TextQuestion") {
                             return (
                                 <div key={questionId} className="w-full">
-                                    <Card title={"Question " + questionId}>
+                                    <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
                                         <InputTextarea autoResize value={responses.get(questionId)}
                                                        onChange={(e) => handleResponseChange(e, questionId, question.type)} rows={10} cols={40} />
@@ -149,7 +149,7 @@ const Survey = () => {
                         if (question.type === "NumberQuestion") {
                             return (
                                 <div key={questionId} className="w-full">
-                                    <Card title={"Question " + questionId}>
+                                    <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex-auto">
                                             <label htmlFor="minmax" className="block mb-2">Enter a number between {question.minValue} and {question.maxValue}</label>
@@ -166,7 +166,7 @@ const Survey = () => {
                             let choiceOptions = question.options;
                             return (
                                 <div key={questionId} className="w-full">
-                                    <Card title={"Question " + questionId}>
+                                    <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex flex-column gap-2">
                                             {choiceOptions.map(function (choiceOption) {
