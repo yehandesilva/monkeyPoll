@@ -87,3 +87,31 @@ export const logoutUser = async () => {
 
     return status;
 }
+
+// Get user
+// Return:
+// - Success: True if user is successfully fetched
+// - Body - Fetched user in JSON format or message describing the error
+export const getUser = async () => {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+    };
+
+    const response = await fetch(`user`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to get user"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
+        status.body = await response.json();
+    }
+
+    return status;
+}
