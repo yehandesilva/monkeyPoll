@@ -3,6 +3,8 @@ import { UserContext } from "../context/UserContext.jsx";
 import { Button } from 'primereact/button';
 import LoginDialog from '../welcome/LoginDialog.jsx';
 import CreateSurvey from "./CreateSurvey.jsx";
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
 
 const Home = () => {
     const [user] = useContext(UserContext);
@@ -31,6 +33,11 @@ const Home = () => {
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Password:</strong> Just kidding!</p>
                     </div>
+                    <DataTable value={user.surveys}  tableStyle={{ minWidth: '50rem' }}>
+                        <Column field="surveyId" header="ID"></Column>
+                        <Column field="description" header="Name"></Column>
+                        <Column field="completions.length" header="Completions"></Column>
+                    </DataTable>
                     <Button label="Create Survey" icon="pi pi-plus" size="small"
                             style={{ boxShadow: "none" }} onClick={() => setShowCreateSurvey(true)} />
                 </div>
