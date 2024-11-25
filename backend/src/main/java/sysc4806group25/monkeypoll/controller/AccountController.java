@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
 import sysc4806group25.monkeypoll.model.Account;
+import sysc4806group25.monkeypoll.repo.AccountRepository;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
+
+import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -30,6 +33,9 @@ public class AccountController {
 
     @Autowired
     AccountUserDetailsService accountUserDetailsService;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     private SecurityContextRepository securityContextRepository =
             new HttpSessionSecurityContextRepository();
@@ -71,10 +77,10 @@ public class AccountController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Account> getCurrentUser() {
+    public ResponseEntity<Optional<Account>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof Account currentUser) {
-            return ResponseEntity.ok(currentUser);
+            return ResponseEntity.ok(accountRepository.findById(currentUser.getId()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
