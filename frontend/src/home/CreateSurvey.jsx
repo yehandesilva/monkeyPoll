@@ -32,35 +32,35 @@ const CreateSurvey = () => {
         // Validate the form input before doing anything else, storing all error messages in a list
         // TODO: currently only the first error is display, but storing all errors anyways in case we need them in the future
         let validation_errors = [];
-
+        console.log(questionContents)
         // Ensure that the survey has a name
         if (!surveyName) {
             validation_errors.push("A survey name is required")
         }
         // Ensure that each field of each question is properly filled in
         for (const [questionId, contents] of Object.entries(questionContents)) {
-            if (!contents["prompt"]) {
+            if (typeof contents["prompt"] === "undefined") {
                 validation_errors.push('Prompt is required for question ' + questionId);
             }
-            if (!contents["type"]) {
+            if (typeof contents["type"] === "undefined") {
                 validation_errors.push('Question Type is required for question ' + questionId);
 
             } else {
                 let responseOptions = contents["responseOptions"];
                 if (contents["type"] === "NumberQuestion") {
-                    if (!responseOptions["min"]) {
+                    if (typeof responseOptions["min"] === "undefined") {
                         validation_errors.push('Minimum value is required for question ' + questionId);
                     }
-                    if (!responseOptions["max"]) {
+                    if (typeof responseOptions["max"] === "undefined") {
                         validation_errors.push('Maximum value is required for question ' + questionId);
                     }
                 } else if (contents["type"] === "ChoiceQuestion") {
                     if (Object.entries(responseOptions).length === 0) {
-                        validation_errors.push('Option missing is required for question ' + questionId);
+                        validation_errors.push('Option(s) missing for question ' + questionId);
                     } else {
                         for (let option in responseOptions) {
                             if (responseOptions.hasOwnProperty(option)) {
-                                if (!option) {
+                                if (typeof option === "undefined") {
                                     validation_errors.push('Option(s) missing for question ' + questionId);
                                     break;
                                 }
