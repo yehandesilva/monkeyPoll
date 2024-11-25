@@ -32,7 +32,7 @@ const CreateSurvey = () => {
         // Validate the form input before doing anything else, storing all error messages in a list
         // TODO: currently only the first error is display, but storing all errors anyways in case we need them in the future
         let validation_errors = [];
-        console.log(questionContents)
+
         // Ensure that the survey has a name
         if (!surveyName) {
             validation_errors.push("A survey name is required")
