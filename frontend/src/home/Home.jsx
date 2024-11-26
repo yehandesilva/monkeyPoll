@@ -20,7 +20,7 @@ const Home = ({toast}) => {
     if (showCreateSurvey) {
         return <CreateSurvey toast={toast} setVisible={setShowCreateSurvey}/>
     } else if (showSurveys) {
-        return <Surveys setVisible={setShowSurveys}/>
+        return <Surveys toast={toast} setVisible={setShowSurveys}/>
     }
 
     const getResponses = async (survey) => {
