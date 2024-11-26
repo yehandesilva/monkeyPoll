@@ -148,8 +148,8 @@ public class SurveyController {
             } else if (question instanceof NumberQuestion) {
                 // For NumberQuestion, structure the value of 'responses' key as the following:
                 // [
-                //    {"number1" : number1Count},
-                //    {"number2" : number2Count},
+                //    {"number1" : count},
+                //    {"number2" : count},
                 // ]
 
                 // Get all NumberResponses for the question
@@ -190,24 +190,48 @@ public class SurveyController {
                         "responses", analyticResponses
                 );
             } else if (question instanceof ChoiceQuestion) {
-                // Structure value of 'responses' key as the following:
+                // For ChoiceQuestion, structure value of 'responses' key as the following:
                 // [
-                //    {"choice1" : choice1Count},
-                //    {"choice2" : choice2Count},
+                //    {"choice1 description" : choice1Count},
+                //    {"choice2 description" : choice2Count},
                 // ]
-                List<ChoiceResponse> choiceResponses = ((ChoiceQuestion) question).getResponses();
+
+                // Get all NumberResponses for the question
+                List<ChoiceResponse> allChoiceResponses = ((ChoiceQuestion) question).getResponses();
+
+                // Create list of HashMap 'entries' - One HashMap<"choiceDescription", count> for every unique choice response
                 ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
-                for (ChoiceResponse response : choiceResponses) {
-                    HashMap<String, Integer> responseMap = new HashMap<>();
-                    responseMap.put(response.getResponse().getDescription(), getChoiceOptionCount(choiceResponses, response));
-                    analyticResponses.add(responseMap);
+                for (ChoiceResponse response : allChoiceResponses) {
+                    // Check if HashMap 'entry' already exists for this number
+                    boolean existingEntry = false;
+                    for (HashMap<String, Integer> entry : analyticResponses) {
+                        if (entry.containsKey(response.getResponse().getDescription())) {
+                            existingEntry = true;
+                            break;
+                        }
+                    }
+                    // Create HashMap for this NumberResponse (unique number)
+                    if (!existingEntry) {
+                        int count = 0;
+                        // Compute number of occurrences
+                        for (ChoiceResponse innerResponse : allChoiceResponses) {
+                            // Note: Comparing ChoiceOptions by choiceOptionId (ChoiceOption PK)
+                            if (response.getResponse().getChoiceOptionId() == innerResponse.getResponse().getChoiceOptionId()) {
+                                // Match found
+                                count++;
+                            }
+                        }
+                        // Create the HashMap 'entry' and add to list
+                        HashMap<String, Integer> responseMap = new HashMap<>();
+                        responseMap.put(response.getResponse().getDescription(), count);
+                        analyticResponses.add(responseMap);
+                    }
                 }
 
                 // Map ChoiceQuestion to a response object
                 return Map.of(
-                        "questionId", question.getQuestionId(),
                         "question", question.getQuestion(),
-                        "type", "ChoiceQuestion",
+                        "questionType", "ChoiceQuestion",
                         "responses", analyticResponses
                 );
             }
