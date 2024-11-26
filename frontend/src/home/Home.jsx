@@ -7,16 +7,20 @@ import {Column} from "primereact/column";
 import {getSurveyResponses} from "../api/surveyApi.js";
 import {Dialog} from "primereact/dialog";
 import SurveyCode from "./SurveyCode.jsx";
+import Surveys from "../survey/Surveys.jsx";
 
 const Home = ({toast}) => {
     const [user] = useContext(UserContext);
     const [showCreateSurvey, setShowCreateSurvey] = useState(false);
+    const [showSurveys, setShowSurveys] = useState(false);
     const [selectedSurveyResponses, setSelectedSurveyResponses] = useState(null);
     const [selectedSurvey, setSelectedSurvey] = useState(null);
     const [responseDialogVisible, setResponseDialogVisible] = useState(false);
 
     if (showCreateSurvey) {
         return <CreateSurvey toast={toast} setVisible={setShowCreateSurvey}/>
+    } else if (showSurveys) {
+        return <Surveys setVisible={setShowSurveys}/>
     }
 
     const getResponses = async (survey) => {
@@ -32,7 +36,7 @@ const Home = ({toast}) => {
                 detail: responsesStatus.body.message,
             });
         }
-    }
+    };
     const handleSelection = (e) => {
         setSelectedSurvey(e.value)
         getResponses(e.value).then(setSelectedSurveyResponses)
@@ -66,15 +70,13 @@ const Home = ({toast}) => {
                         </div>
                         <div className="flex flex-column align-items-center gap-3 p-4 card">
                             <h2>Welcome, {user.firstName} {user.lastName}!</h2>
-                            <SurveyCode large={false} />
-                            <Button label="Create Survey" icon="pi pi-plus" size="small"
-                                    style={{boxShadow: "none"}} onClick={() => setShowCreateSurvey(true)}/>
-                            <DataTable value={user.surveys} selectionMode="single" selection={selectedSurvey}
-                                       onSelectionChange={(e) => handleSelection(e)} tableStyle={{minWidth: '50rem'}}>
-                                <Column field="surveyId" header="ID"></Column>
-                                <Column field="description" header="Name"></Column>
-                                <Column field="completions.length" header="Completions"></Column>
-                            </DataTable>
+                            <SurveyCode toast={toast} />
+                            <div className="flex gap-1 mt-4">
+                                <Button label="Create Survey" icon="pi pi-plus"
+                                        style={{boxShadow: "none"}} onClick={() => setShowCreateSurvey(true)}/>
+                                <Button label="View Surveys" icon="pi pi-eye"
+                                        style={{boxShadow: "none"}} onClick={() => setShowSurveys(true)}/>
+                            </div>
                         </div>
                     </div>
                 ) :
