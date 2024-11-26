@@ -153,6 +153,40 @@ export const getSurveyResponses = async (surveyId) => {
 // - Body - The survey results in JSON format or message describing the error
 export const getSurveyResults = async (surveyId) => {
 
+    // TODO Remove survey response stub with actual returned data
+    return {
+        success: true,
+        body: {
+            description: "Survey Description",
+            responses: [
+                {
+                    question: "Question 1",
+                    questionType: "TextQuestion",
+                    responses: [
+                        "abc",
+                        "xyz"
+                    ]
+                },
+                {
+                    question: "Question 2",
+                        questionType: "NumberQuestion",
+                    responses: [
+                    {"1" : 10},
+                    {"2": 15},
+                ]
+                },
+                {
+                    question: "Question 3",
+                        questionType: "ChoiceQuestion",
+                    responses: [
+                    {"option1" : 10},
+                    {"option2": 5},
+                ]
+                },
+            ]
+                    }
+                }
+
     const requestOptions = {
         method: 'GET',
     };
