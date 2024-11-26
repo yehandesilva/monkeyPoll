@@ -113,6 +113,8 @@ const Survey = ({toast}) => {
 
     return (
         <>
+            <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
+                    style={{boxShadow: "none"}} onClick={() => {setSurvey(null)}}/>
             <div className="flex flex-column align-items-center pt-8 pb-8">
                 <div className="flex flex-column align-items-center">
                     <h1>{survey.description}</h1>
