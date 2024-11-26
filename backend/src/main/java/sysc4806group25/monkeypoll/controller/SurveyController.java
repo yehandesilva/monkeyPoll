@@ -23,9 +23,7 @@ import sysc4806group25.monkeypoll.model.TextQuestion;
 import sysc4806group25.monkeypoll.model.TextResponse;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -124,6 +122,40 @@ public class SurveyController {
 
         // Return the list of questions and their responses
         return ResponseEntity.ok(questionResponses);
+    }
+
+    /**
+     * Returns the number of times the specified NumberResponse occurs
+     * in the provided list of NumberResponses
+     * @param responses - list of NumberResponses
+     * @return the total count of the specified NumberResponse
+     */
+    private int getNumberResponseCount(List<NumberResponse> responses, NumberResponse targetResponse) {
+        int responseCount = 0;
+        for (NumberResponse response : responses) {
+            if (response.getResponse() == targetResponse.getResponse()) {
+                responseCount++;
+            }
+        }
+        return responseCount;
+    }
+
+    /**
+     * Returns the number of times the specified ChoiceResponse occurs
+     * in the provided list of ChoiceResponses
+     * @param responses - list of ChoiceResponses
+     * @return the total count of the specified ChoiceResponse
+     *
+     * (Note: ChoiceOptions can be compared based on their unique choiceOptionId (instead of their description))
+     */
+    private int getChoiceOptionCount(List<ChoiceResponse> responses, ChoiceResponse targetResponse) {
+        int responseCount = 0;
+        for (ChoiceResponse response : responses) {
+            if (response.getResponse().getChoiceOptionId() == targetResponse.getResponse().getChoiceOptionId()) {
+                responseCount++;
+            }
+        }
+        return responseCount;
     }
 
     @GetMapping("/user/survey/{surveyId}/results")
