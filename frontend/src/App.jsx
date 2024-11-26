@@ -23,7 +23,7 @@ const App = () => {
         <>
             <Toast ref={toast}/>
             <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
-                <MenuBar/>
+                <MenuBar toast={toast}/>
                 {
                     (survey) ? <Survey toast={toast}/>
                         : (user) ? <Home toast={toast}/>

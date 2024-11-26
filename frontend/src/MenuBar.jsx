@@ -1,4 +1,4 @@
-import {useContext, useRef, useState} from 'react';
+import {useContext, useState} from 'react';
 
 import {Button} from 'primereact/button';
 
@@ -6,9 +6,7 @@ import LoginDialog from "./welcome/LoginDialog.jsx";
 import {UserContext} from "./context/UserContext.jsx";
 import {logoutUser} from "./api/userApi.js";
 
-
-const MenuBar = () => {
-    const toast = useRef(null);
+const MenuBar = ({toast}) => {
     const [loginVisible, setLoginVisible] = useState(false);
     const [user, setUser] = useContext(UserContext);
 
