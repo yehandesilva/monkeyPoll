@@ -1,4 +1,4 @@
-import {useContext, useRef, useState} from 'react';
+import {useContext, useState} from 'react';
 import { UserContext } from "../context/UserContext.jsx";
 import { Button } from 'primereact/button';
 import LoginDialog from '../welcome/LoginDialog.jsx';

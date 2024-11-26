@@ -1,5 +1,4 @@
-import {useContext, useRef, useState} from 'react';
-import {Toast} from 'primereact/toast';
+import {useContext, useState} from 'react';
 import {Button} from 'primereact/button';
 import {InputText} from 'primereact/inputtext';
 import {getSurvey} from "../api/surveyApi.js";
@@ -34,7 +33,6 @@ const Welcome = ({toast}) => {
 
     return (
         <>
-            <Toast ref={toast}/>
             <div className="flex flex-column justify-content-center align-items-center gap-4 h-screen">
                 <div className="flex justify-content-center">
                     <img src="monkeypoll-full-white.svg" alt="MonkeyPoll Logo"
