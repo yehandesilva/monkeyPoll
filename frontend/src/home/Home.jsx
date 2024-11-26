@@ -6,6 +6,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {getSurveyResponses} from "../api/surveyApi.js";
 import {Dialog} from "primereact/dialog";
+import SurveyCode from "./SurveyCode.jsx";
 
 const Home = ({toast}) => {
     const [user] = useContext(UserContext);
@@ -65,13 +66,7 @@ const Home = ({toast}) => {
                         </div>
                         <div className="flex flex-column align-items-center gap-3 p-4 card">
                             <h2>Welcome, {user.firstName} {user.lastName}!</h2>
-                            <p className="text-secondary">We’re glad you’re here.</p>
-                            <div className="user-info mt-3 text-left">
-                                <p><strong>First Name:</strong> {user.firstName}</p>
-                                <p><strong>Last Name:</strong> {user.lastName}</p>
-                                <p><strong>Email:</strong> {user.email}</p>
-                                <p><strong>Password:</strong> Just kidding!</p>
-                            </div>
+                            <SurveyCode large={false} />
                             <DataTable value={user.surveys} selectionMode="single" selection={selectedSurvey}
                                        onSelectionChange={(e) => handleSelection(e)} tableStyle={{minWidth: '50rem'}}>
                                 <Column field="surveyId" header="ID"></Column>
