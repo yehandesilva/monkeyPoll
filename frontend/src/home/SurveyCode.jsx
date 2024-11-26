@@ -4,7 +4,7 @@ import {useContext, useState} from "react";
 import {SurveyContext} from "../context/SurveyContext.jsx";
 import {getSurvey} from "../api/surveyApi.js";
 
-const SurveyCode = ({toast, large}) => {
+const SurveyCode = ({toast}) => {
 
     const [survey, setSurvey] = useContext(SurveyContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
@@ -35,8 +35,8 @@ const SurveyCode = ({toast, large}) => {
     return (
         <div className="flex">
             <InputText value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter Code"
-                       className={(large) ? "p-inputtext-lg" : ""}/>
-            <Button icon="pi pi-arrow-right" size={(large) ? "large" : "small"} style={{boxShadow: "none"}}
+                       className="p-inputtext-lg"/>
+            <Button icon="pi pi-arrow-right" size="large" style={{boxShadow: "none"}}
                     onClick={() => codeSubmit()}/>
         </div>
     )

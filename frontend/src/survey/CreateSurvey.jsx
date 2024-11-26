@@ -10,6 +10,7 @@ import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 import question from "./Question.jsx";
 import {getUser} from "../api/userApi.js";
+import {Card} from "primereact/card";
 
 const CreateSurvey = ({toast, setVisible}) => {
     const lastQuestionId = useRef(1)
@@ -154,10 +155,11 @@ const CreateSurvey = ({toast, setVisible}) => {
             <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setVisible(false)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
-                <div className="flex flex-column m-2 mt-6 mb-4" >
-                    <label htmlFor="name" className="mb-1">Survey Name</label>
-                    <InputText id="name" placeholder="Enter survey name" onChange={(e) =>
-                        setSurveyName(e.target.value)} className="w-auto"/>
+                <div className="flex flex-column m-2 mt-6 mb-4 w-4" >
+                    <Card title="Survey Name">
+                        <InputText id="name" placeholder="Enter survey name" onChange={(e) =>
+                            setSurveyName(e.target.value)} className="w-full"/>
+                    </Card>
                 </div>
                 {questionList}
                 <Button label="Add question" icon="pi pi-plus-circle" size="small"

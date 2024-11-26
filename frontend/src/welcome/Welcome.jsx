@@ -13,7 +13,7 @@ const Welcome = ({toast}) => {
                     <p className="text-2xl">Polls made simple.</p>
                 </div>
                 <div className="flex gap-2">
-                    <SurveyCode toast={toast} large={true}/>
+                    <SurveyCode toast={toast}/>
                 </div>
             </div>
         </>
