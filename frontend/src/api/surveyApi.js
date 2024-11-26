@@ -157,35 +157,51 @@ export const getSurveyResults = async (surveyId) => {
     return {
         success: true,
         body: {
-            description: "Survey Description",
+            description: "Tell us a little bit about you.",
             responses: [
                 {
-                    question: "Question 1",
+                    question: "How would you describe yourself?",
                     questionType: "TextQuestion",
                     responses: [
-                        "abc",
-                        "xyz"
+                        "Hardworking and focused",
+                        "Creative problem solver",
+                        "Curious and adaptable",
+                        "Optimistic and driven",
+                        "Detail-oriented thinker",
+                        "Resilient and calm",
+                        "Compassionate listener",
+                        "Energetic and resourceful",
+                        "Goal-oriented leader",
+                        "Empathetic and kind",
+                        "Patient and persistent",
+                        "Innovative and bold",
+                        "Organized and reliable",
+                        "Motivated self-starter",
+                        "Open-minded collaborator"
+                    ],
+                },
+                {
+                    question: "How old are you?",
+                    questionType: "NumberQuestion",
+                    responses: [
+                        {"18" : 3},
+                        {"19": 6},
+                        {"21": 1},
+                        {"22": 3},
+                        {"23": 2},
                     ]
                 },
                 {
-                    question: "Question 2",
-                        questionType: "NumberQuestion",
+                    question: "What do you prefer?",
+                    questionType: "ChoiceQuestion",
                     responses: [
-                    {"1" : 10},
-                    {"2": 15},
-                ]
-                },
-                {
-                    question: "Question 3",
-                        questionType: "ChoiceQuestion",
-                    responses: [
-                    {"option1" : 10},
-                    {"option2": 5},
-                ]
+                        {"Lasagna" : 10},
+                        {"Soup": 5},
+                    ]
                 },
             ]
-                    }
-                }
+        }
+    }
 
     const requestOptions = {
         method: 'GET',
