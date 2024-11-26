@@ -1,5 +1,6 @@
 import {Button} from "primereact/button";
 import TextQuestionResponse from "./TextQuestionResponse.jsx";
+import NumberQuestionResponse from "./NumberQuestionResponse.jsx";
 
 const SurveyResult = ({result, setResult}) => {
     console.log(result)
@@ -16,7 +17,7 @@ const SurveyResult = ({result, setResult}) => {
                         if (response.questionType === 'TextQuestion') {
                             return <TextQuestionResponse response={response} index={i}/>
                         } else if (response.questionType === 'NumberQuestion') {
-                            return null;
+                            return <NumberQuestionResponse response={response} index={i}/>;
                         } else if (response.questionType === 'ChoiceQuestion') {
                             return null;
                         } else {

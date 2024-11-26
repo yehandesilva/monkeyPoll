@@ -8,8 +8,8 @@ const TextQuestionResponse = ({response, index}) => {
                 <Card title={"Question " + (index + 1)}>
                     <h3>{response.question}</h3>
                     <ul>
-                        {(response.responses.map((text) => {
-                            return <li>{text}</li>
+                        {(response.responses.map((text, i) => {
+                            return <li key={i}>{text}</li>
                         }))}
                     </ul>
                 </Card>
