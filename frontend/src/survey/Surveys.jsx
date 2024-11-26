@@ -42,11 +42,15 @@ const Surveys = ({setVisible}) => {
             <>
                 {
                     (rowData.closed) ?
-                        <Button icon="pi pi-lock" className='p-button-text p-button-danger p-button-rounded' style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)} tooltip="Click to open survey"/>
+                        <Button icon="pi pi-lock" className='p-button-text p-button-danger p-button-rounded'
+                                style={{boxShadow: "none"}}
+                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
+                                tooltip="Click to open survey"/>
                         :
-                        <Button icon="pi pi-lock-open" className='p-button-text p-button-rounded' style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)} tooltip="Click to close survey"/>
+                        <Button icon="pi pi-lock-open" className='p-button-text p-button-rounded'
+                                style={{boxShadow: "none"}}
+                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
+                                tooltip="Click to close survey"/>
                 }
             </>
         )
@@ -55,7 +59,8 @@ const Surveys = ({setVisible}) => {
     const header = (
         <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <span className="text-2xl text-primary font-bold">My Surveys</span>
-            <Button icon="pi pi-refresh" rounded raised style={{boxShadow: "none"}} onClick={() => refreshSurveys()}/>
+            <Button icon="pi pi-refresh" rounded raised style={{boxShadow: "none"}} onClick={() => refreshSurveys()}
+                    tooltip="Refresh"/>
         </div>
     );
 
