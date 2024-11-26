@@ -1,17 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { SurveyContext } from "../context/SurveyContext.jsx";
-import { UserContext } from "../context/UserContext.jsx";
-import { validateEmail } from "../modules/validation.js";
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton } from "primereact/radiobutton";
-import { Card } from "primereact/card";
-import { InputNumber } from "primereact/inputnumber";
-import { Toast } from "primereact/toast";
-import { Button } from "primereact/button";
-import { submitSurvey } from "../api/surveyApi.js";
-import { InputText } from "primereact/inputtext";
-import { FloatLabel } from "primereact/floatlabel";
-import { Message } from "primereact/message";
+import {useContext, useEffect, useState} from "react";
+import {SurveyContext} from "../context/SurveyContext.jsx";
+import {UserContext} from "../context/UserContext.jsx";
+import {validateEmail} from "../modules/validation.js";
+import {InputTextarea} from 'primereact/inputtextarea';
+import {RadioButton} from "primereact/radiobutton";
+import {Card} from "primereact/card";
+import {InputNumber} from "primereact/inputnumber";
+import {Button} from "primereact/button";
+import {submitSurvey} from "../api/surveyApi.js";
+import {InputText} from "primereact/inputtext";
+import {FloatLabel} from "primereact/floatlabel";
+import {Message} from "primereact/message";
 
 /*
 The Survey component models a Survey that the user can fill
@@ -19,7 +18,7 @@ out and submit.
  */
 const Survey = ({toast}) => {
     // Get reference to survey and user context
-    const [survey] = useContext(SurveyContext);
+    const [survey, setSurvey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
 
     // useState hook for setting/getting user's email address (if not logged in)
@@ -37,7 +36,7 @@ const Survey = ({toast}) => {
     const handleResponseChange = (e, questionId, questionType) => {
         let updatedResponse;
         if (questionType === "ChoiceQuestion") {
-            updatedResponse = { choice: e.target.value, type: "choice" };
+            updatedResponse = {choice: e.target.value, type: "choice"};
         } else {
             updatedResponse = e.target.value;
         }
@@ -98,9 +97,10 @@ const Survey = ({toast}) => {
             toast.current.show({
                 severity: 'success',
                 life: 3000,
-                summary: 'Survey response submitted successfully',
-                detail: 'Response submitted',
+                summary: 'Survey Submission Success',
+                detail: 'Survey response submitted successfully',
             });
+            setSurvey(null);
         } else {
             toast.current.show({
                 severity: 'error',
@@ -120,10 +120,10 @@ const Survey = ({toast}) => {
                 </div>
                 <div className="flex flex-column align-items-center gap-5 pt-5">
                     {user ?
-                        <Message severity="info" text={"Submission email: " + user.email} />
+                        <Message severity="info" text={"Submission email: " + user.email}/>
                         : <div className="card flex justify-content-center">
                             <FloatLabel>
-                                <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                                 <label htmlFor="email">Email address</label>
                             </FloatLabel>
                         </div>}
@@ -137,7 +137,8 @@ const Survey = ({toast}) => {
                                     <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
                                         <InputTextarea autoResize value={responses.get(questionId)}
-                                                       onChange={(e) => handleResponseChange(e, questionId, question.type)} rows={10} cols={40} />
+                                                       onChange={(e) => handleResponseChange(e, questionId, question.type)}
+                                                       rows={10} cols={40}/>
                                     </Card>
                                 </div>
                             );
@@ -149,10 +150,12 @@ const Survey = ({toast}) => {
                                     <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
                                         <div className="flex-auto">
-                                            <label htmlFor="minmax" className="block mb-2">Enter a number between {question.minValue} and {question.maxValue}</label>
+                                            <label htmlFor="minmax" className="block mb-2">Enter a number
+                                                between {question.minValue} and {question.maxValue}</label>
                                             <InputNumber inputId="minmax" value={responses.get(questionId)}
-                                                         onValueChange={(e) => handleResponseChange(e, questionId, question.type)} min={question.minValue}
-                                                         max={question.maxValue} />
+                                                         onValueChange={(e) => handleResponseChange(e, questionId, question.type)}
+                                                         min={question.minValue}
+                                                         max={question.maxValue}/>
                                         </div>
                                     </Card>
                                 </div>
@@ -178,7 +181,8 @@ const Survey = ({toast}) => {
                                                             onChange={(e) => handleResponseChange(e, questionId, question.type)}
                                                             checked={responses.get(questionId)?.choice === choiceOption.description}
                                                         />
-                                                        <label htmlFor={choiceOptionId} className="ml-2">{choiceOption.description}</label>
+                                                        <label htmlFor={choiceOptionId}
+                                                               className="ml-2">{choiceOption.description}</label>
                                                     </div>
                                                 );
                                             })}
@@ -188,7 +192,8 @@ const Survey = ({toast}) => {
                             );
                         }
                     })}
-                    <Button icon="pi pi-arrow-right" label="Submit" size="large" style={{ boxShadow: "none" }} onClick={() => surveySubmit()} />
+                    <Button icon="pi pi-arrow-right" label="Submit" size="large" style={{boxShadow: "none"}}
+                            onClick={() => surveySubmit()}/>
                 </div>
             </div>
         </>
