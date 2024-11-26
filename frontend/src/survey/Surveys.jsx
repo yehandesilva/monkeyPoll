@@ -11,15 +11,15 @@ const Surveys = ({toast, setVisible}) => {
 
     const [user, setUser] = useContext(UserContext);
     const [surveys, setSurveys] = useState([]);
-    const [results, setResults] = useState(null);
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         const _surveys = (user && user.surveys) ? user.surveys : [];
         setSurveys(_surveys);
     }, [user]);
 
-    if (results) {
-        return <SurveyResult results={results} setResults={setResults} />
+    if (result) {
+        return <SurveyResult result={result} setResult={setResult} />
     }
 
     const refreshSurveys = async () => {
@@ -41,9 +41,9 @@ const Surveys = ({toast, setVisible}) => {
     const getResults = async (survey) => {
         const status = await getSurveyResults(survey.surveyId);
         if (status.success) {
-            setResults(status.body)
+            setResult(status.body)
         } else {
-            setResults(null);
+            setResult(null);
             toast.current.show({
                 severity: 'error',
                 life: 3000,

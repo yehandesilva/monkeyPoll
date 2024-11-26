@@ -117,8 +117,8 @@ const Survey = ({toast}) => {
                     style={{boxShadow: "none"}} onClick={() => {setSurvey(null)}}/>
             <div className="flex flex-column align-items-center pt-8 pb-8">
                 <div className="flex flex-column align-items-center">
-                    <h1>{survey.description}</h1>
-                    <h3>Survey code: {survey.surveyId}</h3>
+                    <div className="text-4xl underline font-bold">{survey.description}</div>
+                    <div className="text-xl font-bold">Survey code: {survey.surveyId}</div>
                 </div>
                 <div className="flex flex-column align-items-center gap-5 pt-5">
                     {user ?
