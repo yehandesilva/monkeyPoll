@@ -4,11 +4,12 @@ import "primeflex/primeflex.css";
 
 import Welcome from "./welcome/Welcome.jsx";
 import MenuBar from "./MenuBar.jsx";
-import {useContext} from "react";
+import {useContext, useRef} from "react";
 import Home from "./home/Home.jsx";
 import Survey from "./survey/Survey.jsx";
 import {SurveyContext} from "./context/SurveyContext.jsx";
 import {UserContext} from "./context/UserContext.jsx";
+import {Toast} from "primereact/toast";
 
 const App = () => {
 
@@ -16,15 +17,20 @@ const App = () => {
     const [survey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
 
+    const toast = useRef(null);
+
     return (
-        <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
-            <MenuBar/>
-            {
-                (survey) ? <Survey/>
-                : (user) ? <Home/>
-                : <Welcome/>
-            }
-        </div>
+        <>
+            <Toast ref={toast}/>
+            <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
+                <MenuBar/>
+                {
+                    (survey) ? <Survey toast={toast}/>
+                        : (user) ? <Home toast={toast}/>
+                            : <Welcome toast={toast}/>
+                }
+            </div>
+        </>
     )
 }
 

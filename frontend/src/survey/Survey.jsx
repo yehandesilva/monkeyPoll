@@ -17,7 +17,7 @@ import { Message } from "primereact/message";
 The Survey component models a Survey that the user can fill
 out and submit.
  */
-const Survey = () => {
+const Survey = ({toast}) => {
     // Get reference to survey and user context
     const [survey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
@@ -28,8 +28,6 @@ const Survey = () => {
     // Sort the array of questions based on questionId
     const surveyQuestions = survey.questions;
     surveyQuestions.sort((a, b) => a.questionId - b.questionId);
-
-    const toast = useRef(null);
 
     // Create useState hook to keep track of the user's response for each question
     // for each question using a Map -> [questionId, response] is the key-value pair
@@ -115,7 +113,6 @@ const Survey = () => {
 
     return (
         <>
-            <Toast ref={toast} />
             <div className="flex flex-column align-items-center pt-8 pb-8">
                 <div className="flex flex-column align-items-center">
                     <h1>{survey.description}</h1>

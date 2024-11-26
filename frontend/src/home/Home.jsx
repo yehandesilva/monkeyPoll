@@ -8,8 +8,7 @@ import {Column} from "primereact/column";
 import {getSurveyResponses} from "../api/surveyApi.js";
 import {Dialog} from "primereact/dialog";
 
-const Home = () => {
-    const toast = useRef(null);
+const Home = ({toast}) => {
     const [user] = useContext(UserContext);
     const [loginDialogVisible, setLoginDialogVisible] = useState(false);
     const [showCreateSurvey, setShowCreateSurvey] = useState(false)

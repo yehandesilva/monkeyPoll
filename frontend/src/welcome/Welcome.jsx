@@ -5,8 +5,7 @@ import {InputText} from 'primereact/inputtext';
 import {getSurvey} from "../api/surveyApi.js";
 import {SurveyContext} from "../context/SurveyContext.jsx";
 
-const Welcome = () => {
-    const toast = useRef(null);
+const Welcome = ({toast}) => {
     const [survey, setSurvey] = useContext(SurveyContext);
     const [code, setCode] = useState((window.location.pathname).toString().substring(1));
 
