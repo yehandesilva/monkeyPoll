@@ -1,6 +1,7 @@
 import {useContext, useState} from 'react';
 
 import {Button} from 'primereact/button';
+import { Avatar } from 'primereact/avatar';
 
 import LoginDialog from "./welcome/LoginDialog.jsx";
 import {UserContext} from "./context/UserContext.jsx";
@@ -28,13 +29,18 @@ const MenuBar = ({toast}) => {
     return (
         <>
             <LoginDialog visible={loginVisible} setVisible={setLoginVisible}/>
-            {user ? (
-                <Button label="Logout" icon="pi pi-sign-out" size="small" className="absolute top-0 right-0 m-4"
-                        style={{boxShadow: "none"}} onClick={handleLogout}/>
-            ) : (
-                <Button label="Login" icon="pi pi-sign-in" size="small" className="absolute top-0 right-0 m-4"
-                        style={{boxShadow: "none"}} onClick={() => setLoginVisible(true)}/>
-            )}
+            <div className="absolute top-0 right-0 m-4">
+                {user ? (
+                    <div className="flex gap-2 align-items-center">
+                        <Button label="Logout" icon="pi pi-sign-out" size="small"
+                                style={{boxShadow: "none"}} onClick={handleLogout}/>
+                        <Avatar className="flex bg-primary" label={user.firstName.substring(0, 1)} shape="circle" size="large" onClick={() => {}}/>
+                    </div>
+                ) : (
+                    <Button label="Login" icon="pi pi-sign-in" size="small"
+                            style={{boxShadow: "none"}} onClick={() => setLoginVisible(true)}/>
+                )}
+            </div>
         </>
     );
 }
