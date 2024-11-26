@@ -124,6 +124,78 @@ public class SurveyController {
         return ResponseEntity.ok(questionResponses);
     }
 
+    @GetMapping("/user/survey/{surveyId}/results")
+    public ResponseEntity<?> getSurveyResults(@PathVariable long surveyId) {
+        // Retrieve the survey by its ID
+        Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
+        if (surveyOpt.isEmpty()) {
+            // Return a 404 status if the survey is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+        Survey survey = surveyOpt.get();
+
+        // Map the questions and their responses to a list of objects
+        List<Object> questionResponses = survey.getQuestions().stream().map(question -> {
+            if (question instanceof TextQuestion) {
+                // Map TextQuestion to a response object
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "TextQuestion",
+                        "responses", ((TextQuestion) question).getResponses().stream()
+                                .map(TextResponse::getResponse)
+                                .collect(Collectors.toList())
+                );
+            } else if (question instanceof NumberQuestion) {
+                // Structure value of 'responses' key as the following:
+                // [
+                //    {"number1" : number1Count},
+                //    {"number2" : number2Count},
+                // ]
+                List<NumberResponse> numberResponses = ((NumberQuestion) question).getResponses();
+                ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
+                for (NumberResponse response : numberResponses) {
+                    HashMap<String, Integer> responseMap = new HashMap<>();
+                    responseMap.put(String.valueOf(response.getResponse()), getNumberResponseCount(numberResponses, response));
+                    analyticResponses.add(responseMap);
+                }
+
+                // Map NumberQuestion to a response object
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "NumberQuestion",
+                        "responses", analyticResponses
+                );
+            } else if (question instanceof ChoiceQuestion) {
+                // Structure value of 'responses' key as the following:
+                // [
+                //    {"choice1" : choice1Count},
+                //    {"choice2" : choice2Count},
+                // ]
+                List<ChoiceResponse> choiceResponses = ((ChoiceQuestion) question).getResponses();
+                ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
+                for (ChoiceResponse response : choiceResponses) {
+                    HashMap<String, Integer> responseMap = new HashMap<>();
+                    responseMap.put(response.getResponse().getDescription(), getChoiceOptionCount(choiceResponses, response));
+                    analyticResponses.add(responseMap);
+                }
+
+                // Map ChoiceQuestion to a response object
+                return Map.of(
+                        "questionId", question.getQuestionId(),
+                        "question", question.getQuestion(),
+                        "type", "ChoiceQuestion",
+                        "responses", analyticResponses
+                );
+            }
+            return null;
+        }).collect(Collectors.toList());
+
+        // Return the list of questions and their responses
+        return ResponseEntity.ok(questionResponses);
+    }
+
     /**
      * Returns the number of times the specified NumberResponse occurs
      * in the provided list of NumberResponses
@@ -156,11 +228,6 @@ public class SurveyController {
             }
         }
         return responseCount;
-    }
-
-    @GetMapping("/user/survey/{surveyId}/results")
-    public ResponseEntity<?> getSurveyResults(@PathVariable long surveyId) {
-        return null;
     }
 
     /**
