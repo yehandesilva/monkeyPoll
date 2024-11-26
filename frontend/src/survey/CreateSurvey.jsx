@@ -159,7 +159,7 @@ const CreateSurvey = () => {
     return (
         <>
             <Toast ref={toast}/>
-            <Button label="Back to Home" icon="pi pi-home" size="small" className="absolute top-0 left-0 m-4"
+            <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setShowHome(true)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
                 <div className="flex flex-column m-2 mt-6 mb-4" >
