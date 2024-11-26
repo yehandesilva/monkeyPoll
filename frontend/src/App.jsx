@@ -15,14 +15,15 @@ const App = () => {
     // Get reference to survey and user context
     const [survey] = useContext(SurveyContext);
     const [user] = useContext(UserContext);
+
     return (
         <div className="h-auto min-h-screen w-full relative" style={{backgroundColor: '#014F5E'}}>
             <MenuBar/>
-            { survey ? (
-                <Survey />
-            ) : user ? (
-                <Home />
-            ) : <Welcome/>}
+            {
+                (survey) ? <Survey/>
+                : (user) ? <Home/>
+                : <Welcome/>
+            }
         </div>
     )
 }

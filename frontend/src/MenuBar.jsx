@@ -29,13 +29,13 @@ const MenuBar = () => {
 
     return (
         <>
-            <LoginDialog visible={loginVisible} setVisible={setLoginVisible} />
+            <LoginDialog visible={loginVisible} setVisible={setLoginVisible}/>
             {user ? (
                 <Button label="Logout" icon="pi pi-sign-out" size="small" className="absolute top-0 right-0 m-4"
-                        style={{ boxShadow: "none" }} onClick={handleLogout} />
+                        style={{boxShadow: "none"}} onClick={handleLogout}/>
             ) : (
                 <Button label="Login" icon="pi pi-sign-in" size="small" className="absolute top-0 right-0 m-4"
-                        style={{ boxShadow: "none" }} onClick={() => setLoginVisible(true)} />
+                        style={{boxShadow: "none"}} onClick={() => setLoginVisible(true)}/>
             )}
         </>
     );
