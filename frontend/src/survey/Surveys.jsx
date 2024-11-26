@@ -5,6 +5,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {getUser} from "../api/userApi.js";
 import {getSurveyResults} from "../api/surveyApi.js";
+import SurveyResult from "./SurveyResult.jsx";
 
 const Surveys = ({toast, setVisible}) => {
 
@@ -16,6 +17,10 @@ const Surveys = ({toast, setVisible}) => {
         const _surveys = (user && user.surveys) ? user.surveys : [];
         setSurveys(_surveys);
     }, [user]);
+
+    if (results) {
+        return <SurveyResult results={results} setResults={setResults} />
+    }
 
     const refreshSurveys = async () => {
         const _user = await getUser();
@@ -36,7 +41,7 @@ const Surveys = ({toast, setVisible}) => {
     const getResults = async (survey) => {
         const status = await getSurveyResults(survey.surveyId);
         if (status.success) {
-            setResults(status.body);
+            setResults(status.body)
         } else {
             setResults(null);
             toast.current.show({
