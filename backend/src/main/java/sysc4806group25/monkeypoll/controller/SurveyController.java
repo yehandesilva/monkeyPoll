@@ -202,7 +202,7 @@ public class SurveyController {
                 // Create list of HashMap 'entries' - One HashMap<"choiceDescription", count> for every unique choice response
                 ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
                 for (ChoiceResponse response : allChoiceResponses) {
-                    // Check if HashMap 'entry' already exists for this number
+                    // Check if HashMap 'entry' already exists for this description
                     boolean existingEntry = false;
                     for (HashMap<String, Integer> entry : analyticResponses) {
                         if (entry.containsKey(response.getResponse().getDescription())) {
@@ -210,7 +210,7 @@ public class SurveyController {
                             break;
                         }
                     }
-                    // Create HashMap for this NumberResponse (unique number)
+                    // Create HashMap for this ChoiceResponse (unique number)
                     if (!existingEntry) {
                         int count = 0;
                         // Compute number of occurrences
