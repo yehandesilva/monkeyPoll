@@ -11,19 +11,12 @@ import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 import question from "./Question.jsx";
 import {getUser} from "../api/userApi.js";
 
-const CreateSurvey = () => {
-    const toast = useRef(null);
+const CreateSurvey = ({toast, setVisible}) => {
     const lastQuestionId = useRef(1)
     const [user, setUser] = useContext(UserContext);
-    const [showHome, setShowHome] = useState(false);
     const [surveyName, setSurveyName] = useState("")
     const [questionContents, setQuestionContents] = useState({})
     const [questionList, setQuestionList] = useState([<Question key={1} id={1} setQuestionContents={setQuestionContents}/>])
-
-
-    if (showHome) {
-        return <Home />;
-    }
 
     const getUniqueId = () =>  {
         return ++lastQuestionId.current;
@@ -97,7 +90,7 @@ const CreateSurvey = () => {
             if (_user.success) {
                 setUser(_user.body);
             }
-            setShowHome(true) //TODO: returning to home, but may need to change
+            setVisible(false);
         } else {
             toast.current.show({
                 severity: 'error',
@@ -158,9 +151,8 @@ const CreateSurvey = () => {
 
     return (
         <>
-            <Toast ref={toast}/>
             <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
-                    style={{boxShadow: "none"}} onClick={() => setShowHome(true)}/>
+                    style={{boxShadow: "none"}} onClick={() => setVisible(false)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
                 <div className="flex flex-column m-2 mt-6 mb-4" >
                     <label htmlFor="name" className="mb-1">Survey Name</label>

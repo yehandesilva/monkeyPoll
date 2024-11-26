@@ -10,13 +10,13 @@ import SurveyCode from "./SurveyCode.jsx";
 
 const Home = ({toast}) => {
     const [user] = useContext(UserContext);
-    const [showCreateSurvey, setShowCreateSurvey] = useState(false)
-    const [selectedSurveyResponses, setSelectedSurveyResponses] = useState(null)
-    const [selectedSurvey, setSelectedSurvey] = useState(null)
-    const [responseDialogVisible, setResponseDialogVisible] = useState(false)
+    const [showCreateSurvey, setShowCreateSurvey] = useState(false);
+    const [selectedSurveyResponses, setSelectedSurveyResponses] = useState(null);
+    const [selectedSurvey, setSelectedSurvey] = useState(null);
+    const [responseDialogVisible, setResponseDialogVisible] = useState(false);
 
     if (showCreateSurvey) {
-        return <CreateSurvey/>
+        return <CreateSurvey toast={toast} setVisible={setShowCreateSurvey}/>
     }
 
     const getResponses = async (survey) => {
@@ -67,14 +67,14 @@ const Home = ({toast}) => {
                         <div className="flex flex-column align-items-center gap-3 p-4 card">
                             <h2>Welcome, {user.firstName} {user.lastName}!</h2>
                             <SurveyCode large={false} />
+                            <Button label="Create Survey" icon="pi pi-plus" size="small"
+                                    style={{boxShadow: "none"}} onClick={() => setShowCreateSurvey(true)}/>
                             <DataTable value={user.surveys} selectionMode="single" selection={selectedSurvey}
                                        onSelectionChange={(e) => handleSelection(e)} tableStyle={{minWidth: '50rem'}}>
                                 <Column field="surveyId" header="ID"></Column>
                                 <Column field="description" header="Name"></Column>
                                 <Column field="completions.length" header="Completions"></Column>
                             </DataTable>
-                            <Button label="Create Survey" icon="pi pi-plus" size="small"
-                                    style={{boxShadow: "none"}} onClick={() => setShowCreateSurvey(true)}/>
                         </div>
                     </div>
                 ) :
