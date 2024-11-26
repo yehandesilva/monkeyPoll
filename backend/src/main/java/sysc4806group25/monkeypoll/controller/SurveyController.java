@@ -126,6 +126,11 @@ public class SurveyController {
         return ResponseEntity.ok(questionResponses);
     }
 
+    @GetMapping("/user/survey/{surveyId}/results")
+    public ResponseEntity<?> getSurveyResults(@PathVariable long surveyId) {
+        return null;
+    }
+
     /**
      * Submits a survey response for a specific survey by its ID.
      *
