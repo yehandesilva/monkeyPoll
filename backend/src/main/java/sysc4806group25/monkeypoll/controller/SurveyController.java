@@ -139,9 +139,8 @@ public class SurveyController {
             if (question instanceof TextQuestion) {
                 // Map TextQuestion to a response object
                 return Map.of(
-                        "questionId", question.getQuestionId(),
                         "question", question.getQuestion(),
-                        "type", "TextQuestion",
+                        "questionType", "TextQuestion",
                         "responses", ((TextQuestion) question).getResponses().stream()
                                 .map(TextResponse::getResponse)
                                 .collect(Collectors.toList())
@@ -152,19 +151,40 @@ public class SurveyController {
                 //    {"number1" : number1Count},
                 //    {"number2" : number2Count},
                 // ]
-                List<NumberResponse> numberResponses = ((NumberQuestion) question).getResponses();
+
+                // NumberResponses for the question
+                List<NumberResponse> allNumberResponses = ((NumberQuestion) question).getResponses();
+
                 ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
-                for (NumberResponse response : numberResponses) {
-                    HashMap<String, Integer> responseMap = new HashMap<>();
-                    responseMap.put(String.valueOf(response.getResponse()), getNumberResponseCount(numberResponses, response));
-                    analyticResponses.add(responseMap);
+                for (NumberResponse response : allNumberResponses) {
+                    // Check if HashMap entry already exists
+                    boolean existingEntry = false;
+                    for (HashMap<String, Integer> entry : analyticResponses) {
+                        if (entry.containsKey(String.valueOf(response.getResponse()))) {
+                            existingEntry = true;
+                            break;
+                        }
+                    }
+                    // No entry for this response (is unique)
+                    if (!existingEntry) {
+                        int count = 0;
+                        // Get count
+                        for (NumberResponse innerResponse : allNumberResponses) {
+                            if (response.getResponse() == innerResponse.getResponse()) {
+                                // Check if match found
+                                count++;
+                            }
+                        }
+                        HashMap<String, Integer> responseMap = new HashMap<>();
+                        responseMap.put(String.valueOf(response.getResponse()), count);
+                        analyticResponses.add(responseMap);
+                    }
                 }
 
                 // Map NumberQuestion to a response object
                 return Map.of(
-                        "questionId", question.getQuestionId(),
                         "question", question.getQuestion(),
-                        "type", "NumberQuestion",
+                        "questionType", "NumberQuestion",
                         "responses", analyticResponses
                 );
             } else if (question instanceof ChoiceQuestion) {
