@@ -147,4 +147,31 @@ export const getSurveyResponses = async (surveyId) => {
     return status;
 }
 
+// Get a survey's results
+// Return:
+// - Success: True if survey results are retrieved
+// - Body - The survey results in JSON format or message describing the error
+export const getSurveyResults = async (surveyId) => {
+
+    const requestOptions = {
+        method: 'GET',
+    };
+
+    const response = await fetch(`/survey/${surveyId}/results`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to get survey results"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
+        status.body = await response.json();
+    }
+
+    return status;
+}
+
 
