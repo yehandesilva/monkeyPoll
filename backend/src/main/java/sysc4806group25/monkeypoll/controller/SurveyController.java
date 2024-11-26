@@ -146,18 +146,19 @@ public class SurveyController {
                                 .collect(Collectors.toList())
                 );
             } else if (question instanceof NumberQuestion) {
-                // Structure value of 'responses' key as the following:
+                // For NumberQuestion, structure the value of 'responses' key as the following:
                 // [
                 //    {"number1" : number1Count},
                 //    {"number2" : number2Count},
                 // ]
 
-                // NumberResponses for the question
+                // Get all NumberResponses for the question
                 List<NumberResponse> allNumberResponses = ((NumberQuestion) question).getResponses();
 
+                // Create list of HashMap 'entries' - One HashMap<"number", number> for every unique number response
                 ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
                 for (NumberResponse response : allNumberResponses) {
-                    // Check if HashMap entry already exists
+                    // Check if HashMap 'entry' already exists for this number
                     boolean existingEntry = false;
                     for (HashMap<String, Integer> entry : analyticResponses) {
                         if (entry.containsKey(String.valueOf(response.getResponse()))) {
@@ -165,16 +166,17 @@ public class SurveyController {
                             break;
                         }
                     }
-                    // No entry for this response (is unique)
+                    // Create HashMap for this NumberResponse (unique number)
                     if (!existingEntry) {
                         int count = 0;
-                        // Get count
+                        // Compute number of occurrences
                         for (NumberResponse innerResponse : allNumberResponses) {
                             if (response.getResponse() == innerResponse.getResponse()) {
-                                // Check if match found
+                                // Match found
                                 count++;
                             }
                         }
+                        // Create the HashMap 'entry' and add to list
                         HashMap<String, Integer> responseMap = new HashMap<>();
                         responseMap.put(String.valueOf(response.getResponse()), count);
                         analyticResponses.add(responseMap);
