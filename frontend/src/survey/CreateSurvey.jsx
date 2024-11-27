@@ -175,7 +175,7 @@ const CreateSurvey = ({toast, setVisible}) => {
 
     return (
         <>
-            <Dialog header="Message from Monkey" visible={dialogVisible} position='bottom-right' style={{ width: '25vw' }} onHide={() => {if (!dialogVisible) return; setDialogVisible(false); }} draggable={false} resizable={false}>
+            <Dialog header="Uncle Bob Says:" visible={dialogVisible} position='bottom-right' style={{ width: '25vw' }} onHide={() => {if (!dialogVisible) return; setDialogVisible(false); }} draggable={false} resizable={false}>
                 <div className="flex flex-row ">
                     <Image src="public/aiMonkey.png" alt="Image" width="100" />
                     <div className="ml-3">
