@@ -5,19 +5,22 @@ import { InputText } from 'primereact/inputtext';
 import { UserContext } from "../context/UserContext.jsx";
 import Home from '../home/Home.jsx';
 import Question from "./Question.jsx";
-import {createSurvey} from "../api/surveyApi.js";
+import {createSurvey, getAiQuestions} from "../api/surveyApi.js";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 import question from "./Question.jsx";
 import {getUser} from "../api/userApi.js";
 import {Card} from "primereact/card";
+import {Dialog} from "primereact/dialog";
+import { Image } from 'primereact/image';
 
 const CreateSurvey = ({toast, setVisible}) => {
-    const lastQuestionId = useRef(1)
+    const lastQuestionId = useRef(0)
     const [user, setUser] = useContext(UserContext);
     const [surveyName, setSurveyName] = useState("")
     const [questionContents, setQuestionContents] = useState({})
-    const [questionList, setQuestionList] = useState([<Question key={1} id={1} setQuestionContents={setQuestionContents}/>])
+    const [questionList, setQuestionList] = useState([])
+    const [dialogVisible, setDialogVisible] = useState(false);
 
     const getUniqueId = () =>  {
         return ++lastQuestionId.current;
@@ -146,19 +149,50 @@ const CreateSurvey = ({toast, setVisible}) => {
         const newId = getUniqueId()
 
         setQuestionList(prevState => {
-            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents}/>]
+            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt=""/>]
         })
     };
 
+    const generateQuestions = async () => {
+        const status = await getAiQuestions(surveyName);
+        if (status.success) {
+            Object.values(status.body)[0].forEach((question) => {
+               const newId = getUniqueId();
+                setQuestionList(prevState => {
+                    return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt={question}/>]
+                })
+            });
+        } else {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Generation Error',
+                detail: status.body.message,
+            });
+        }
+        if (!dialogVisible) return; setDialogVisible(false);
+    }
+
     return (
         <>
+            <Dialog header="Message from Monkey" visible={dialogVisible} position='bottom-right' style={{ width: '25vw' }} onHide={() => {if (!dialogVisible) return; setDialogVisible(false); }} draggable={false} resizable={false}>
+                <div className="flex flex-row ">
+                    <Image src="public/aiMonkey.png" alt="Image" width="100" />
+                    <div className="ml-3">
+                        <div>
+                            {"Generate questions?"}
+                        </div>
+                        <Button className="flex mt-2" label="Yes" size="small" icon="pi pi-check"  style={{boxShadow: "none"}} onClick={() => generateQuestions()}/>
+                    </div>
+                </div>
+            </Dialog>
             <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setVisible(false)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
                 <div className="flex flex-column m-2 mt-6 mb-4 w-4" >
                     <Card title="Survey Name">
                         <InputText id="name" placeholder="Enter survey name" onChange={(e) =>
-                            setSurveyName(e.target.value)} className="w-full"/>
+                            setSurveyName(e.target.value)} className="w-full" onBlur={() => (surveyName)? setDialogVisible(true) : null}/>
                     </Card>
                 </div>
                 {questionList}

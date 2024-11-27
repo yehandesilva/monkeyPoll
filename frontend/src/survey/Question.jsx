@@ -6,8 +6,9 @@ import PropTypes from "prop-types";
 import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
 import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
 
-const Question = ({id, setQuestionContents}) => {
-    const [prompt, setPrompt] = useState()
+const Question = ({id, setQuestionContents, prompt}) => {
+
+    const [questionPrompt, setQuestionPrompt] = useState(prompt);
     const [type, setType] = useState()
     const [responseOptions, setResponseOptions] = useState({})
 
@@ -26,12 +27,12 @@ const Question = ({id, setQuestionContents}) => {
 
     useEffect(() => {
         updateQuestionContentsObj()
-    }, [prompt, responseOptions]);
+    }, [questionPrompt, responseOptions]);
 
 
     const updateQuestionContentsObj = () => {
         const contentsAsObject = {
-            prompt: prompt,
+            prompt: questionPrompt,
             type: type,
             responseOptions: responseOptions
         }
@@ -60,8 +61,8 @@ const Question = ({id, setQuestionContents}) => {
           <Card title={"Question " + id} className="w-6">
               <div className="formgrid grid">
                   <div className="field col-12 md:col-6">
-                      <InputText type="text" placeholder="Enter question prompt" onChange={(e) =>
-                          setPrompt(e.target.value)} className="w-full"/>
+                      <InputText value={questionPrompt} type="text" placeholder="Enter question prompt" onChange={(e) =>
+                          setQuestionPrompt(e.target.value)} className="w-full"/>
                   </div>
                   <div className="field col-12 md:col-6">
                       <Dropdown value={type} onChange={(e) => setType(e.value)} options={questionTypes}
