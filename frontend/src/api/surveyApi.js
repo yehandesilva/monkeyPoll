@@ -224,4 +224,42 @@ export const getSurveyResults = async (surveyId) => {
     return status;
 }
 
+// Get AI generated prompts for survey questions
+// Return:
+// - Success: True if prompts are generated
+// - Body - The questions in JSON format or message describing the error
+export const getAiQuestions = async (prompt) => {
+
+    // TODO Remove stub replicating AI response
+    return {
+        success: true,
+        body: {
+            responses: [
+                "Sample Prompt 1",
+                "Sample Prompt 2",
+                "Sample Prompt 3",
+            ]
+        }
+    }
+
+    const requestOptions = {
+        method: 'GET',
+    };
+
+    const response = await fetch(`/generatePrompts/${prompt}`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to get prompts"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
+        status.body = await response.json();
+    }
+
+    return status;
+}
 
