@@ -147,7 +147,7 @@ public class SurveyController {
                 // Map TextQuestion to a response object
                 return Map.of(
                         "question", question.getQuestion(),
-                        "questionType", "TextQuestion",
+                        "questionType", question.getClass().getSimpleName(),
                         "responses", ((TextQuestion) question).getResponses().stream()
                                 .map(TextResponse::getResponse)
                                 .collect(Collectors.toList())
@@ -193,7 +193,7 @@ public class SurveyController {
                 // Map NumberQuestion to a response object
                 return Map.of(
                         "question", question.getQuestion(),
-                        "questionType", "NumberQuestion",
+                        "questionType", question.getClass().getSimpleName(),
                         "responses", analyticResponses
                 );
             } else if (question instanceof ChoiceQuestion) {
@@ -238,7 +238,7 @@ public class SurveyController {
                 // Map ChoiceQuestion to a response object
                 return Map.of(
                         "question", question.getQuestion(),
-                        "questionType", "ChoiceQuestion",
+                        "questionType", question.getClass().getSimpleName(),
                         "responses", analyticResponses
                 );
             }
