@@ -138,7 +138,7 @@ const Survey = ({toast}) => {
                                 <div key={questionId} className="w-full">
                                     <Card title={"Question " + (questionIndex + 1)}>
                                         <h3>{questionStr}</h3>
-                                        <InputTextarea autoResize value={responses.get(questionId)}
+                                        <InputTextarea className="flex w-full" autoResize value={responses.get(questionId)}
                                                        onChange={(e) => handleResponseChange(e, questionId, question.type)}
                                                        rows={10} cols={40}/>
                                     </Card>
@@ -154,7 +154,7 @@ const Survey = ({toast}) => {
                                         <div className="flex-auto">
                                             <label htmlFor="minmax" className="block mb-2">Enter a number
                                                 between {question.minValue} and {question.maxValue}</label>
-                                            <InputNumber inputId="minmax" value={responses.get(questionId)}
+                                            <InputNumber className="flex w-auto" inputId="minmax" value={responses.get(questionId)}
                                                          onValueChange={(e) => handleResponseChange(e, questionId, question.type)}
                                                          min={question.minValue}
                                                          max={question.maxValue}/>

@@ -190,7 +190,7 @@ const CreateSurvey = ({toast, setVisible}) => {
         <>
             <Dialog header="Uncle Bob Says:" visible={bobDialogVisible} position='bottom-right' style={{ width: '25vw' }} onHide={() => {if (!bobDialogVisible) return; setBobDialogVisible(false); }} draggable={false} resizable={false}>
                 <div className="flex flex-row ">
-                    <Image src="public/aiMonkey.png" alt="Image" width="100" />
+                    <Image src="aiMonkey.png" alt="Image" width="100" />
                     <div className="ml-3">
                         <div>
                             {"Generate questions?"}
