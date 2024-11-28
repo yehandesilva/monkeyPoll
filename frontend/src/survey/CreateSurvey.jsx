@@ -1,23 +1,25 @@
-import { useState, useRef, useContext, useEffect } from 'react';
-import { Toast } from 'primereact/toast';
+import { useState, useRef, useContext } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { UserContext } from "../context/UserContext.jsx";
-import Home from '../home/Home.jsx';
 import Question from "./Question.jsx";
-import {createSurvey} from "../api/surveyApi.js";
-import NumberQuestionOptions from "./NumberQuestionOptions.jsx";
-import ChoiceQuestionOptions from "./ChoiceQuestionOptions.jsx";
-import question from "./Question.jsx";
+import {createSurvey, getAiQuestions} from "../api/surveyApi.js";
 import {getUser} from "../api/userApi.js";
 import {Card} from "primereact/card";
+import {Dialog} from "primereact/dialog";
+import { Image } from 'primereact/image';
+import {ProgressSpinner} from "primereact/progressspinner";
 
 const CreateSurvey = ({toast, setVisible}) => {
-    const lastQuestionId = useRef(1)
+    const lastQuestionId = useRef(0)
     const [user, setUser] = useContext(UserContext);
     const [surveyName, setSurveyName] = useState("")
     const [questionContents, setQuestionContents] = useState({})
-    const [questionList, setQuestionList] = useState([<Question key={1} id={1} setQuestionContents={setQuestionContents}/>])
+    const [questionList, setQuestionList] = useState([])
+    const [bobDialogVisible, setBobDialogVisible] = useState(false);
+    const [generatedQuestionsVisible, setGeneratedQuestionsVisible] = useState(false);
+    const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const getUniqueId = () =>  {
         return ++lastQuestionId.current;
@@ -146,19 +148,85 @@ const CreateSurvey = ({toast, setVisible}) => {
         const newId = getUniqueId()
 
         setQuestionList(prevState => {
-            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents}/>]
+            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt=""/>]
         })
     };
 
+    const generateQuestions = async () => {
+        setLoading(true);
+        const status = await getAiQuestions(surveyName);
+        if (status.success) {
+            const _generatedQuestions = [];
+            Object.values(status.body)[0].forEach((question) => {
+               _generatedQuestions.push(question);
+            });
+            setGeneratedQuestions(_generatedQuestions);
+        } else {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Generation Error',
+                detail: status.body.message,
+            });
+        }
+        setLoading(false);
+        setGeneratedQuestionsVisible(true);
+        if (!bobDialogVisible) return; setBobDialogVisible(false);
+    }
+
+    const addGeneratedQuestion = (question) => {
+        const newId = getUniqueId();
+        setQuestionList(prevState => {
+            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt={question}/>]
+        })
+        const _generatedQuestions = [...generatedQuestions.filter((ques) => ques !== question)];
+        setGeneratedQuestions(_generatedQuestions);
+        if (_generatedQuestions.length === 0) {
+            setGeneratedQuestionsVisible(false);
+        }
+    }
+
     return (
         <>
+            <Dialog header="Uncle Bob Says:" visible={bobDialogVisible} position='bottom-right' style={{ width: '25vw' }} onHide={() => {if (!bobDialogVisible) return; setBobDialogVisible(false); }} draggable={false} resizable={false}>
+                <div className="flex flex-row ">
+                    <Image src="public/aiMonkey.png" alt="Image" width="100" />
+                    <div className="ml-3">
+                        <div>
+                            {"Generate questions?"}
+                        </div>
+                        {
+                            (loading) ?
+                                <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+                                :
+                                <Button className="flex mt-2" label="Yes" size="small" icon="pi pi-check"  style={{boxShadow: "none"}} onClick={() => generateQuestions()}/>
+                        }
+
+                    </div>
+                </div>
+            </Dialog>
+            <Dialog header="Generated Questions:" visible={generatedQuestionsVisible} style={{ width: '50vw' }} onHide={() => {if (!generatedQuestionsVisible) return; setGeneratedQuestionsVisible(false); }} draggable={false} resizable={false}>
+                <div className="flex flex-column gap-2">
+                    {
+                        (generatedQuestions.map((ques, i) => {
+                            return (
+                                <div key={i} className="flex flex-row gap-2 align-items-center">
+                                    <Button icon="pi pi-plus" outlined raised size="small" style={{boxShadow: "none"}} onClick={() => addGeneratedQuestion(ques)}/>
+                                    {ques}
+                                </div>
+                            )
+                        }))
+                    }
+                </div>
+            </Dialog>
+
             <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setVisible(false)}/>
             <div className="flex flex-column align-items-center gap-3 p-4 card">
                 <div className="flex flex-column m-2 mt-6 mb-4 w-4" >
                     <Card title="Survey Name">
                         <InputText id="name" placeholder="Enter survey name" onChange={(e) =>
-                            setSurveyName(e.target.value)} className="w-full"/>
+                            setSurveyName(e.target.value)} className="w-full" onBlur={() => (surveyName)? setBobDialogVisible(true) : null}/>
                     </Card>
                 </div>
                 {questionList}

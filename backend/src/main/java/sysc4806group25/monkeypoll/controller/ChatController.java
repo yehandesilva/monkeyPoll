@@ -34,7 +34,7 @@ public class ChatController {
         }
 
         // Construct the prompt message
-        String promptMessage = "Please return exactly 5 survey questions (only the questions), each on a new line. " +
+        String promptMessage = "Please return exactly 5 survey questions (only the questions and without numbering), each on a new line. " +
                 "Based on the topic: " + message;
 
         try {
