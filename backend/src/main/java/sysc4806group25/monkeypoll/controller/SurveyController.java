@@ -243,40 +243,6 @@ public class SurveyController {
     }
 
     /**
-     * Returns the number of times the specified NumberResponse occurs
-     * in the provided list of NumberResponses
-     * @param responses - list of NumberResponses
-     * @return the total count of the specified NumberResponse
-     */
-    private int getNumberResponseCount(List<NumberResponse> responses, NumberResponse targetResponse) {
-        int responseCount = 0;
-        for (NumberResponse response : responses) {
-            if (response.getResponse() == targetResponse.getResponse()) {
-                responseCount++;
-            }
-        }
-        return responseCount;
-    }
-
-    /**
-     * Returns the number of times the specified ChoiceResponse occurs
-     * in the provided list of ChoiceResponses
-     * @param responses - list of ChoiceResponses
-     * @return the total count of the specified ChoiceResponse
-     *
-     * (Note: ChoiceOptions can be compared based on their unique choiceOptionId (instead of their description))
-     */
-    private int getChoiceOptionCount(List<ChoiceResponse> responses, ChoiceResponse targetResponse) {
-        int responseCount = 0;
-        for (ChoiceResponse response : responses) {
-            if (response.getResponse().getChoiceOptionId() == targetResponse.getResponse().getChoiceOptionId()) {
-                responseCount++;
-            }
-        }
-        return responseCount;
-    }
-
-    /**
      * Submits a survey response for a specific survey by its ID.
      *
      * @param surveyResponseDTO the survey response data transfer object containing the responses
