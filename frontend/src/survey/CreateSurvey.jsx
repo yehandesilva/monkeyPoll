@@ -173,7 +173,7 @@ const CreateSurvey = ({toast, setVisible}) => {
     const addGeneratedQuestion = (question) => {
         const newId = getUniqueId();
         setQuestionList(prevState => {
-            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt={question.question}/>]
+            return [...prevState, <Question key={newId} id={newId} setQuestionContents={setQuestionContents} prompt={question}/>]
         })
         const _generatedQuestions = [...generatedQuestions.filter((ques) => ques !== question)];
         setGeneratedQuestions(_generatedQuestions);
