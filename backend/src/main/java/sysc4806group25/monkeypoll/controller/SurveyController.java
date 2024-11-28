@@ -238,8 +238,8 @@ public class SurveyController {
             return null;
         }).collect(Collectors.toList());
 
-        // Return the list of questions and their responses
-        return ResponseEntity.ok(questionResponses);
+        // Return the survey description, and the list of responses as the entire JSON response
+        return ResponseEntity.ok(Map.of("description", survey.getDescription(), "responses", questionResponses));
     }
 
     /**
