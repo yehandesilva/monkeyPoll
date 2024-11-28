@@ -8,6 +8,7 @@ import {getUser} from "../api/userApi.js";
 import {Card} from "primereact/card";
 import {Dialog} from "primereact/dialog";
 import { Image } from 'primereact/image';
+import {ProgressSpinner} from "primereact/progressspinner";
 
 const CreateSurvey = ({toast, setVisible}) => {
     const lastQuestionId = useRef(0)
@@ -18,6 +19,7 @@ const CreateSurvey = ({toast, setVisible}) => {
     const [bobDialogVisible, setBobDialogVisible] = useState(false);
     const [generatedQuestionsVisible, setGeneratedQuestionsVisible] = useState(false);
     const [generatedQuestions, setGeneratedQuestions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const getUniqueId = () =>  {
         return ++lastQuestionId.current;
@@ -151,6 +153,7 @@ const CreateSurvey = ({toast, setVisible}) => {
     };
 
     const generateQuestions = async () => {
+        setLoading(true);
         const status = await getAiQuestions(surveyName);
         if (status.success) {
             const _generatedQuestions = [];
@@ -166,6 +169,7 @@ const CreateSurvey = ({toast, setVisible}) => {
                 detail: status.body.message,
             });
         }
+        setLoading(false);
         setGeneratedQuestionsVisible(true);
         if (!bobDialogVisible) return; setBobDialogVisible(false);
     }
@@ -191,7 +195,13 @@ const CreateSurvey = ({toast, setVisible}) => {
                         <div>
                             {"Generate questions?"}
                         </div>
-                        <Button className="flex mt-2" label="Yes" size="small" icon="pi pi-check"  style={{boxShadow: "none"}} onClick={() => generateQuestions()}/>
+                        {
+                            (loading) ?
+                                <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+                                :
+                                <Button className="flex mt-2" label="Yes" size="small" icon="pi pi-check"  style={{boxShadow: "none"}} onClick={() => generateQuestions()}/>
+                        }
+
                     </div>
                 </div>
             </Dialog>
@@ -200,7 +210,7 @@ const CreateSurvey = ({toast, setVisible}) => {
                     {
                         (generatedQuestions.map((ques, i) => {
                             return (
-                                <div key={i} className="flex flex-wrap gap-2 align-items-center">
+                                <div key={i} className="flex flex-row gap-2 align-items-center">
                                     <Button icon="pi pi-plus" outlined raised size="small" style={{boxShadow: "none"}} onClick={() => addGeneratedQuestion(ques)}/>
                                     {ques}
                                 </div>
