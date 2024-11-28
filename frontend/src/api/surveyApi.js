@@ -230,18 +230,6 @@ export const getSurveyResults = async (surveyId) => {
 // - Body - The questions in JSON format or message describing the error
 export const getAiQuestions = async (prompt) => {
 
-    // TODO Remove stub replicating AI response
-    return {
-        success: true,
-        body: {
-            questions: [
-                "Sample Prompt 1",
-                "Sample Prompt 2",
-                "Sample Prompt 3",
-            ]
-        }
-    }
-
     const requestOptions = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
