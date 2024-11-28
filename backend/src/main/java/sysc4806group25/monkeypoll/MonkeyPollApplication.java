@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.repo.AccountRepository;
@@ -11,6 +12,7 @@ import sysc4806group25.monkeypoll.repo.SurveyRepository;
 
 @SpringBootApplication
 @EntityScan(basePackages = "sysc4806group25.monkeypoll.model")
+@EnableHystrix
 public class MonkeyPollApplication {
 
     public static void main(String[] args) {
