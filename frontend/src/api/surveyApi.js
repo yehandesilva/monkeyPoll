@@ -234,7 +234,7 @@ export const getAiQuestions = async (prompt) => {
     return {
         success: true,
         body: {
-            responses: [
+            questions: [
                 "Sample Prompt 1",
                 "Sample Prompt 2",
                 "Sample Prompt 3",
@@ -243,10 +243,12 @@ export const getAiQuestions = async (prompt) => {
     }
 
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: prompt})
     };
 
-    const response = await fetch(`/generatePrompts/${prompt}`, requestOptions);
+    const response = await fetch(`/user/ai/generate`, requestOptions);
 
     const status = {
         success: false,
