@@ -124,6 +124,13 @@ public class SurveyController {
         return ResponseEntity.ok(questionResponses);
     }
 
+    /**
+     * This endpoint is responsible for returning the specified survey's
+     * analytics, which includes a list of all TextResponses, a total count
+     * for each unique NumberResponse, and a total count for each unique ChoiceResponse
+     * @param surveyId - the survey to return analytics for
+     * @return response containing the survey description and list of all responses for each question
+     */
     @GetMapping("/user/survey/{surveyId}/results")
     public ResponseEntity<?> getSurveyResults(@PathVariable long surveyId) {
         // Retrieve the survey by its ID
