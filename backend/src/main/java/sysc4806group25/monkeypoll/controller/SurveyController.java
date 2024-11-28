@@ -23,9 +23,7 @@ import sysc4806group25.monkeypoll.model.TextQuestion;
 import sysc4806group25.monkeypoll.model.TextResponse;
 import sysc4806group25.monkeypoll.service.SurveyService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -124,6 +122,131 @@ public class SurveyController {
 
         // Return the list of questions and their responses
         return ResponseEntity.ok(questionResponses);
+    }
+
+    /**
+     * This endpoint is responsible for returning the specified survey's
+     * analytics, which includes a list of all TextResponses, a total count
+     * for each unique NumberResponse, and a total count for each unique ChoiceResponse
+     * @param surveyId - the survey to return analytics for
+     * @return response containing the survey description and list of all responses for each question
+     */
+    @GetMapping("/user/survey/{surveyId}/results")
+    public ResponseEntity<?> getSurveyResults(@PathVariable long surveyId) {
+        // Retrieve the survey by its ID
+        Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
+        if (surveyOpt.isEmpty()) {
+            // Return a 404 status if the survey is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+        Survey survey = surveyOpt.get();
+
+        // Map the questions and their responses to a list of objects
+        List<Object> questionResponses = survey.getQuestions().stream().map(question -> {
+            if (question instanceof TextQuestion) {
+                // Map TextQuestion to a response object
+                return Map.of(
+                        "question", question.getQuestion(),
+                        "questionType", question.getClass().getSimpleName(),
+                        "responses", ((TextQuestion) question).getResponses().stream()
+                                .map(TextResponse::getResponse)
+                                .collect(Collectors.toList())
+                );
+            } else if (question instanceof NumberQuestion) {
+                // For NumberQuestion, structure the value of 'responses' key as the following:
+                // [
+                //    {"number1" : count},
+                //    {"number2" : count},
+                // ]
+
+                // Get all NumberResponses for the question
+                List<NumberResponse> allNumberResponses = ((NumberQuestion) question).getResponses();
+
+                // Create list of HashMap 'entries' - One HashMap<"number", number> for every unique number response
+                ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
+                for (NumberResponse response : allNumberResponses) {
+                    // Check if HashMap 'entry' already exists for this number
+                    boolean existingEntry = false;
+                    for (HashMap<String, Integer> entry : analyticResponses) {
+                        if (entry.containsKey(String.valueOf(response.getResponse()))) {
+                            existingEntry = true;
+                            break;
+                        }
+                    }
+                    // Create HashMap for this NumberResponse (unique number)
+                    if (!existingEntry) {
+                        int count = 0;
+                        // Compute number of occurrences
+                        for (NumberResponse innerResponse : allNumberResponses) {
+                            if (response.getResponse() == innerResponse.getResponse()) {
+                                // Match found
+                                count++;
+                            }
+                        }
+                        // Create the HashMap 'entry' and add to list
+                        HashMap<String, Integer> responseMap = new HashMap<>();
+                        responseMap.put(String.valueOf(response.getResponse()), count);
+                        analyticResponses.add(responseMap);
+                    }
+                }
+
+                // Map NumberQuestion to a response object
+                return Map.of(
+                        "question", question.getQuestion(),
+                        "questionType", question.getClass().getSimpleName(),
+                        "responses", analyticResponses
+                );
+            } else if (question instanceof ChoiceQuestion) {
+                // For ChoiceQuestion, structure value of 'responses' key as the following:
+                // [
+                //    {"choice1 description" : choice1Count},
+                //    {"choice2 description" : choice2Count},
+                // ]
+
+                // Get all NumberResponses for the question
+                List<ChoiceResponse> allChoiceResponses = ((ChoiceQuestion) question).getResponses();
+
+                // Create list of HashMap 'entries' - One HashMap<"choiceDescription", count> for every unique choice response
+                ArrayList<HashMap<String, Integer>> analyticResponses = new ArrayList<>();
+                for (ChoiceResponse response : allChoiceResponses) {
+                    // Check if HashMap 'entry' already exists for this description
+                    boolean existingEntry = false;
+                    for (HashMap<String, Integer> entry : analyticResponses) {
+                        if (entry.containsKey(response.getResponse().getDescription())) {
+                            existingEntry = true;
+                            break;
+                        }
+                    }
+                    // Create HashMap for this ChoiceResponse (unique number)
+                    if (!existingEntry) {
+                        int count = 0;
+                        // Compute number of occurrences
+                        for (ChoiceResponse innerResponse : allChoiceResponses) {
+                            // Note: Comparing ChoiceOptions by choiceOptionId (ChoiceOption PK)
+                            if (response.getResponse().getChoiceOptionId() == innerResponse.getResponse().getChoiceOptionId()) {
+                                // Match found
+                                count++;
+                            }
+                        }
+                        // Create the HashMap 'entry' and add to list
+                        HashMap<String, Integer> responseMap = new HashMap<>();
+                        responseMap.put(response.getResponse().getDescription(), count);
+                        analyticResponses.add(responseMap);
+                    }
+                }
+
+                // Map ChoiceQuestion to a response object
+                return Map.of(
+                        "question", question.getQuestion(),
+                        "questionType", question.getClass().getSimpleName(),
+                        "responses", analyticResponses
+                );
+            }
+            return null;
+        }).collect(Collectors.toList());
+
+        // Return the survey description, and the list of responses as the entire JSON response
+        return ResponseEntity.ok(Map.of("description", survey.getDescription(), "responses", questionResponses));
     }
 
     /**
