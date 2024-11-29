@@ -1,6 +1,7 @@
 package sysc4806group25.monkeypoll.controller;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.vertexai.gemini.VertexAiGeminiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,11 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
-    @HystrixCommand(fallbackMethod = "handleAIProcessingError")
+    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "120000")})
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
+        // Log when entering the endpoint
+        logger.info("Entered usr/ai/generate endpoint to generate questions...");
+
         String message = request.getOrDefault("message", "").trim();
 
         // Validate the incoming message
@@ -39,25 +43,19 @@ public class ChatController {
         String promptMessage = "Please return exactly 5 survey questions (only the questions and without numbering), each on a new line. " +
                 "Based on the topic: " + message;
 
-        try {
-            // Call the model
-            UserMessage userMessage = new UserMessage(promptMessage);
-            String generation = this.chatModel.call(userMessage);
+        // Call the model
+        UserMessage userMessage = new UserMessage(promptMessage);
+        String generation = this.chatModel.call(userMessage);
 
-            // Clean and validate the response
-            ArrayList<String> questions = cleanAndConvertToArrayList(generation);
-            if (questions.size() != 5) {
-                logger.warning("The model response does not contain 5 questions.");
-                return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("The model response must contain exactly 5 questions"))), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-            // Return the cleaned questions
-            return ResponseEntity.ok(Map.of("questions", questions));
-
-        } catch (Exception e) {
-            logger.severe("EXCEPTION THROWN DURING AI PROCESSING");
-            throw new RuntimeException();
+        // Clean and validate the response
+        ArrayList<String> questions = cleanAndConvertToArrayList(generation);
+        if (questions.size() != 5) {
+            logger.warning("The model response does not contain 5 questions.");
+            return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("The model response must contain exactly 5 questions"))), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        // Return the cleaned questions
+        return ResponseEntity.ok(Map.of("questions", questions));
     }
 
     private ArrayList<String> cleanAndConvertToArrayList(String generation) {
@@ -87,7 +85,7 @@ public class ChatController {
      * @return a SERVICE_UNAVAILABLE response
      */
     private ResponseEntity<Map<String, ArrayList<String>>> handleAIProcessingError(@RequestBody Map<String, String> request) {
-        logger.severe("[HYSTRIX] An exception was thrown while calling the AI model: ");
+        logger.severe("[HYSTRIX] An exception was thrown while calling the AI model. Returning 503 response to frontend...");
         return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
