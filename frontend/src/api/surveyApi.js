@@ -201,7 +201,9 @@ export const getAiQuestions = async (prompt) => {
     } else {
         // Check for 503 Service Unavailable response from backend (via Hystrix fallback method)
         if (response.status === 503) {
-            status.body.message = "Bob is unavailable at the moment. Please try again later";
+            status.body.message = "Uncle Bob is currently unavailable. Please try again later";
+        } else {
+            status.body.message = "Uncle Bob had some trouble generating questions for you. Can you try again?";
         }
     }
 
