@@ -1,5 +1,6 @@
 package sysc4806group25.monkeypoll.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.vertexai.gemini.VertexAiGeminiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
+    @HystrixCommand(fallbackMethod = "handleAIGenerationError")
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
         String message = request.getOrDefault("message", "").trim();
 
@@ -53,8 +55,8 @@ public class ChatController {
             return ResponseEntity.ok(Map.of("questions", questions));
 
         } catch (Exception e) {
-            logger.severe("Error calling the AI model: " + e.getMessage());
-            return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("An error occurred while generating the survey questions"))), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.severe("EXCEPTION THROWN DURING AI PROCESSING");
+            throw new RuntimeException();
         }
     }
 
