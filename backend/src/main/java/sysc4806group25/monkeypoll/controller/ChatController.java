@@ -76,4 +76,18 @@ public class ChatController {
         // Convert the array into an ArrayList and return it
         return new ArrayList<>(Arrays.asList(questionsArray));
     }
+
+    /**
+     * The handleAIGenerationError method models the fallback method for the
+     * @HystrixCommand, which is the generate() endpoint method. When an exception
+     * is thrown in the endpoint method, it will use this method as its fallback to
+     * handle the exception. In this case, this method will handle th exception by
+     * returning a SERVICE_UNAVAILABLE response.
+     * @param request - the incoming request
+     * @return a SERVICE_UNAVAILABLE response
+     */
+    private ResponseEntity<Map<String, ArrayList<String>>> handleAIGenerationError(@RequestBody Map<String, String> request) {
+        logger.severe("[HYSTRIX] An exception was thrown while calling the AI model: ");
+        return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
