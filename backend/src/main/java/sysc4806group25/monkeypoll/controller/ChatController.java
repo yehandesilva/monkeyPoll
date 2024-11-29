@@ -26,10 +26,10 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
-    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "120000")})
+    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000")})
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
         // Log when entering the endpoint
-        logger.info("Entered usr/ai/generate endpoint to generate questions...");
+        logger.info("[/GENERATE ENDPOINT] Entered the endpoint to generate questions...");
 
         String message = request.getOrDefault("message", "").trim();
 
@@ -85,7 +85,7 @@ public class ChatController {
      * @return a SERVICE_UNAVAILABLE response
      */
     private ResponseEntity<Map<String, ArrayList<String>>> handleAIProcessingError(@RequestBody Map<String, String> request) {
-        logger.severe("[HYSTRIX] An exception was thrown while calling the AI model. Returning 503 response to frontend...");
+        logger.severe("[HYSTRIX FALLBACK METHOD] An exception was thrown while calling the AI model. Returning 503 response to frontend...");
         return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
