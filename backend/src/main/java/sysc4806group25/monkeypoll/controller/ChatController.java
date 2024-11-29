@@ -25,7 +25,7 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
-    @HystrixCommand(fallbackMethod = "handleAIGenerationError")
+    @HystrixCommand(fallbackMethod = "handleAIProcessingError")
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
         String message = request.getOrDefault("message", "").trim();
 
@@ -86,7 +86,7 @@ public class ChatController {
      * @param request - the incoming request
      * @return a SERVICE_UNAVAILABLE response
      */
-    private ResponseEntity<Map<String, ArrayList<String>>> handleAIGenerationError(@RequestBody Map<String, String> request) {
+    private ResponseEntity<Map<String, ArrayList<String>>> handleAIProcessingError(@RequestBody Map<String, String> request) {
         logger.severe("[HYSTRIX] An exception was thrown while calling the AI model: ");
         return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.SERVICE_UNAVAILABLE);
     }
