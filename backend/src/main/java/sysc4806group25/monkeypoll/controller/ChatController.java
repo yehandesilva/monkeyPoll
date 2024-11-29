@@ -1,5 +1,7 @@
 package sysc4806group25.monkeypoll.controller;
 
+import com.netflix.hystrix.HystrixCircuitBreaker;
+import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -79,13 +81,21 @@ public class ChatController {
      * The handleAIGenerationError method models the fallback method for the
      * @HystrixCommand, which is the generate() endpoint method. When an exception
      * is thrown in the endpoint method, it will use this method as its fallback to
-     * handle the exception. In this case, this method will handle th exception by
-     * returning a SERVICE_UNAVAILABLE response.
+     * handle the exception. In this case, this method will handle the exception by
+     * returning a SERVICE_UNAVAILABLE response IF the circuit is opened. Otherwise,
+     * an INTERNAL_SERVER_ERROR response is returned.
      * @param request - the incoming request
-     * @return a SERVICE_UNAVAILABLE response
+     * @return a SERVICE_UNAVAILABLE response if circuit is open, otherwise return
+     * INTERNAL_SERVER_ERROR.
      */
     private ResponseEntity<Map<String, ArrayList<String>>> handleAIProcessingError(@RequestBody Map<String, String> request) {
-        logger.severe("[HYSTRIX FALLBACK METHOD] An exception was thrown while calling the AI model. Returning 503 response to frontend...");
-        return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.SERVICE_UNAVAILABLE);
+        HystrixCircuitBreaker circuitBreaker = HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("generate"));
+        if (circuitBreaker != null && circuitBreaker.isOpen()) {
+            logger.severe("[HYSTRIX FALLBACK METHOD] Exception was thrown during AI processing. CIRCUIT IS OPEN! Returning 503 response to notify frontend that this service will be temporarily unavailable...");
+            return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions. Service will temporarily be unavailable"))), HttpStatus.SERVICE_UNAVAILABLE);
+        } else {
+            logger.severe("[HYSTRIX FALLBACK METHOD] Exception was thrown during AI processing. Returning response 500 response to frontend...");
+            return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
