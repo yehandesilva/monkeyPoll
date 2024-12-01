@@ -29,8 +29,8 @@ const Surveys = ({toast, setVisible}) => {
         }
     }
 
-    const closeSurvey = async (survey) => {
-        const status = await postCloseSurvey(survey.surveyId);
+    const closeSurvey = async (surveyId) => {
+        const status = await postCloseSurvey(surveyId);
         if (status.success) {
             await refreshSurveys();
         } else {
@@ -75,12 +75,11 @@ const Surveys = ({toast, setVisible}) => {
                     (rowData.closed) ?
                         <Button icon="pi pi-lock" className='p-button-text p-button-danger p-button-rounded'
                                 style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
-                                tooltip="Click to open survey"/>
+                                tooltip="This survey is closed"/>
                         :
                         <Button icon="pi pi-lock-open" className='p-button-text p-button-rounded'
                                 style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
+                                onClick={() => closeSurvey(rowData.surveyId)}
                                 tooltip="Click to close survey"/>
                 }
             </>
