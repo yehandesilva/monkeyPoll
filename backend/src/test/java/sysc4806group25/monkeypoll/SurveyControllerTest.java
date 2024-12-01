@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import sysc4806group25.monkeypoll.model.*;
 import sysc4806group25.monkeypoll.service.AccountUserDetailsService;
@@ -21,6 +22,10 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -310,5 +315,72 @@ public class SurveyControllerTest {
                         "\"responses\":[\"Fortnite\"],\"type\":\"ChoiceQuestion\",\"questionId\":0}," +
                         "{\"question\":\"Describe your work experience.\",\"responses\":[],\"type\":\"TextQuestion\"," +
                         "\"questionId\":0}]"));
+    }
+
+    /**
+     * Test to close an open survey, then retrieve that survey to ensure it is has been closed
+     *
+     * Expects a 204 No Content status for closing, then on retrieval expects that the survey's "closed" attribute
+     * is true.
+     */
+    @Test
+    public void testCloseOpenSurvey() throws Exception {
+        Account account = new Account();
+        account.setEmail("johndoe@email.com");
+        account.setPassword("password123");
+
+        Mockito.when(userDetailsService.loadUserByUsername(account.getEmail()))
+                .thenReturn(account);
+
+        Survey mockSurvey = new Survey();
+        mockSurvey.setAccount(account);
+        mockSurvey.setDescription("Survey");
+        mockSurvey.setClosed(false);
+
+        // stub non-controller components to be compatible with MockMvc
+        when(surveyService.createSurvey(Mockito.any(Survey.class))).thenReturn(mockSurvey);
+        when(surveyService.getSurveyById(mockSurvey.getSurveyId())).thenReturn(Optional.of(mockSurvey));
+        when(surveyService.closeSurvey(mockSurvey)).then(answer -> {mockSurvey.setClosed(true); return mockSurvey;});
+
+        this.mockMvc.perform(post("/user/survey/" + mockSurvey.getSurveyId() + "/close")
+                        .with(SecurityMockMvcRequestPostProcessors.user(account))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        this.mockMvc.perform(get("/survey/" + mockSurvey.getSurveyId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"closed\": true}"));
+    }
+
+    /**
+     * Test to close an already closed survey
+     *
+     * Expects a 409 Conflict status when closing (since the survey is already closed)
+     */
+    @Test
+    public void testCloseClosedSurvey() throws Exception {
+        Account account = new Account();
+        account.setEmail("johndoe@email.com");
+        account.setPassword("password123");
+
+        Mockito.when(userDetailsService.loadUserByUsername(account.getEmail()))
+                .thenReturn(account);
+
+        Survey mockSurvey = new Survey();
+        mockSurvey.setAccount(account);
+        mockSurvey.setDescription("Survey");
+        mockSurvey.setClosed(true);
+
+        // stub non-controller components to be compatible with MockMvc
+        when(surveyService.createSurvey(Mockito.any(Survey.class))).thenReturn(mockSurvey);
+        when(surveyService.getSurveyById(mockSurvey.getSurveyId())).thenReturn(Optional.of(mockSurvey));
+        when(surveyService.closeSurvey(mockSurvey)).then(answer -> {mockSurvey.setClosed(true); return mockSurvey;});
+
+        // Ensure that trying to close the already-closed survey returns 409 CONFLICT
+        this.mockMvc.perform(post("/user/survey/" + mockSurvey.getSurveyId() + "/close")
+                        .with(SecurityMockMvcRequestPostProcessors.user(account))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
     }
 }
