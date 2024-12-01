@@ -330,4 +330,33 @@ public class SurveyController {
         return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\":\"Survey response successfully submitted!\"}");
     }
 
+    /**
+     * This endpoint is responsible for closing the specified survey
+     *
+     * @param surveyId - the survey ID to close
+     * @return a ResponseEntity with a 204 status (success - No Content), a 409 status (error - conflict), or a
+     *         404 status if the survey is not found
+     */
+    @PostMapping("/user/survey/{surveyId}/close")
+    public ResponseEntity<?> closeSurvey(@PathVariable long surveyId) {
+        // Retrieve the survey by its ID
+        Optional<Survey> surveyOpt = surveyService.getSurveyById(surveyId);
+        if (surveyOpt.isEmpty()) {
+            // Return a 404 status if the survey is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\":\"Survey not found!\"}");
+        }
+        Survey survey = surveyOpt.get();
+
+        // Check if the survey is already closed
+        if (survey.getClosed()) {
+            // Return a 409 status if the survey is already closed
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"message\":\"Survey is already closed!\"}");
+        }
+
+        surveyService.closeSurvey(survey);
+
+        // Return the survey description, and the list of responses as the entire JSON response
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
