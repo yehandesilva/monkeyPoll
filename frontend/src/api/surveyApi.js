@@ -174,6 +174,32 @@ export const getSurveyResults = async (surveyId) => {
     return status;
 }
 
+// Close a survey
+// Return:
+// - Success: True if survey has been closed
+// - Body - No content (204) on success or message describing the error
+export const postCloseSurvey = async (surveyId) => {
+
+    const requestOptions = {
+        method: 'POST',
+    };
+
+    const response = await fetch(`/user/survey/${surveyId}/close`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to close survey"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
+    }
+
+    return status;
+}
+
 // Get AI generated prompts for survey questions
 // Return:
 // - Success: True if prompts are generated
