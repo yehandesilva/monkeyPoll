@@ -27,7 +27,7 @@ const CreateSurvey = ({toast, setVisible}) => {
 
     const onSubmit = async () => {
         // Validate the form input before doing anything else, storing all error messages in a list
-        // TODO: currently only the first error is display, but storing all errors anyways in case we need them in the future
+        // currently only the first error is display, but storing all errors anyways in case we need them in the future
         let validation_errors = [];
 
         // Ensure that the survey has a name
