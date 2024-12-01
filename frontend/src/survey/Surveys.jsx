@@ -4,7 +4,7 @@ import {UserContext} from "../context/UserContext.jsx";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {getUser} from "../api/userApi.js";
-import {getSurveyResults} from "../api/surveyApi.js";
+import {postCloseSurvey, getSurveyResults} from "../api/surveyApi.js";
 import SurveyResult from "./SurveyResult.jsx";
 
 const Surveys = ({toast, setVisible}) => {
@@ -30,11 +30,16 @@ const Surveys = ({toast, setVisible}) => {
     }
 
     const closeSurvey = async (survey) => {
-        // TODO Function should inverse the closed state of survey
-
-        const _user = await getUser();
-        if (_user.success) {
-            setUser(_user.body);
+        const status = await postCloseSurvey(survey.surveyId);
+        if (status.success) {
+            await refreshSurveys();
+        } else {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Close Survey Error',
+                detail: status.body.message,
+            });
         }
     }
 
