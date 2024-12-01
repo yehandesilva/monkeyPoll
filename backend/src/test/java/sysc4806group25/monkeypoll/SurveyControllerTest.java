@@ -347,10 +347,7 @@ public class SurveyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        this.mockMvc.perform(get("/survey/" + mockSurvey.getSurveyId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"closed\": true}"));
+        assert surveyService.getSurveyById(mockSurvey.getSurveyId()).get().getClosed(); // ensure survey is closed
     }
 
     /**
