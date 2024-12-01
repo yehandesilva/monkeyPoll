@@ -21,6 +21,10 @@ export const getSurvey = async (id) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+    } else if (response.status === 403) {
+        status.body = await response.json();
+    } else if (response.status === 404) {
+        status.body = await response.json();
     }
 
     return status;
