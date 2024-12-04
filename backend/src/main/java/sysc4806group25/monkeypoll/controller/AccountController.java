@@ -67,7 +67,6 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerAccount(@RequestBody RegisterRequest registerRequest) {
-        //TODO: Validate inputs of RegisterRequest, which should be done in the record or a DTO
 
         if (accountUserDetailsService.isEmailUnique(registerRequest.email())) {
             Account newAccount = accountUserDetailsService.registerNewAccount(registerRequest);

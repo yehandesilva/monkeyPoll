@@ -4,14 +4,17 @@ import {UserContext} from "../context/UserContext.jsx";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {getUser} from "../api/userApi.js";
-import {getSurveyResults} from "../api/surveyApi.js";
+import {postCloseSurvey, getSurveyResults} from "../api/surveyApi.js";
 import SurveyResult from "./SurveyResult.jsx";
+import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog";
 
 const Surveys = ({toast, setVisible}) => {
 
     const [user, setUser] = useContext(UserContext);
     const [surveys, setSurveys] = useState([]);
     const [result, setResult] = useState(null);
+    const [confirmLockDialogVisible, setConfirmLockDialogVisible] = useState(null);
+    const [surveyToClose, setSurveyToClose] = useState(null);
 
     useEffect(() => {
         const _surveys = (user && user.surveys) ? user.surveys : [];
@@ -29,12 +32,22 @@ const Surveys = ({toast, setVisible}) => {
         }
     }
 
-    const closeSurvey = async (survey) => {
-        // TODO Function should inverse the closed state of survey
-
-        const _user = await getUser();
-        if (_user.success) {
-            setUser(_user.body);
+    const closeSurvey = async () => {
+        const status = await postCloseSurvey(surveyToClose);
+        if (status.success) {
+            toast.current.show({
+                severity: 'info',
+                life: 3000,
+                summary: 'Survey has been closed'
+            });
+            await refreshSurveys();
+        } else {
+            toast.current.show({
+                severity: 'error',
+                life: 3000,
+                summary: 'Close Survey Error',
+                detail: status.body.message,
+            });
         }
     }
 
@@ -70,12 +83,11 @@ const Surveys = ({toast, setVisible}) => {
                     (rowData.closed) ?
                         <Button icon="pi pi-lock" className='p-button-text p-button-danger p-button-rounded'
                                 style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
-                                tooltip="Click to open survey"/>
+                                tooltip="This survey is closed and cannot be re-opened"/>
                         :
                         <Button icon="pi pi-lock-open" className='p-button-text p-button-rounded'
                                 style={{boxShadow: "none"}}
-                                onClick={() => navigator.clipboard.writeText(rowData.surveyId)}
+                                onClick={() => {setSurveyToClose(rowData.surveyId); setConfirmLockDialogVisible(true); }}
                                 tooltip="Click to close survey"/>
                 }
             </>
@@ -104,6 +116,9 @@ const Surveys = ({toast, setVisible}) => {
 
     return (
         <>
+            <ConfirmDialog group="declarative"  visible={confirmLockDialogVisible} onHide={() => {setConfirmLockDialogVisible(false); setSurveyToClose(null)}}
+                           message="Are you sure you want close this survey? Once closed, you cannot re-open a survey."
+                           header="Confirm Survey Close" icon="pi pi-exclamation-triangle" accept={closeSurvey} reject={() => (setSurveyToClose(null))} />
             <Button label="Back" icon="pi pi-arrow-circle-left" size="small" className="absolute top-0 left-0 m-4"
                     style={{boxShadow: "none"}} onClick={() => setVisible(false)}/>
             <div className="flex justify-content-center p-8">

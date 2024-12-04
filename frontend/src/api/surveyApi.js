@@ -21,6 +21,10 @@ export const getSurvey = async (id) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+    } else if (response.status === 403) {
+        status.body = await response.json();
+    } else if (response.status === 404) {
+        status.body = await response.json();
     }
 
     return status;
@@ -169,6 +173,32 @@ export const getSurveyResults = async (surveyId) => {
     if (response.ok) {
         status.success = true;
         status.body = await response.json();
+    }
+
+    return status;
+}
+
+// Close a survey
+// Return:
+// - Success: True if survey has been closed
+// - Body - No content (204) on success or message describing the error
+export const postCloseSurvey = async (surveyId) => {
+
+    const requestOptions = {
+        method: 'POST',
+    };
+
+    const response = await fetch(`/user/survey/${surveyId}/close`, requestOptions);
+
+    const status = {
+        success: false,
+        body: {
+            message: "Failed to close survey"
+        }
+    }
+
+    if (response.ok) {
+        status.success = true;
     }
 
     return status;

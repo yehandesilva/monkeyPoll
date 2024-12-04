@@ -48,6 +48,20 @@ public class SurveyService {
     }
 
     /**
+     * Closes a survey
+     *
+     * @param survey the survey to be closed
+     * @return the closed survey
+     */
+    public Survey closeSurvey(Survey survey) {
+
+        // Close and save the survey
+        survey.setClosed(true);
+
+        return surveyRepository.save(survey);
+    }
+
+    /**
      * Retrieves a survey by its ID.
      *
      * @param surveyId the ID of the survey

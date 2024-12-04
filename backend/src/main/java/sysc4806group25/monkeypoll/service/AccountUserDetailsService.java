@@ -16,7 +16,6 @@ import java.util.Optional;
 @Service
 public class AccountUserDetailsService implements UserDetailsService {
 
-    //TODO: Need to merge Account Entity code to for this to work; Account entity must implement UserDetails
     @Autowired
     private AccountRepository accountRepository;
 
