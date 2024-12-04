@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
-    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "2"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000")})
+    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "50000")})
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
         // Log when entering the endpoint
         logger.info("[/GENERATE ENDPOINT] Entered the endpoint to generate questions...");
@@ -89,11 +89,16 @@ public class ChatController {
      * INTERNAL_SERVER_ERROR.
      */
     private ResponseEntity<Map<String, ArrayList<String>>> handleAIProcessingError(@RequestBody Map<String, String> request) {
+        // Get instance of circuit for 'generate' endpoint
         HystrixCircuitBreaker circuitBreaker = HystrixCircuitBreaker.Factory.getInstance(HystrixCommandKey.Factory.asKey("generate"));
-        if (circuitBreaker != null && circuitBreaker.isOpen()) {
+
+        // Check if circuit is open
+        if (circuitBreaker.isOpen()) {
+            // Log corresponding message
             logger.severe("[HYSTRIX FALLBACK METHOD] Exception was thrown during AI processing. CIRCUIT IS OPEN! Returning 503 response to notify frontend that this service will be temporarily unavailable...");
             return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions. Service will temporarily be unavailable"))), HttpStatus.SERVICE_UNAVAILABLE);
         } else {
+            // Circuit is closed (or half-open)
             logger.severe("[HYSTRIX FALLBACK METHOD] Exception was thrown during AI processing. Returning response 500 response to frontend...");
             return new ResponseEntity<>(Map.of("questions", new ArrayList<>(Arrays.asList("(Hystrix) An exception occurred while generating the survey questions"))), HttpStatus.INTERNAL_SERVER_ERROR);
         }
