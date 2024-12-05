@@ -140,5 +140,6 @@ See below for the complete ER model of how the entities of the MonkeyPoll applic
 ### Milestone 3 - Final Demo:
 - Allow creators of surveys to close their surveys, preventing any more responses
 - Analyze the responses of surveys and display the results to owners of surveys
-- Incorporate an alternative to our ORM as per the project topic
-- 
+- Incorporate Google Cloud AI API to generate survey questions
+- Develop Project Topic Circuit Breaker pattern to handle API failures
+- Integrate Spring Security to secure all the endpoints and login 
