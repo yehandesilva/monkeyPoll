@@ -161,6 +161,7 @@ const CreateSurvey = ({toast, setVisible}) => {
                _generatedQuestions.push(question);
             });
             setGeneratedQuestions(_generatedQuestions);
+            setGeneratedQuestionsVisible(true);
         } else {
             toast.current.show({
                 severity: 'error',
@@ -170,7 +171,6 @@ const CreateSurvey = ({toast, setVisible}) => {
             });
         }
         setLoading(false);
-        setGeneratedQuestionsVisible(true);
         if (!bobDialogVisible) return; setBobDialogVisible(false);
     }
 
