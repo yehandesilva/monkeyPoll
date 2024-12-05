@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @PostMapping("user/ai/generate")
-    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "50000")})
+    @HystrixCommand(fallbackMethod = "handleAIProcessingError", commandProperties = {@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"), @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "50000"), @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "10000")})
     public ResponseEntity<Map<String, ArrayList<String>>> generate(@RequestBody Map<String, String> request) {
         // Log when entering the endpoint
         logger.info("[/GENERATE ENDPOINT] Entered the endpoint to generate questions...");
