@@ -74,14 +74,16 @@ Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of the
 1. Open the Environment Variables settings.
 2. Add a new **System Variable**:
    - Name: `GOOGLE_APPLICATION_CREDENTIALS`
-   - Value: `C:\Users\Micha\.config\google\your-api-key.json`
+   - Value: `C:\path\to\your\api-key.json`
 
 **On Linux:**
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your-api-key.json"
 ```
+#### c. Restart your computer 
+This will ensure the system variable change is taken into effect.
 
-#### c. Verify the Environment Variable
+#### d. Verify the Environment Variable
 To ensure the environment variable is set correctly:
 
 **On Windows (PowerShell):**
@@ -135,7 +137,8 @@ See below for the complete ER model of how the entities of the MonkeyPoll applic
 - Added user interface on frontend to allow users to create surveys and see survey responses
 - Added user interface on frontend to allow users to get, fill out and submit surveys
 
-### Plans For Next Milestone - Final Demo:
+### Milestone 3 - Final Demo:
 - Allow creators of surveys to close their surveys, preventing any more responses
-- Analyze the reponses of surveys and display the results to owners of surveys
+- Analyze the responses of surveys and display the results to owners of surveys
 - Incorporate an alternative to our ORM as per the project topic
+- 
