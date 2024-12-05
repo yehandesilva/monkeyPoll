@@ -33,23 +33,78 @@ Make sure you have the following installed and properly configured (Exp: Path en
 
 ### Steps
 
-**1. Clone the repository:**
-   ```
-   git clone https://github.com/yehandesilva/MonkeyPoll.git
-   cd MonkeyPoll
-   ```
+# MonkeyPoll Setup Guide
 
-**2. Install the required dependencies and build the project:**
+## Steps
+
+### 1. Clone the Repository
+Clone the project repository to your local machine:
+```bash
+git clone https://github.com/yehandesilva/MonkeyPoll.git
+cd MonkeyPoll
 ```
+
+### 2. Install Dependencies and Build the Project
+Use Maven to clean and build the project:
+```bash
 mvn clean install
 ```
 
-**3. Run the program:**
-```
+### 3. Run the Application
+Navigate to the backend directory and run the application:
+```bash
 cd backend
 mvn spring-boot:run
-   ```
-   The application should now be running at http://localhost:8080.
+```
+The application will be available at: [http://localhost:8080](http://localhost:8080)
+
+### 4. (OPTIONAL) Set Up Google Cloud Console for AI API Integration
+Follow these steps to configure Google Cloud credentials for generating survey questions:
+
+#### a. Obtain the API Key
+Request the Google Cloud Console API Key from the project owner. Save the file in a secure and accessible location, such as:
+```plaintext
+C:\Users\Micha\.config\google
+```
+
+#### b. Configure the Environment Variable
+Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path of the API key file.
+
+**On Windows:**
+1. Open the Environment Variables settings.
+2. Add a new **System Variable**:
+   - Name: `GOOGLE_APPLICATION_CREDENTIALS`
+   - Value: `C:\Users\Micha\.config\google\your-api-key.json`
+
+**On Linux:**
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your-api-key.json"
+```
+
+#### c. Verify the Environment Variable
+To ensure the environment variable is set correctly:
+
+**On Windows (PowerShell):**
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS
+```
+
+**On Linux:**
+```bash
+echo $GOOGLE_APPLICATION_CREDENTIALS
+```
+
+You can also check the environment variable in the IntelliJ console.
+
+### 5. Rebuild and Run the Program
+After setting the environment variable, rebuild the project:
+```bash
+mvn clean install
+```
+
+Then, follow Step 3 to run the program again.
+
+
 
 ## Diagrams:
 
