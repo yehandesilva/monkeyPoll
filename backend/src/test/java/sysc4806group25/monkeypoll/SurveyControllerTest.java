@@ -380,4 +380,53 @@ public class SurveyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
+
+    @Test
+    public void testGetSurveyResultsWithResponses() throws Exception {
+        Account account = new Account();
+        account.setEmail("johndoe@email.com");
+        account.setPassword("password123");
+
+        Mockito.when(userDetailsService.loadUserByUsername(account.getEmail()))
+                .thenReturn(account);
+
+        Survey mockSurvey = new Survey();
+        mockSurvey.setDescription("Survey");
+        mockSurvey.setClosed(false);
+
+        TextQuestion textQuestion = new TextQuestion("Describe your work experience.", mockSurvey);
+        NumberQuestion numberQuestion = new NumberQuestion("What's your age?", mockSurvey);
+        ChoiceQuestion choiceQuestion = new ChoiceQuestion("What's your favorite video game?", mockSurvey);
+
+        List<ChoiceOption> options = List.of(
+                new ChoiceOption("Fortnite", choiceQuestion),
+                new ChoiceOption("Forza", choiceQuestion),
+                new ChoiceOption("Mario-Kart", choiceQuestion)
+        );
+        choiceQuestion.setOptions(options);
+
+        List<Question> questions = List.of(textQuestion, numberQuestion, choiceQuestion);
+        mockSurvey.setQuestions(questions);
+
+        TextResponse textResponse = new TextResponse("I have 5 years of experience.", textQuestion);
+        NumberResponse numberResponse = new NumberResponse(25, numberQuestion);
+        ChoiceResponse choiceResponse = new ChoiceResponse(options.get(0), choiceQuestion);
+
+        textQuestion.setResponses(List.of(textResponse));
+        numberQuestion.setResponses(List.of(numberResponse));
+        choiceQuestion.setResponses(List.of(choiceResponse));
+
+        when(surveyService.getSurveyById(Mockito.anyLong())).thenReturn(Optional.of(mockSurvey));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/user/survey/1/results")
+                        .with(SecurityMockMvcRequestPostProcessors.user(account))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"description\":\"Survey\",\"responses\":["
+                        + "{\"question\":\"Describe your work experience.\",\"questionType\":\"TextQuestion\",\"responses\":[\"I have 5 years of experience.\"]},"
+                        + "{\"question\":\"What's your age?\",\"questionType\":\"NumberQuestion\",\"responses\":[{\"25\":1}]},"
+                        + "{\"question\":\"What's your favorite video game?\",\"questionType\":\"ChoiceQuestion\",\"responses\":[{\"Fortnite\":1}]}"
+                        + "]}"));
+    }
+
 }
